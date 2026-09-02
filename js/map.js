@@ -1,182 +1,164 @@
-// Módulo de Mapa Interactivo (Leaflet + Custom Price Pills Markers)
+// Módulo de Mapa Interactivo Leaflet con Pines de Precio Estilo Airbnb & Glassmorphism
 (function () {
     let map = null;
     let markersLayer = null;
-    let markersMap = new Map(); // propertyId -> Leaflet Marker
-    let activePropertyId = null;
+    let markersMap = {};
+    let activeHighlightMarker = null;
 
     const MapManager = {
-        init: function (containerId = "map-container") {
+        init: function (containerId = "leaflet-map") {
             const container = document.getElementById(containerId);
-            if (!container) return;
+            if (!container || map !== null) return;
 
-            // Coordenadas iniciales: Centro de Asunción, Paraguay
-            const defaultCenter = [-25.2950, -57.5750];
-            const defaultZoom = 13;
+            // Coordenadas iniciales: Eje Corporativo Asunción
+            const initialLat = -25.2861;
+            const initialLng = -57.5623;
+            const initialZoom = 13;
 
             map = L.map(containerId, {
-                center: defaultCenter,
-                zoom: defaultZoom,
+                center: [initialLat, initialLng],
+                zoom: initialZoom,
                 zoomControl: false,
-                attributionControl: false
+                scrollWheelZoom: true,
+                fadeAnimation: true
             });
 
-            // Control de Zoom personalizado en esquina superior derecha
-            L.control.zoom({ position: 'topright' }).addTo(map);
+            // Control de Zoom personalizado en esquina inferior derecha
+            L.control.zoom({ position: "bottomright" }).addTo(map);
 
-            // Capa de Mapa estilo CartoDB Positron / Voyager moderno y limpio
-            L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                maxZoom: 19,
-                subdomains: 'abcd'
+            // Capa de Mapa CartoDB Voyager (Limpia y moderna estilo Airbnb)
+            L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png", {
+                attribution: '&copy; <a href="https://carto.com/">CARTO</a> &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+                subdomains: "abcd",
+                maxZoom: 19
             }).addTo(map);
 
             markersLayer = L.layerGroup().addTo(map);
 
-            // Evento cuando el usuario mueve el mapa
-            map.on('moveend', function () {
-                const autoSearchCheckbox = document.getElementById("search-on-map-move");
-                if (autoSearchCheckbox && autoSearchCheckbox.checked) {
-                    window.dispatchEvent(new CustomEvent("mapBoundsChanged", {
-                        detail: { bounds: map.getBounds() }
-                    }));
-                }
-            });
+            // Botón de re-centrado
+            const recenterBtn = document.getElementById("map-recenter-btn");
+            if (recenterBtn) {
+                recenterBtn.addEventListener("click", () => {
+                    this.fitToMarkers();
+                });
+            }
 
-            // Listener de cambio de moneda para actualizar las etiquetas de los pines
-            window.addEventListener("currencyChanged", () => {
-                this.updateMarkerLabels();
+            // Invalida tamaño en resize
+            window.addEventListener("resize", () => {
+                if (map) map.invalidateSize();
             });
-
-            // Forzar resize para que cargue correctamente las dimensiones del contenedor
-            setTimeout(() => {
-                map.invalidateSize();
-            }, 300);
         },
 
         renderMarkers: function (properties) {
             if (!map || !markersLayer) return;
 
             markersLayer.clearLayers();
-            markersMap.clear();
+            markersMap = {};
 
-            const bounds = L.latLngBounds();
+            if (!properties || properties.length === 0) return;
+
+            const duration = (window.FilterManager && window.FilterManager.filters.durationMonths) || 3;
 
             properties.forEach(prop => {
                 if (!prop.coordinates || prop.coordinates.length !== 2) return;
 
-                const lat = prop.coordinates[0];
-                const lng = prop.coordinates[1];
-                bounds.extend([lat, lng]);
+                const quote = window.PricingEngine ? window.PricingEngine.calculateQuote(prop.priceUSD, duration) : { monthlyRentUSD: prop.priceUSD, monthlyRentPYG: prop.pricePYG };
+                const compactPrice = window.CurrencyManager ? window.CurrencyManager.formatCompactPrice(quote.monthlyRentUSD, quote.monthlyRentPYG) : `$${quote.monthlyRentUSD}`;
 
-                const formattedPrice = window.CurrencyManager.formatCompactPrice(prop.priceUSD, prop.pricePYG);
-                const isPlatinum = prop.tier === "platinum";
-
-                // Icono HTML personalizado con forma de píldora de precio (Estilo Airbnb)
+                // Pin de Precio Píldora Estilo Airbnb con efecto Glassmorphism
                 const customIcon = L.divIcon({
-                    className: 'custom-map-pill-wrapper',
+                    className: "airbnb-glass-marker-wrapper",
                     html: `
-                        <div class="map-price-pill ${isPlatinum ? 'tier-platinum' : ''} ${activePropertyId === prop.id ? 'active' : ''}" id="marker-${prop.id}">
-                            <span class="pill-price">${formattedPrice}</span>
+                        <div class="airbnb-price-pill" id="marker-pill-${prop.id}">
+                            <span class="pill-price">${compactPrice}</span>
                         </div>
                     `,
-                    iconSize: [60, 30],
-                    iconAnchor: [30, 15]
+                    iconSize: [80, 32],
+                    iconAnchor: [40, 16]
                 });
 
-                const marker = L.marker([lat, lng], { icon: customIcon });
-
-                // Eventos del marcador
-                marker.on('click', () => {
-                    this.highlightProperty(prop.id, true);
-                    if (window.ModalManager) {
-                        window.ModalManager.openPropertyModal(prop);
-                    }
+                const marker = L.marker(prop.coordinates, {
+                    icon: customIcon,
+                    title: prop.title,
+                    riseOnHover: true
                 });
 
-                marker.on('mouseover', () => {
+                // Micro Popup flotante estilo Airbnb al hacer clic
+                const popupContent = `
+                    <div class="airbnb-map-mini-card" onclick="window.ModalManager.openPropertyModal(window.PROPERTIES_DATA.find(p => p.id === '${prop.id}'))">
+                        <img src="${prop.images[0]}" alt="${prop.title}" class="mini-card-img">
+                        <div class="mini-card-body">
+                            <div class="mini-card-rating"><i class="fas fa-star text-accent"></i> ${prop.rating || '4.95'} (${prop.reviewCount || 24})</div>
+                            <h4 class="mini-card-title">${prop.title}</h4>
+                            <p class="mini-card-hood"><i class="fas fa-map-pin text-primary"></i> ${prop.neighborhood}</p>
+                            <div class="mini-card-price">${compactPrice} <span class="text-xs text-muted">/ mes</span></div>
+                        </div>
+                    </div>
+                `;
+
+                marker.bindPopup(popupContent, {
+                    offset: [0, -14],
+                    closeButton: false,
+                    className: "airbnb-glass-popup"
+                });
+
+                marker.on("click", () => {
                     this.highlightProperty(prop.id, false);
                 });
 
-                marker.on('mouseout', () => {
-                    if (activePropertyId !== prop.id) {
-                        this.unhighlightProperty(prop.id);
-                    }
-                });
-
-                marker.propertyData = prop;
                 markersLayer.addLayer(marker);
-                markersMap.set(prop.id, marker);
+                markersMap[prop.id] = marker;
             });
 
-            // Ajustar vista a las propiedades si hay resultados
-            if (properties.length > 0 && bounds.isValid()) {
-                map.fitBounds(bounds, { padding: [50, 50], maxZoom: 15 });
+            // Si el checkbox de sincronizar mapa está activo, ajustar vista
+            const syncCheckbox = document.getElementById("sync-map-checkbox");
+            if (syncCheckbox && syncCheckbox.checked) {
+                this.fitToMarkers();
             }
         },
 
-        updateMarkerLabels: function () {
-            markersMap.forEach((marker, propId) => {
-                const prop = marker.propertyData;
-                if (!prop) return;
-                const formattedPrice = window.CurrencyManager.formatCompactPrice(prop.priceUSD, prop.pricePYG);
-                const el = document.querySelector(`#marker-${propId} .pill-price`);
-                if (el) {
-                    el.textContent = formattedPrice;
-                }
-            });
-        },
-
-        highlightProperty: function (propId, scrollToCard = false) {
-            activePropertyId = propId;
-
-            // Resaltar pin en mapa
-            document.querySelectorAll(".map-price-pill").forEach(el => el.classList.remove("active"));
-            const markerEl = document.getElementById(`marker-${propId}`);
-            if (markerEl) {
-                markerEl.classList.add("active");
-                // Elevar z-index del marcador
-                const parentIcon = markerEl.closest('.leaflet-marker-icon');
-                if (parentIcon) parentIcon.style.zIndex = '9999';
+        highlightProperty: function (propId, openPopup = false) {
+            if (activeHighlightMarker) {
+                const prevPill = document.getElementById(`marker-pill-${activeHighlightMarker}`);
+                if (prevPill) prevPill.classList.remove("active");
             }
 
-            // Resaltar tarjeta en el listado
-            document.querySelectorAll(".property-card").forEach(el => el.classList.remove("active-card"));
-            const cardEl = document.getElementById(`card-${propId}`);
-            if (cardEl) {
-                cardEl.classList.add("active-card");
-                if (scrollToCard) {
-                    cardEl.scrollIntoView({ behavior: "smooth", block: "center" });
+            const marker = markersMap[propId];
+            if (marker) {
+                const pill = document.getElementById(`marker-pill-${propId}`);
+                if (pill) pill.classList.add("active");
+                activeHighlightMarker = propId;
+
+                if (openPopup) {
+                    marker.openPopup();
                 }
             }
         },
 
         unhighlightProperty: function (propId) {
-            const markerEl = document.getElementById(`marker-${propId}`);
-            if (markerEl) {
-                markerEl.classList.remove("active");
-                const parentIcon = markerEl.closest('.leaflet-marker-icon');
-                if (parentIcon) parentIcon.style.zIndex = '';
-            }
-
-            const cardEl = document.getElementById(`card-${propId}`);
-            if (cardEl) {
-                cardEl.classList.remove("active-card");
+            const pill = document.getElementById(`marker-pill-${propId}`);
+            if (pill) pill.classList.remove("active");
+            if (activeHighlightMarker === propId) {
+                activeHighlightMarker = null;
             }
         },
 
         panTo: function (lat, lng, zoom = 15) {
-            if (!map) return;
-            map.flyTo([lat, lng], zoom, { duration: 1.2 });
+            if (map) {
+                map.flyTo([lat, lng], zoom, { duration: 1.2, easeLinearity: 0.25 });
+            }
+        },
+
+        fitToMarkers: function () {
+            if (!map || Object.keys(markersMap).length === 0) return;
+            const group = L.featureGroup(Object.values(markersMap));
+            map.fitBounds(group.getBounds().pad(0.15), { maxZoom: 15, animate: true, duration: 1 });
         },
 
         invalidateSize: function () {
             if (map) {
                 setTimeout(() => map.invalidateSize(), 200);
             }
-        },
-
-        getMapInstance: function () {
-            return map;
         }
     };
 

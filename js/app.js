@@ -1,13 +1,14 @@
-// Orquestador Principal de Zilla Flex Media Estancia
+// Orquestador Principal de Zilla Flex Estilo Airbnb Homes & Glassmorphism
 (function () {
     let currentProperties = [];
+    let showTotalPriceWithTax = false;
 
     const App = {
         init: function () {
-            // 1. Inicializar tema (Claro / Oscuro)
+            // 1. Tema Glass (Claro / Oscuro)
             this.initTheme();
 
-            // 2. Inicializar módulos
+            // 2. Inicializar Módulos
             if (window.CurrencyManager) window.CurrencyManager.init();
             if (window.MapManager) window.MapManager.init("leaflet-map");
             if (window.ModalManager) window.ModalManager.init();
@@ -16,13 +17,13 @@
             if (window.PublishManager) window.PublishManager.init();
             if (window.CheckoutManager) window.CheckoutManager.init();
 
-            // 3. Cargar parámetros iniciales (de landing.html o URL)
+            // 3. Parámetros de URL iniciales
             this.loadInitialURLParams();
 
-            // 4. Vincular listeners globales
-            this.bindGlobalEvents();
+            // 4. Vincular Eventos Airbnb
+            this.bindAirbnbEvents();
 
-            // 5. Cargar propiedades y renderizar
+            // 5. Aplicar y Renderizar
             if (window.FilterManager) {
                 currentProperties = window.FilterManager.applyFilters();
             }
@@ -50,20 +51,21 @@
             const locParam = urlParams.get("loc") || localStorage.getItem("zilla_search_location");
             const durationParam = urlParams.get("duration") || localStorage.getItem("zilla_search_duration");
 
-            if (locParam && locParam !== "all") {
-                const locSelect = document.getElementById("location-select");
-                if (locSelect) locSelect.value = locParam;
-                if (window.FilterManager) window.FilterManager.filters.neighborhood = locParam;
+            if (locParam && locParam !== "all" && window.FilterManager) {
+                window.FilterManager.filters.neighborhood = locParam;
+                const whereVal = document.getElementById("capsule-where-val");
+                if (whereVal) whereVal.textContent = locParam;
             }
 
-            if (durationParam) {
-                const durationSelect = document.getElementById("duration-select");
-                if (durationSelect) durationSelect.value = durationParam;
-                if (window.FilterManager) window.FilterManager.filters.durationMonths = parseInt(durationParam, 10);
+            if (durationParam && window.FilterManager) {
+                const d = parseInt(durationParam, 10);
+                window.FilterManager.filters.durationMonths = d;
+                const whenVal = document.getElementById("capsule-when-val");
+                if (whenVal) whenVal.textContent = `${d} meses`;
             }
         },
 
-        bindGlobalEvents: function () {
+        bindAirbnbEvents: function () {
             // Evento cuando se filtran propiedades
             window.addEventListener("propertiesFiltered", (e) => {
                 currentProperties = e.detail.properties;
@@ -72,13 +74,13 @@
                 this.updateFilterUIStates(e.detail.filters, e.detail.activeCount);
             });
 
-            // Evento cuando cambia la moneda global
-            window.addEventListener("currencyChanged", (e) => {
+            // Evento cuando cambia la moneda
+            window.addEventListener("currencyChanged", () => {
                 this.renderPropertyList(currentProperties);
-                this.syncPriceCurrency(e.detail.currency);
+                if (window.MapManager) window.MapManager.renderMarkers(currentProperties);
             });
 
-            // Conmutador de moneda en la barra de navegación
+            // Moneda dual en navbar
             document.querySelectorAll(".currency-toggle-btn").forEach(btn => {
                 btn.addEventListener("click", () => {
                     const currency = btn.dataset.currency;
@@ -86,7 +88,7 @@
                 });
             });
 
-            // Conmutador de Rol (Arrendatario vs Propietario)
+            // Conmutador de rol (Arrendatario / Propietario)
             const roleBtn = document.getElementById("user-role-toggle-btn");
             if (roleBtn) {
                 roleBtn.addEventListener("click", () => {
@@ -94,285 +96,156 @@
                 });
             }
 
-            // Conmutador de Vista Móvil (Mapa / Lista)
-            const mobileViewToggle = document.getElementById("mobile-view-toggle");
-            if (mobileViewToggle) {
-                mobileViewToggle.addEventListener("click", () => {
+            // Barra de Categorías Airbnb (Scroll Horizontal y Selección)
+            const track = document.getElementById("airbnb-categories-track");
+            const leftArrow = document.getElementById("cat-scroll-left");
+            const rightArrow = document.getElementById("cat-scroll-right");
+
+            if (track) {
+                if (leftArrow) {
+                    leftArrow.addEventListener("click", () => {
+                        track.scrollBy({ left: -220, behavior: "smooth" });
+                    });
+                }
+                if (rightArrow) {
+                    rightArrow.addEventListener("click", () => {
+                        track.scrollBy({ left: 220, behavior: "smooth" });
+                    });
+                }
+
+                track.querySelectorAll(".airbnb-category-item").forEach(item => {
+                    item.addEventListener("click", () => {
+                        track.querySelectorAll(".airbnb-category-item").forEach(el => el.classList.remove("active"));
+                        item.classList.add("active");
+                        const cat = item.dataset.category;
+                        if (window.FilterManager) window.FilterManager.setFilter("category", cat);
+                    });
+                });
+            }
+
+            // Modal de Filtros Airbnb
+            const openModalBtn = document.getElementById("open-airbnb-filters-modal-btn");
+            const searchCapsuleBtn = document.getElementById("airbnb-search-capsule-btn");
+            const closeModalBtn = document.getElementById("close-airbnb-filters-btn");
+            const backdrop = document.getElementById("close-airbnb-filters-backdrop");
+            const modal = document.getElementById("airbnb-filters-modal");
+            const applyModalBtn = document.getElementById("modal-apply-filters-btn");
+            const clearModalBtn = document.getElementById("modal-clear-all-filters-btn");
+
+            const openFilterModal = () => {
+                if (modal) modal.classList.add("active");
+            };
+
+            const closeFilterModal = () => {
+                if (modal) modal.classList.remove("active");
+            };
+
+            if (openModalBtn) openModalBtn.addEventListener("click", openFilterModal);
+            if (searchCapsuleBtn) searchCapsuleBtn.addEventListener("click", openFilterModal);
+            if (closeModalBtn) closeModalBtn.addEventListener("click", closeFilterModal);
+            if (backdrop) backdrop.addEventListener("click", closeFilterModal);
+
+            // Filtros en Modal
+            if (modal) {
+                // Segmented buttons
+                modal.querySelectorAll(".duration-segmented-airbnb .segmented-btn").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        modal.querySelectorAll(".duration-segmented-airbnb .segmented-btn").forEach(b => b.classList.remove("active"));
+                        btn.classList.add("active");
+                    });
+                });
+
+                modal.querySelectorAll("#modal-rooms-segmented .segmented-btn").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        modal.querySelectorAll("#modal-rooms-segmented .segmented-btn").forEach(b => b.classList.remove("active"));
+                        btn.classList.add("active");
+                    });
+                });
+
+                modal.querySelectorAll("#modal-baths-segmented .segmented-btn").forEach(btn => {
+                    btn.addEventListener("click", () => {
+                        modal.querySelectorAll("#modal-baths-segmented .segmented-btn").forEach(b => b.classList.remove("active"));
+                        btn.classList.add("active");
+                    });
+                });
+
+                if (applyModalBtn) {
+                    applyModalBtn.addEventListener("click", () => {
+                        const minP = parseFloat(document.getElementById("modal-filter-min-price")?.value) || null;
+                        const maxP = parseFloat(document.getElementById("modal-filter-max-price")?.value) || null;
+
+                        const activeDurationBtn = modal.querySelector(".duration-segmented-airbnb .segmented-btn.active");
+                        const duration = activeDurationBtn ? parseInt(activeDurationBtn.dataset.months, 10) : 3;
+
+                        const activeRoomsBtn = modal.querySelector("#modal-rooms-segmented .segmented-btn.active");
+                        const rooms = activeRoomsBtn ? parseInt(activeRoomsBtn.dataset.val, 10) : 0;
+
+                        const activeBathsBtn = modal.querySelector("#modal-baths-segmented .segmented-btn.active");
+                        const baths = activeBathsBtn ? parseInt(activeBathsBtn.dataset.val, 10) : 0;
+
+                        const amenities = Array.from(modal.querySelectorAll(".airbnb-filter-checkbox:checked")).map(cb => cb.value);
+
+                        if (window.FilterManager) {
+                            window.FilterManager.setMultipleFilters({
+                                minPriceUSD: minP,
+                                maxPriceUSD: maxP,
+                                durationMonths: duration,
+                                minBedrooms: rooms,
+                                minBathrooms: baths,
+                                amenities: amenities
+                            });
+                        }
+
+                        // Actualizar textos en la cápsula
+                        const whenVal = document.getElementById("capsule-when-val");
+                        if (whenVal) whenVal.textContent = `${duration} meses`;
+
+                        closeFilterModal();
+                    });
+                }
+
+                if (clearModalBtn) {
+                    clearModalBtn.addEventListener("click", () => {
+                        if (window.FilterManager) window.FilterManager.resetFilters();
+                        closeFilterModal();
+                    });
+                }
+            }
+
+            // Toggle "Mostrar total antes de impuestos"
+            const taxToggle = document.getElementById("toggle-total-price-switch");
+            if (taxToggle) {
+                taxToggle.addEventListener("change", (e) => {
+                    showTotalPriceWithTax = e.target.checked;
+                    this.renderPropertyList(currentProperties);
+                });
+            }
+
+            // Botón Flotante Airbnb "Mostrar Mapa / Mostrar Lista"
+            const floatingMapBtn = document.getElementById("mobile-view-toggle");
+            if (floatingMapBtn) {
+                floatingMapBtn.addEventListener("click", () => {
                     const isMapVisible = document.body.classList.toggle("mobile-map-active");
-                    const icon = mobileViewToggle.querySelector("i");
-                    const text = mobileViewToggle.querySelector("span");
+                    const icon = floatingMapBtn.querySelector("i");
+                    const text = floatingMapBtn.querySelector("span");
 
                     if (isMapVisible) {
                         icon.className = "fas fa-list";
-                        text.textContent = "Ver Lista";
+                        text.textContent = "Mostrar lista";
                         if (window.MapManager) window.MapManager.invalidateSize();
                     } else {
-                        icon.className = "fas fa-map-marked-alt";
-                        text.textContent = "Ver Mapa";
+                        icon.className = "fas fa-map";
+                        text.textContent = "Mostrar mapa";
                     }
                 });
             }
-
-            // Input de búsqueda rápida
-            const searchInput = document.getElementById("search-input");
-            if (searchInput) {
-                searchInput.addEventListener("input", (e) => {
-                    if (window.FilterManager) window.FilterManager.setFilter("keyword", e.target.value.trim());
-                });
-            }
-
-            // Selector de Ubicación
-            const locationSelect = document.getElementById("location-select");
-            if (locationSelect) {
-                locationSelect.addEventListener("change", (e) => {
-                    if (window.FilterManager) window.FilterManager.setFilter("neighborhood", e.target.value);
-                });
-            }
-
-            // Selector de Duración de Estancia (1 a 11 meses)
-            const durationSelect = document.getElementById("duration-select");
-            if (durationSelect) {
-                durationSelect.addEventListener("change", (e) => {
-                    const months = parseInt(e.target.value, 10);
-                    localStorage.setItem("zilla_search_duration", months);
-                    if (window.FilterManager) window.FilterManager.setFilter("durationMonths", months);
-                });
-            }
-
-            // Inicializar Popovers de Precio y Dormitorios
-            this.initPopovers();
-            this.initPriceFilter();
-            this.initRoomsFilter();
-            this.initQuickChips();
-
-            // Botón de Restablecer Todos los Filtros
-            const resetAllBtn = document.getElementById("reset-all-filters-btn");
-            if (resetAllBtn) {
-                resetAllBtn.addEventListener("click", () => {
-                    if (window.FilterManager) window.FilterManager.resetFilters();
-                });
-            }
-        },
-
-        initPopovers: function () {
-            const popovers = [
-                { btn: document.getElementById("price-dropdown-btn"), popover: document.getElementById("price-dropdown-popover") },
-                { btn: document.getElementById("rooms-dropdown-btn"), popover: document.getElementById("rooms-dropdown-popover") }
-            ];
-
-            const closeAllPopovers = () => {
-                popovers.forEach(p => {
-                    if (p.btn) p.btn.classList.remove("open");
-                    if (p.popover) p.popover.classList.remove("active");
-                });
-            };
-
-            popovers.forEach(p => {
-                if (p.btn && p.popover) {
-                    p.btn.addEventListener("click", (e) => {
-                        e.stopPropagation();
-                        const isOpen = p.popover.classList.contains("active");
-                        closeAllPopovers();
-                        if (!isOpen) {
-                            p.popover.classList.add("active");
-                            p.btn.classList.add("open");
-                        }
-                    });
-
-                    p.popover.addEventListener("click", (e) => {
-                        e.stopPropagation();
-                    });
-                }
-            });
-
-            document.addEventListener("click", () => {
-                closeAllPopovers();
-            });
-        },
-
-        initPriceFilter: function () {
-            let activeCurrency = window.CurrencyManager ? window.CurrencyManager.getCurrency() : "USD";
-            const minInput = document.getElementById("filter-min-price");
-            const maxInput = document.getElementById("filter-max-price");
-            const minSymbol = document.getElementById("min-price-symbol");
-            const maxSymbol = document.getElementById("max-price-symbol");
-            const presetsContainer = document.getElementById("price-presets-container");
-            const applyBtn = document.getElementById("apply-price-btn");
-            const clearBtn = document.getElementById("clear-price-btn");
-            const currBtns = document.querySelectorAll(".popover-curr-btn");
-
-            const renderPresets = (curr) => {
-                if (!presetsContainer) return;
-                let presets = [];
-                if (curr === "USD") {
-                    presets = [
-                        { label: "< US$ 1.000", min: 0, max: 1000 },
-                        { label: "US$ 1.000 - 1.500", min: 1000, max: 1500 },
-                        { label: "US$ 1.500 - 2.500", min: 1500, max: 2500 },
-                        { label: "> US$ 2.500", min: 2500, max: null }
-                    ];
-                } else {
-                    presets = [
-                        { label: "< ₲ 8M", min: 0, max: 8000000 },
-                        { label: "₲ 8M - 12M", min: 8000000, max: 12000000 },
-                        { label: "₲ 12M - 20M", min: 12000000, max: 20000000 },
-                        { label: "> ₲ 20M", min: 20000000, max: null }
-                    ];
-                }
-
-                presetsContainer.innerHTML = presets.map(p => `
-                    <button type="button" class="price-preset-chip" data-min="${p.min}" data-max="${p.max || ''}">
-                        ${p.label}
-                    </button>
-                `).join('');
-
-                presetsContainer.querySelectorAll(".price-preset-chip").forEach(chip => {
-                    chip.addEventListener("click", () => {
-                        const min = chip.dataset.min ? parseFloat(chip.dataset.min) : null;
-                        const max = chip.dataset.max ? parseFloat(chip.dataset.max) : null;
-                        if (minInput) minInput.value = min !== null && min > 0 ? min : "";
-                        if (maxInput) maxInput.value = max !== null && max > 0 ? max : "";
-                    });
-                });
-            };
-
-            const setCurrency = (curr) => {
-                activeCurrency = curr;
-                currBtns.forEach(b => b.classList.toggle("active", b.dataset.curr === curr));
-                if (minSymbol) minSymbol.textContent = curr === "USD" ? "US$" : "₲";
-                if (maxSymbol) maxSymbol.textContent = curr === "USD" ? "US$" : "₲";
-                if (minInput) minInput.placeholder = curr === "USD" ? "Ej. 800" : "Ej. 6000000";
-                if (maxInput) maxInput.placeholder = curr === "USD" ? "Ej. 2000" : "Ej. 16000000";
-                renderPresets(curr);
-            };
-
-            currBtns.forEach(btn => {
-                btn.addEventListener("click", () => {
-                    setCurrency(btn.dataset.curr);
-                });
-            });
-
-            this.syncPriceCurrency = (curr) => {
-                setCurrency(curr);
-            };
-
-            setCurrency(activeCurrency);
-
-            if (applyBtn) {
-                applyBtn.addEventListener("click", () => {
-                    const minVal = parseFloat(minInput.value) || null;
-                    const maxVal = parseFloat(maxInput.value) || null;
-
-                    if (activeCurrency === "PYG") {
-                        window.FilterManager.setMultipleFilters({
-                            priceCurrency: "PYG",
-                            minPricePYG: minVal,
-                            maxPricePYG: maxVal,
-                            minPriceUSD: null,
-                            maxPriceUSD: null
-                        });
-                    } else {
-                        window.FilterManager.setMultipleFilters({
-                            priceCurrency: "USD",
-                            minPriceUSD: minVal,
-                            maxPriceUSD: maxVal,
-                            minPricePYG: null,
-                            maxPricePYG: null
-                        });
-                    }
-
-                    document.getElementById("price-dropdown-popover")?.classList.remove("active");
-                    document.getElementById("price-dropdown-btn")?.classList.remove("open");
-                });
-            }
-
-            if (clearBtn) {
-                clearBtn.addEventListener("click", () => {
-                    if (minInput) minInput.value = "";
-                    if (maxInput) maxInput.value = "";
-                    window.FilterManager.setMultipleFilters({
-                        minPriceUSD: null,
-                        maxPriceUSD: null,
-                        minPricePYG: null,
-                        maxPricePYG: null
-                    });
-                    document.getElementById("price-dropdown-popover")?.classList.remove("active");
-                    document.getElementById("price-dropdown-btn")?.classList.remove("open");
-                });
-            }
-        },
-
-        initRoomsFilter: function () {
-            let selectedRooms = 0;
-            const roomBtns = document.querySelectorAll("#bedrooms-segmented .segmented-btn");
-            const applyBtn = document.getElementById("apply-rooms-btn");
-            const clearBtn = document.getElementById("clear-rooms-btn");
-
-            roomBtns.forEach(btn => {
-                btn.addEventListener("click", () => {
-                    roomBtns.forEach(b => b.classList.remove("active"));
-                    btn.classList.add("active");
-                    selectedRooms = parseInt(btn.dataset.rooms, 10);
-                });
-            });
-
-            if (applyBtn) {
-                applyBtn.addEventListener("click", () => {
-                    window.FilterManager.setFilter("minBedrooms", selectedRooms);
-                    document.getElementById("rooms-dropdown-popover")?.classList.remove("active");
-                    document.getElementById("rooms-dropdown-btn")?.classList.remove("open");
-                });
-            }
-
-            if (clearBtn) {
-                clearBtn.addEventListener("click", () => {
-                    selectedRooms = 0;
-                    roomBtns.forEach(b => b.classList.toggle("active", b.dataset.rooms === "0"));
-                    window.FilterManager.setFilter("minBedrooms", 0);
-                    document.getElementById("rooms-dropdown-popover")?.classList.remove("active");
-                    document.getElementById("rooms-dropdown-btn")?.classList.remove("open");
-                });
-            }
-        },
-
-        initQuickChips: function () {
-            document.querySelectorAll(".amenity-filter-chip").forEach(chip => {
-                chip.addEventListener("click", () => {
-                    chip.classList.toggle("active");
-                    const activeAmenities = Array.from(document.querySelectorAll(".amenity-filter-chip.active"))
-                        .map(el => el.dataset.amenity);
-                    if (window.FilterManager) window.FilterManager.setFilter("amenities", activeAmenities);
-                });
-            });
         },
 
         updateFilterUIStates: function (filters, activeCount) {
-            // Actualizar etiqueta del botón de Presupuesto
-            const priceBtn = document.getElementById("price-dropdown-btn");
-            const priceLabel = document.getElementById("price-dropdown-label");
-            if (priceBtn && priceLabel) {
-                const hasUSD = (filters.minPriceUSD || filters.maxPriceUSD);
-                const hasPYG = (filters.minPricePYG || filters.maxPricePYG);
-                if (hasUSD) {
-                    const min = filters.minPriceUSD ? `$${filters.minPriceUSD}` : '0';
-                    const max = filters.maxPriceUSD ? `$${filters.maxPriceUSD}` : '∞';
-                    priceLabel.textContent = `${min} - ${max}`;
-                    priceBtn.classList.add("active");
-                } else if (hasPYG) {
-                    const min = filters.minPricePYG ? `₲${Math.round(filters.minPricePYG / 1000000)}M` : '0';
-                    const max = filters.maxPricePYG ? `₲${Math.round(filters.maxPricePYG / 1000000)}M` : '∞';
-                    priceLabel.textContent = `${min} - ${max}`;
-                    priceBtn.classList.add("active");
-                } else {
-                    priceLabel.textContent = "Presupuesto";
-                    priceBtn.classList.remove("active");
-                }
-            }
-
-            // Mostrar/ocultar botón de limpiar filtros
-            const resetBtn = document.getElementById("reset-all-filters-btn");
-            if (resetBtn) {
-                resetBtn.style.display = activeCount > 0 ? "inline-flex" : "none";
+            const badge = document.getElementById("active-filters-count-badge");
+            if (badge) {
+                badge.textContent = activeCount;
+                badge.style.display = activeCount > 0 ? "inline-block" : "none";
             }
         },
 
@@ -382,34 +255,34 @@
             const duration = (window.FilterManager && window.FilterManager.filters.durationMonths) || 3;
 
             if (countLabel) {
-                countLabel.innerHTML = `<strong>${properties.length} estancias</strong> listas para alquiler de ${duration} meses`;
+                countLabel.innerHTML = `Más de <strong>${properties.length} alojamientos</strong> en Asunción • Estancias de ${duration} meses`;
             }
 
             if (!feedContainer) return;
 
             if (properties.length === 0) {
                 feedContainer.innerHTML = `
-                    <div class="empty-feed-state">
+                    <div class="empty-feed-state" style="grid-column: 1 / -1;">
                         <div class="empty-icon"><i class="fas fa-calendar-xmark"></i></div>
-                        <h3>No hay estancias con esos filtros</h3>
-                        <p>Intenta ajustar el presupuesto o la duración en meses para ver más departamentos disponibles.</p>
+                        <h3>No se encontraron alojamientos</h3>
+                        <p>Intenta ajustar tus fechas o filtros para ver más opciones en Asunción.</p>
                         <button class="btn btn-primary btn-sm" onclick="window.FilterManager.resetFilters()">
-                            <i class="fas fa-rotate-left"></i> Restablecer Filtros
+                            <i class="fas fa-rotate-left"></i> Restablecer filtros
                         </button>
                     </div>
                 `;
                 return;
             }
 
-            feedContainer.innerHTML = properties.map(prop => this.buildPropertyCardHTML(prop, duration)).join("");
+            feedContainer.innerHTML = properties.map(prop => this.buildAirbnbCardHTML(prop, duration)).join("");
 
-            // Vincular eventos de cada tarjeta
+            // Vincular eventos de tarjetas
             properties.forEach(prop => {
-                const card = document.getElementById(`card-${prop.id}`);
+                const card = document.getElementById(`airbnb-card-${prop.id}`);
                 if (!card) return;
 
                 card.addEventListener("click", (e) => {
-                    if (e.target.closest('.card-carousel-btn') || e.target.closest('.card-fav-btn')) {
+                    if (e.target.closest('.card-nav-btn') || e.target.closest('.airbnb-wishlist-heart-btn')) {
                         return;
                     }
                     window.ModalManager.openPropertyModal(prop);
@@ -427,64 +300,63 @@
             });
         },
 
-        buildPropertyCardHTML: function (prop, duration = 3) {
+        buildAirbnbCardHTML: function (prop, duration = 3) {
             const quote = window.PricingEngine ? window.PricingEngine.calculateQuote(prop.priceUSD, duration) : { monthlyRentUSD: prop.priceUSD, monthlyRentPYG: prop.pricePYG, discountPercent: 0 };
             const formattedPrice = window.CurrencyManager.formatPrice(quote.monthlyRentUSD, quote.monthlyRentPYG);
+            const formattedOriginal = window.CurrencyManager.formatPrice(quote.baseMonthlyUSD, quote.baseMonthlyPYG);
+            const isPYG = window.CurrencyManager.getCurrency() === "PYG";
+
             const images = prop.images && prop.images.length > 0 ? prop.images : [
                 "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1000&q=80"
             ];
 
             return `
-                <div class="property-card" id="card-${prop.id}">
-                    <div class="card-media-wrapper">
+                <div class="airbnb-home-card" id="airbnb-card-${prop.id}">
+                    <!-- Carrusel de Fotos con Wishlist Heart -->
+                    <div class="airbnb-card-media">
                         <div class="card-carousel-container" data-current-index="0">
                             ${images.map((img, idx) => `
-                                <img src="${img}" class="card-image ${idx === 0 ? 'active' : ''}" alt="${prop.title}" loading="lazy" data-index="${idx}">
+                                <img src="${img}" class="airbnb-card-img ${idx === 0 ? 'active' : ''}" alt="${prop.title}" loading="lazy" data-index="${idx}">
                             `).join('')}
                         </div>
-                        
+
                         ${images.length > 1 ? `
-                            <button class="card-carousel-btn prev-btn" title="Foto anterior"><i class="fas fa-chevron-left"></i></button>
-                            <button class="card-carousel-btn next-btn" title="Foto siguiente"><i class="fas fa-chevron-right"></i></button>
-                            <div class="carousel-dots">
+                            <button class="card-nav-btn prev-btn" title="Foto anterior"><i class="fas fa-chevron-left"></i></button>
+                            <button class="card-nav-btn next-btn" title="Foto siguiente"><i class="fas fa-chevron-right"></i></button>
+                            <div class="airbnb-card-dots">
                                 ${images.map((_, idx) => `<span class="dot ${idx === 0 ? 'active' : ''}"></span>`).join('')}
                             </div>
                         ` : ''}
 
-                        <!-- Badges Superiores -->
-                        <div class="card-badge-top-left">
-                            <span class="micro-badge badge-primary"><i class="fas fa-wifi"></i> ${prop.wifiSpeedMbps || 300} Mbps</span>
-                            ${quote.discountPercent > 0 ? `<span class="micro-badge badge-cheroga">${quote.discountPercent}% OFF (${duration}m)</span>` : ''}
-                        </div>
-
-                        <!-- Botón Favorito -->
-                        <button class="card-fav-btn" title="Guardar estancia" onclick="this.classList.toggle('active')">
-                            <i class="fas fa-heart"></i>
+                        <!-- Wishlist Heart SVG Button -->
+                        <button class="airbnb-wishlist-heart-btn" title="Guardar en favoritos" onclick="event.stopPropagation(); this.classList.toggle('active')">
+                            <svg viewBox="0 0 32 32"><path d="M16 28c7-4.73 14-10 14-17a6.98 6.98 0 0 0-7-7c-1.8 0-3.58.68-4.95 2.05L16 8.1l-2.05-2.05A6.98 6.98 0 0 0 9 4a6.98 6.98 0 0 0-7 7c0 7 7 12.27 14 17z"></path></svg>
                         </button>
+
+                        <!-- Badge "Recomendación del viajero" -->
+                        ${prop.guestFavorite ? `
+                            <div class="airbnb-guest-favorite-badge">
+                                <i class="fas fa-award text-primary"></i> Recomendación del viajero
+                            </div>
+                        ` : ''}
                     </div>
 
-                    <div class="card-info-content">
-                        <div class="card-location-row">
-                            <span class="card-neighborhood"><i class="fas fa-map-marker-alt text-primary"></i> ${prop.neighborhood}, ${prop.city}</span>
-                            <span class="card-op-tag tag-rent_monthly">Media Estancia</span>
+                    <!-- Metadatos de la Tarjeta Estilo Airbnb -->
+                    <div class="airbnb-card-body">
+                        <div class="airbnb-title-rating-row">
+                            <span class="airbnb-card-location">${prop.neighborhood}, ${prop.city}</span>
+                            <span class="airbnb-card-rating">
+                                <i class="fas fa-star"></i> ${prop.rating || '4.95'}
+                            </span>
                         </div>
 
-                        <h3 class="card-title">${prop.title}</h3>
+                        <div class="airbnb-card-distance">${prop.distanceHighlight || 'Zona Prime de Asunción'}</div>
+                        <div class="airbnb-card-dates">Estancia flexible de ${duration} meses</div>
 
-                        <div class="card-specs-row">
-                            <span><i class="fas fa-bed"></i> ${prop.bedrooms} Dorms</span> • 
-                            <span><i class="fas fa-bath"></i> ${prop.bathrooms} Baños</span> • 
-                            <span><i class="fas fa-ruler-combined"></i> ${prop.builtAreaM2} m²</span>
-                        </div>
-
-                        <div class="card-price-footer">
-                            <div>
-                                <div class="card-price-main">${formattedPrice} <span class="text-xs font-normal text-muted">/ mes</span></div>
-                                <div class="card-expenses text-xs text-muted">WiFi + Expensas incluidas</div>
-                            </div>
-                            <button class="btn btn-primary btn-sm card-book-action-btn" onclick="event.stopPropagation(); window.ModalManager.openPropertyModal(window.PROPERTIES_DATA.find(p => p.id === '${prop.id}'))">
-                                Reservar
-                            </button>
+                        <div class="airbnb-card-price-row">
+                            ${quote.discountPercent > 0 ? `<span class="price-strikethrough">${formattedOriginal}</span>` : ''}
+                            <span class="airbnb-price-val">${formattedPrice}</span>
+                            <span class="text-xs text-muted">/ mes</span>
                         </div>
                     </div>
                 </div>
@@ -492,13 +364,12 @@
         },
 
         initCardCarousel: function (cardElement, prop) {
-            const container = cardElement.querySelector(".card-carousel-container");
-            const images = cardElement.querySelectorAll(".card-image");
-            const dots = cardElement.querySelectorAll(".carousel-dots .dot");
-            const prevBtn = cardElement.querySelector(".card-carousel-btn.prev-btn");
-            const nextBtn = cardElement.querySelector(".card-carousel-btn.next-btn");
+            const images = cardElement.querySelectorAll(".airbnb-card-img");
+            const dots = cardElement.querySelectorAll(".airbnb-card-dots .dot");
+            const prevBtn = cardElement.querySelector(".card-nav-btn.prev-btn");
+            const nextBtn = cardElement.querySelector(".card-nav-btn.next-btn");
 
-            if (!container || images.length <= 1) return;
+            if (images.length <= 1) return;
 
             let currentIndex = 0;
 

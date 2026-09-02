@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zilla Flex | Marketplace de Alquileres de Media Estancia (1-11 meses)</title>
-    <meta name="description" content="Encuentra departamentos amoblados de 1 a 11 meses en Paraguay. Sin garantes, con WiFi 300+ Mbps y contratos 100% digitales.">
+    <title>Zilla Flex | Explorar Alojamientos de Media Estancia (1 a 11 meses)</title>
+    <meta name="description" content="Explora departamentos y residencias de diseño de 1 a 11 meses en Asunción y Paraguay. Sin garantes, con WiFi 500 Mbps y contratos digitales.">
 
     <!-- Google Fonts: Outfit & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
 
     <!-- FontAwesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -19,222 +19,326 @@
 
     <!-- Custom Modern Stylesheets -->
     <link rel="stylesheet" href="css/styles.css">
-    <link rel="stylesheet" href="css/landing.css">
 </head>
 <body>
 
-    <!-- 1. Header de Navegación Principal -->
-    <header class="site-navbar">
-        <div class="navbar-left">
+    <!-- 1. Header de Navegación Glassmorphic Estilo Airbnb -->
+    <header class="airbnb-glass-navbar">
+        <!-- Logo -->
+        <div class="navbar-brand-area">
             <a href="landing.html" class="brand-logo" title="Ir a la Landing Page">
                 <i class="fas fa-building-circle-check"></i>
                 <span>Zilla</span>
                 <span class="brand-badge-flex">Flex</span>
             </a>
-            
-            <a href="landing.html" class="nav-landing-link" style="margin-left: 14px; font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); text-decoration: none;">
-                <i class="fas fa-arrow-left"></i> Inicio / Landing
-            </a>
         </div>
 
-        <div class="navbar-right">
-            <!-- Conmutador de Rol (Arrendatario vs Propietario) -->
-            <button class="role-switcher-btn role-tenant-active" id="user-role-toggle-btn" title="Alternar entre modo Inquilino y Propietario">
+        <!-- Airbnb Search Capsule Flotante (Glassmorphism) -->
+        <div class="airbnb-search-capsule" id="airbnb-search-capsule-btn">
+            <button class="capsule-segment" id="capsule-where-btn">
+                <span class="capsule-label">Dónde</span>
+                <span class="capsule-val" id="capsule-where-val">Cualquier zona</span>
+            </button>
+            <span class="capsule-divider"></span>
+            <button class="capsule-segment" id="capsule-when-btn">
+                <span class="capsule-label">Estancia</span>
+                <span class="capsule-val" id="capsule-when-val">3 meses</span>
+            </button>
+            <span class="capsule-divider"></span>
+            <button class="capsule-segment capsule-search-action">
+                <span class="capsule-label">Filtros</span>
+                <span class="capsule-val">Buscar</span>
+                <div class="capsule-icon-circle">
+                    <i class="fas fa-search"></i>
+                </div>
+            </button>
+        </div>
+
+        <!-- Opciones de Usuario y Configuración -->
+        <div class="navbar-user-area">
+            <!-- Conmutador de Rol (Arrendatario / Propietario) -->
+            <button class="glass-role-btn role-tenant-active" id="user-role-toggle-btn" title="Alternar entre modo Inquilino y Propietario">
                 <i class="fas fa-laptop-house"></i>
-                <span class="role-label">Modo Arrendatario</span>
+                <span class="role-label">Inquilino</span>
             </button>
 
-            <!-- Conmutador Modo Oscuro / Claro -->
-            <button class="theme-toggle-btn" id="app-theme-toggle" title="Modo Oscuro / Claro">
+            <!-- Modo Oscuro / Claro -->
+            <button class="theme-toggle-btn glass-btn" id="app-theme-toggle" title="Modo Oscuro / Claro">
                 <i class="fas fa-moon"></i>
             </button>
 
-            <!-- Conmutador de Moneda Dual USD / PYG -->
-            <div class="currency-switcher-wrapper">
-                <button class="currency-toggle-btn active" data-currency="USD" title="Mostrar precios en Dólares">USD ($)</button>
-                <button class="currency-toggle-btn" data-currency="PYG" title="Mostrar precios en Guaraníes">PYG (₲)</button>
+            <!-- Moneda Dual USD / PYG -->
+            <div class="currency-switcher-wrapper glass-currency">
+                <button class="currency-toggle-btn active" data-currency="USD">USD</button>
+                <button class="currency-toggle-btn" data-currency="PYG">Gs.</button>
             </div>
 
-            <!-- Botón de Acción Principal (Dinámico según Rol) -->
-            <button class="btn btn-primary btn-sm" id="navbar-main-action-btn">
-                <i class="fas fa-calendar-check"></i>
-                <span>Mis Reservas</span>
-            </button>
-
-            <!-- Perfil de Usuario -->
-            <button class="user-profile-btn" id="user-profile-menu-btn" title="Mi Cuenta">
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Avatar" class="navbar-avatar">
+            <!-- Perfil de Usuario con Menú Glass -->
+            <button class="user-pill-btn glass-btn" id="user-profile-menu-btn" title="Mi Cuenta">
+                <i class="fas fa-bars"></i>
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Avatar" class="user-avatar-tiny">
             </button>
         </div>
     </header>
 
-    <!-- 2. Barra Superior de Filtros de Media Estancia (Sticky sobre el mapa) -->
-    <div class="search-filter-bar" id="search-filter-bar">
-        <div class="filter-controls-row">
-            <!-- Buscador por palabra clave -->
-            <div class="search-input-wrapper">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" id="search-input" placeholder="Buscar por edificio, calle o zona..." autocomplete="off">
-            </div>
+    <!-- 2. Barra Horizontal de Categorías con Iconos Estilo Airbnb (Glass Slider) -->
+    <nav class="airbnb-categories-bar">
+        <div class="categories-scroll-wrapper">
+            <button class="cat-nav-arrow prev-arrow" id="cat-scroll-left"><i class="fas fa-chevron-left"></i></button>
 
-            <!-- Selector de Zona / Barrio -->
-            <div class="filter-dropdown-wrapper">
-                <select class="filter-select" id="location-select">
-                    <option value="all">📍 Todas las Zonas Prime</option>
-                    <option value="Villa Morra">Villa Morra (Asunción)</option>
-                    <option value="Santa Teresa">Santa Teresa (Asunción)</option>
-                    <option value="Ycuá Satí">Ycuá Satí (Asunción)</option>
-                    <option value="Recoleta">Recoleta (Asunción)</option>
-                    <option value="Surubi'i">Surubi'i (M.R. Alonso)</option>
-                    <option value="San Bernardino">San Bernardino (Lago)</option>
-                </select>
-            </div>
-
-            <!-- Selector de Duración de Estancia (1 a 11 meses) -->
-            <div class="filter-dropdown-wrapper">
-                <select class="filter-select" id="duration-select">
-                    <option value="1">⏱️ 1 Mes (Base)</option>
-                    <option value="2">⏱️ 2 Meses (Base)</option>
-                    <option value="3" selected>⏱️ 3 Meses (8% OFF)</option>
-                    <option value="6">⏱️ 6 Meses (15% OFF)</option>
-                    <option value="9">⏱️ 9 Meses (22% OFF)</option>
-                    <option value="11">⏱️ 11 Meses (22% OFF)</option>
-                </select>
-            </div>
-
-            <!-- Popover de Rango de Precios -->
-            <div class="filter-dropdown-wrapper" id="price-filter-wrapper">
-                <button type="button" class="filter-dropdown-btn" id="price-dropdown-btn">
-                    <i class="fas fa-dollar-sign"></i>
-                    <span id="price-dropdown-label">Presupuesto</span>
-                    <i class="fas fa-chevron-down arrow-icon"></i>
+            <div class="airbnb-categories-track" id="airbnb-categories-track">
+                <button class="airbnb-category-item active" data-category="all">
+                    <i class="fas fa-globe"></i>
+                    <span>Todas</span>
                 </button>
-
-                <div class="filter-popover-menu" id="price-dropdown-popover">
-                    <div class="popover-header">
-                        <span class="popover-title">Rango de Precio Mensual</span>
-                        <div class="popover-curr-toggle">
-                            <button type="button" class="popover-curr-btn active" data-curr="USD">USD</button>
-                            <button type="button" class="popover-curr-btn" data-curr="PYG">Gs.</button>
-                        </div>
-                    </div>
-                    <div class="price-inputs-row">
-                        <div class="price-input-box">
-                            <label>Mínimo</label>
-                            <div class="input-with-symbol">
-                                <span class="curr-symbol" id="min-price-symbol">US$</span>
-                                <input type="number" id="filter-min-price" placeholder="Ej. 600" step="50">
-                            </div>
-                        </div>
-                        <span class="price-separator">-</span>
-                        <div class="price-input-box">
-                            <label>Máximo</label>
-                            <div class="input-with-symbol">
-                                <span class="curr-symbol" id="max-price-symbol">US$</span>
-                                <input type="number" id="filter-max-price" placeholder="Ej. 2500" step="50">
-                            </div>
-                        </div>
-                    </div>
-                    <div class="price-presets-list" id="price-presets-container"></div>
-                    <div class="popover-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" id="clear-price-btn">Borrar</button>
-                        <button type="button" class="btn btn-primary btn-sm" id="apply-price-btn">Aplicar</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Popover de Dormitorios -->
-            <div class="filter-dropdown-wrapper" id="rooms-filter-wrapper">
-                <button type="button" class="filter-dropdown-btn" id="rooms-dropdown-btn">
-                    <i class="fas fa-bed"></i>
-                    <span id="rooms-dropdown-label">Dormitorios</span>
-                    <i class="fas fa-chevron-down arrow-icon"></i>
+                <button class="airbnb-category-item" data-category="pool">
+                    <i class="fas fa-water-ladder"></i>
+                    <span>Con Piscina</span>
                 </button>
-
-                <div class="filter-popover-menu" id="rooms-dropdown-popover" style="min-width: 300px;">
-                    <div class="popover-header">
-                        <span class="popover-title">Dormitorios</span>
-                    </div>
-                    <div class="popover-section">
-                        <div class="segmented-control" id="bedrooms-segmented">
-                            <button type="button" class="segmented-btn active" data-rooms="0">Todos</button>
-                            <button type="button" class="segmented-btn" data-rooms="1">1</button>
-                            <button type="button" class="segmented-btn" data-rooms="2">2</button>
-                            <button type="button" class="segmented-btn" data-rooms="3">3+</button>
-                        </div>
-                    </div>
-                    <div class="popover-footer">
-                        <button type="button" class="btn btn-secondary btn-sm" id="clear-rooms-btn">Borrar</button>
-                        <button type="button" class="btn btn-primary btn-sm" id="apply-rooms-btn">Aplicar</button>
-                    </div>
-                </div>
+                <button class="airbnb-category-item" data-category="wfh">
+                    <i class="fas fa-laptop-code"></i>
+                    <span>Home Office 500M</span>
+                </button>
+                <button class="airbnb-category-item" data-category="views">
+                    <i class="fas fa-city"></i>
+                    <span>Vistas a la Ciudad</span>
+                </button>
+                <button class="airbnb-category-item" data-category="lake">
+                    <i class="fas fa-water"></i>
+                    <span>Frente al Lago</span>
+                </button>
+                <button class="airbnb-category-item" data-category="luxury">
+                    <i class="fas fa-gem"></i>
+                    <span>Penthouses VIP</span>
+                </button>
+                <button class="airbnb-category-item" data-category="pet_friendly">
+                    <i class="fas fa-paw"></i>
+                    <span>Pet Friendly</span>
+                </button>
+                <button class="airbnb-category-item" data-category="quincho">
+                    <i class="fas fa-fire-burner"></i>
+                    <span>Con Parrilla</span>
+                </button>
             </div>
 
-            <!-- Botón Limpiar Filtros -->
-            <button type="button" class="btn-clear-all-filters" id="reset-all-filters-btn" style="display: none;">
-                <i class="fas fa-rotate-left"></i> <span>Limpiar</span>
+            <button class="cat-nav-arrow next-arrow" id="cat-scroll-right"><i class="fas fa-chevron-right"></i></button>
+        </div>
+
+        <!-- Acciones a la Derecha: Botón de Filtros Airbnb & Toggle de Total -->
+        <div class="categories-actions-group">
+            <button class="airbnb-filters-trigger-btn glass-btn" id="open-airbnb-filters-modal-btn">
+                <i class="fas fa-sliders"></i>
+                <span>Filtros</span>
+                <span class="filters-badge" id="active-filters-count-badge" style="display: none;">0</span>
             </button>
-        </div>
 
-        <!-- Fila de Chips Rápidos de Comodidades Nómadas -->
-        <div class="amenities-quick-chips">
-            <span class="chips-label"><i class="fas fa-sparkles text-accent"></i> Filtros Flex:</span>
-            <button type="button" class="amenity-filter-chip active" data-amenity="wifi"><i class="fas fa-wifi text-primary"></i> WiFi 500M</button>
-            <button type="button" class="amenity-filter-chip" data-amenity="coworking"><i class="fas fa-laptop-code text-primary"></i> Espacio WFH</button>
-            <button type="button" class="amenity-filter-chip" data-amenity="pool"><i class="fas fa-water-ladder text-primary"></i> Piscina</button>
-            <button type="button" class="amenity-filter-chip" data-amenity="gym"><i class="fas fa-dumbbell text-primary"></i> Gimnasio</button>
-            <button type="button" class="amenity-filter-chip" data-amenity="pet_friendly"><i class="fas fa-paw text-primary"></i> Pet Friendly</button>
-            <button type="button" class="amenity-filter-chip" data-amenity="laundry"><i class="fas fa-jug-detergent text-primary"></i> Laundry</button>
-            <button type="button" class="amenity-filter-chip" data-amenity="security"><i class="fas fa-shield-halved text-primary"></i> Seguridad 24h</button>
-            <button type="button" class="amenity-filter-chip" data-amenity="quincho"><i class="fas fa-fire-burner text-primary"></i> Parrilla</button>
+            <div class="airbnb-total-switch-box glass-card">
+                <span class="switch-label">Mostrar total antes de imp.</span>
+                <label class="custom-toggle-switch">
+                    <input type="checkbox" id="toggle-total-price-switch">
+                    <span class="slider-round"></span>
+                </label>
+            </div>
         </div>
-    </div>
+    </nav>
 
-    <!-- 3. Contenedor Principal Split-Screen (55% Feed de Tarjetas / 45% Mapa Interactivo) -->
+    <!-- 3. Layout Principal Split-Screen (55% Tarjetas / 45% Mapa Interactivo) -->
     <main class="split-screen-container">
-        <!-- Columna Izquierda: Feed de Tarjetas Bento -->
+        <!-- Columna Izquierda: Grid de Tarjetas de Alojamiento Estilo Airbnb -->
         <section class="properties-feed-column" id="properties-feed-column">
             <div class="feed-header-info">
                 <div class="results-count" id="results-count-label">
-                    Cargando estancias disponibles...
-                </div>
-                <div class="map-sync-toggle">
-                    <input type="checkbox" id="sync-map-checkbox" checked>
-                    <label for="sync-map-checkbox">Mover mapa al filtrar</label>
+                    Cargando estancias en Asunción...
                 </div>
             </div>
 
-            <!-- Contenedor Dinámico de Tarjetas -->
-            <div class="properties-grid-container" id="properties-feed">
-                <!-- Skeleton Loaders de Carga -->
-                <div class="property-card-skeleton"></div>
-                <div class="property-card-skeleton"></div>
-                <div class="property-card-skeleton"></div>
+            <!-- Grid de Tarjetas Airbnb -->
+            <div class="airbnb-homes-grid" id="properties-feed">
+                <!-- Skeleton Loaders -->
+                <div class="airbnb-card-skeleton"></div>
+                <div class="airbnb-card-skeleton"></div>
+                <div class="airbnb-card-skeleton"></div>
+                <div class="airbnb-card-skeleton"></div>
             </div>
         </section>
 
-        <!-- Columna Derecha: Mapa Interactivo Leaflet -->
+        <!-- Columna Derecha: Mapa Interactivo con Pines de Precio Glassmorphism -->
         <section class="map-column-wrapper" id="map-column-wrapper">
+            <div class="map-floating-search-this-area" id="search-this-area-container">
+                <label class="glass-pill-checkbox">
+                    <input type="checkbox" id="sync-map-checkbox" checked>
+                    <span><i class="fas fa-arrows-rotate"></i> Buscar al mover el mapa</span>
+                </label>
+            </div>
+
             <div id="leaflet-map" class="map-container"></div>
             
-            <button class="map-recenter-btn" id="map-recenter-btn" title="Centrar en Asunción">
-                <i class="fas fa-crosshairs"></i> Centrar
+            <button class="map-recenter-btn glass-btn" id="map-recenter-btn" title="Centrar en Asunción">
+                <i class="fas fa-crosshairs"></i>
             </button>
         </section>
     </main>
 
-    <!-- 4. Botón Flotante para Alternar Vista en Móviles -->
-    <button class="mobile-view-btn" id="mobile-view-toggle">
-        <i class="fas fa-map-marked-alt"></i>
-        <span>Ver Mapa</span>
+    <!-- 4. Botón Flotante Airbnb "Mostrar Mapa / Mostrar Lista" -->
+    <button class="airbnb-floating-map-btn" id="mobile-view-toggle">
+        <i class="fas fa-map"></i>
+        <span>Mostrar mapa</span>
     </button>
 
-    <!-- 5. Modal de Detalle de Inmueble con Sticky Booking Card -->
+    <!-- 5. Modal Completo de Filtros Estilo Airbnb (Glassmorphism) -->
+    <div class="modal-container" id="airbnb-filters-modal">
+        <div class="modal-backdrop" id="close-airbnb-filters-backdrop"></div>
+        <div class="modal-dialog-large airbnb-filter-modal-dialog">
+            <div class="modal-top-bar">
+                <button class="modal-close-button" id="close-airbnb-filters-btn">&times;</button>
+                <span class="font-bold text-base">Filtros</span>
+                <div style="width: 24px;"></div>
+            </div>
+
+            <div class="modal-scrollable-content airbnb-filters-body">
+                <!-- Sección 1: Tipo de Lugar -->
+                <div class="filter-section-block">
+                    <h3 class="filter-section-heading">Tipo de lugar</h3>
+                    <p class="filter-section-sub">Busca departamentos enteros o espacios ejecutivos privados.</p>
+                    <div class="place-type-grid">
+                        <label class="place-type-card selected">
+                            <input type="radio" name="place-type" value="entire" checked>
+                            <span class="font-bold text-sm">Cualquier tipo</span>
+                            <span class="text-xs text-muted">Departamentos, casas y lofts de media estancia</span>
+                        </label>
+                        <label class="place-type-card">
+                            <input type="radio" name="place-type" value="room">
+                            <span class="font-bold text-sm">Studio / 1 Dorm</span>
+                            <span class="text-xs text-muted">Ideal para nómadas y ejecutivos solos</span>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Sección 2: Rango de Precios -->
+                <div class="filter-section-block">
+                    <h3 class="filter-section-heading">Rango de precios</h3>
+                    <p class="filter-section-sub">Precios mensuales para estancias flexibles con servicios.</p>
+                    
+                    <div class="price-inputs-grid-airbnb">
+                        <div class="price-input-glass-box">
+                            <label>Mínimo</label>
+                            <div class="symbol-input-wrap">
+                                <span class="curr-prefix" id="modal-curr-symbol-min">US$</span>
+                                <input type="number" id="modal-filter-min-price" placeholder="600" step="50">
+                            </div>
+                        </div>
+                        <div class="price-input-glass-box">
+                            <label>Máximo</label>
+                            <div class="symbol-input-wrap">
+                                <span class="curr-prefix" id="modal-curr-symbol-max">US$</span>
+                                <input type="number" id="modal-filter-max-price" placeholder="3000" step="50">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección 3: Duración de la Estancia -->
+                <div class="filter-section-block">
+                    <h3 class="filter-section-heading">Duración de la Estancia (Meses)</h3>
+                    <p class="filter-section-sub">Descuentos automáticos desde 3 meses en adelante.</p>
+                    <div class="duration-segmented-airbnb" id="modal-duration-segmented">
+                        <button type="button" class="segmented-btn" data-months="1">1 m</button>
+                        <button type="button" class="segmented-btn" data-months="2">2 m</button>
+                        <button type="button" class="segmented-btn active" data-months="3">3 m (-8%)</button>
+                        <button type="button" class="segmented-btn" data-months="6">6 m (-15%)</button>
+                        <button type="button" class="segmented-btn" data-months="9">9 m (-22%)</button>
+                        <button type="button" class="segmented-btn" data-months="11">11 m (-22%)</button>
+                    </div>
+                </div>
+
+                <!-- Sección 4: Habitaciones y Camas -->
+                <div class="filter-section-block">
+                    <h3 class="filter-section-heading">Habitaciones y Camas</h3>
+                    
+                    <div class="rooms-counter-row">
+                        <span>Dormitorios</span>
+                        <div class="segmented-control" id="modal-rooms-segmented">
+                            <button type="button" class="segmented-btn active" data-val="0">Cualquiera</button>
+                            <button type="button" class="segmented-btn" data-val="1">1</button>
+                            <button type="button" class="segmented-btn" data-val="2">2</button>
+                            <button type="button" class="segmented-btn" data-val="3">3</button>
+                            <button type="button" class="segmented-btn" data-val="4">4+</button>
+                        </div>
+                    </div>
+
+                    <div class="rooms-counter-row mt-3">
+                        <span>Baños</span>
+                        <div class="segmented-control" id="modal-baths-segmented">
+                            <button type="button" class="segmented-btn active" data-val="0">Cualquiera</button>
+                            <button type="button" class="segmented-btn" data-val="1">1</button>
+                            <button type="button" class="segmented-btn" data-val="2">2</button>
+                            <button type="button" class="segmented-btn" data-val="3">3+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Sección 5: Servicios Destacados -->
+                <div class="filter-section-block">
+                    <h3 class="filter-section-heading">Servicios y Equipamiento</h3>
+                    <div class="amenities-checkboxes-grid-airbnb">
+                        <label class="amenity-checkbox-card">
+                            <input type="checkbox" class="airbnb-filter-checkbox" value="wifi" checked>
+                            <i class="fas fa-wifi"></i>
+                            <span>WiFi 500 Mbps</span>
+                        </label>
+                        <label class="amenity-checkbox-card">
+                            <input type="checkbox" class="airbnb-filter-checkbox" value="pool">
+                            <i class="fas fa-water-ladder"></i>
+                            <span>Piscina</span>
+                        </label>
+                        <label class="amenity-checkbox-card">
+                            <input type="checkbox" class="airbnb-filter-checkbox" value="garage">
+                            <i class="fas fa-car"></i>
+                            <span>Estacionamiento gratuito</span>
+                        </label>
+                        <label class="amenity-checkbox-card">
+                            <input type="checkbox" class="airbnb-filter-checkbox" value="air_conditioning">
+                            <i class="fas fa-snowflake"></i>
+                            <span>Aire acondicionado</span>
+                        </label>
+                        <label class="amenity-checkbox-card">
+                            <input type="checkbox" class="airbnb-filter-checkbox" value="pet_friendly">
+                            <i class="fas fa-paw"></i>
+                            <span>Acepta mascotas</span>
+                        </label>
+                        <label class="amenity-checkbox-card">
+                            <input type="checkbox" class="airbnb-filter-checkbox" value="gym">
+                            <i class="fas fa-dumbbell"></i>
+                            <span>Gimnasio</span>
+                        </label>
+                        <label class="amenity-checkbox-card">
+                            <input type="checkbox" class="airbnb-filter-checkbox" value="quincho">
+                            <i class="fas fa-fire-burner"></i>
+                            <span>Quincho / Parrilla</span>
+                        </label>
+                        <label class="amenity-checkbox-card">
+                            <input type="checkbox" class="airbnb-filter-checkbox" value="security">
+                            <i class="fas fa-shield-halved"></i>
+                            <span>Seguridad 24 horas</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer Fijo de Filtros -->
+            <div class="modal-footer-sticky airbnb-filters-footer">
+                <button type="button" class="btn-clear-underline" id="modal-clear-all-filters-btn">Quitar todos</button>
+                <button type="button" class="btn btn-primary" id="modal-apply-filters-btn">Mostrar alojamientos</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Modal de Detalle con Sticky Booking Card (Glassmorphism) -->
     <div class="modal-container" id="property-modal-container">
         <div class="modal-backdrop" id="property-modal-backdrop"></div>
-        <div class="modal-dialog-large" id="property-modal-dialog">
+        <div class="modal-dialog-large glass-modal-dialog" id="property-modal-dialog">
             <div class="modal-top-bar">
-                <span class="font-bold text-base"><i class="fas fa-bolt text-accent"></i> Zilla Flex • Alquiler de Media Estancia</span>
+                <span class="font-bold text-base"><i class="fas fa-bolt text-accent"></i> Zilla Flex • Media Estancia</span>
                 <button class="modal-close-button" id="close-property-modal">&times;</button>
             </div>
             <div class="modal-scrollable-content" id="property-modal-content">
@@ -243,28 +347,28 @@
         </div>
     </div>
 
-    <!-- 6. Modal de Publicación de Unidad (Modo Propietario) -->
+    <!-- 7. Modal de Publicación de Unidad (Host Mode) -->
     <div class="modal-container" id="publish-modal-container">
         <div class="modal-backdrop" id="publish-modal-backdrop"></div>
-        <div class="modal-dialog-large" style="max-width: 760px; height: 90vh;">
+        <div class="modal-dialog-large glass-modal-dialog" style="max-width: 760px; height: 90vh;">
             <div class="modal-top-bar">
-                <span class="font-bold text-base"><i class="fas fa-key text-accent"></i> Publicar Unidad para Media Estancia (Host Zilla)</span>
+                <span class="font-bold text-base"><i class="fas fa-key text-accent"></i> Publicar Unidad para Media Estancia</span>
                 <button class="modal-close-button" id="close-publish-modal">&times;</button>
             </div>
             <div class="modal-scrollable-content" style="padding: 28px;">
                 <div class="form-group mb-4">
-                    <label class="font-bold text-sm">Título del Anuncio</label>
-                    <input type="text" id="pub-title" class="filter-select w-full" placeholder="Ej. Studio de Diseño con Balcón y Vista en Torre Santa Teresa" required>
+                    <label class="font-bold text-sm">Título del Alojamiento</label>
+                    <input type="text" id="pub-title" class="filter-select w-full" placeholder="Ej. Studio de Diseño con Balcón en Torre Santa Teresa" required>
                 </div>
                 <div class="form-grid-2 mb-4">
                     <div class="form-group">
-                        <label class="font-bold text-sm">Barrio / Ciudad</label>
+                        <label class="font-bold text-sm">Barrio / Zona</label>
                         <select id="pub-neighborhood" class="filter-select w-full">
                             <option value="Santa Teresa">Santa Teresa (Asunción)</option>
                             <option value="Villa Morra">Villa Morra (Asunción)</option>
                             <option value="Ycuá Satí">Ycuá Satí (Asunción)</option>
                             <option value="Recoleta">Recoleta (Asunción)</option>
-                            <option value="Surubi'i">Surubi'i (Mariano R. Alonso)</option>
+                            <option value="Surubi'i">Surubi'i (M.R. Alonso)</option>
                             <option value="San Bernardino">San Bernardino</option>
                         </select>
                     </div>
@@ -278,7 +382,7 @@
                         <label class="font-bold text-sm">Velocidad de WiFi (Mbps)</label>
                         <select id="pub-wifi" class="filter-select w-full">
                             <option value="300">300 Mbps Fibra Óptica</option>
-                            <option value="500" selected>500 Mbps Fibra Óptica Dedicada</option>
+                            <option value="500" selected>500 Mbps Fibra Dedicada</option>
                             <option value="1000">1 Gbps Simétrico</option>
                         </select>
                     </div>

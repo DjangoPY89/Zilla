@@ -1,18 +1,23 @@
-// Motor de Filtrado Reactivo y Búsqueda para Zilla Flex Media Estancia
+// Motor de Filtrado y Categorías Estilo Airbnb Homes para Zilla Flex
 (function () {
     const defaultFilters = {
         keyword: "",
         department: "all",
         neighborhood: "all",
-        durationMonths: 3, // Duración predeterminada (1 a 11 meses)
-        startMonth: "sep",
-        priceCurrency: "USD", // 'USD' o 'PYG'
+        category: "all", // 'pool', 'wfh', 'lake', 'views', 'luxury', 'pet_friendly'
+        durationMonths: 3, // Duración (1 a 11 meses)
+        placeType: "entire", // 'entire' | 'room'
+        priceCurrency: "USD",
         minPriceUSD: null,
         maxPriceUSD: null,
         minPricePYG: null,
         maxPricePYG: null,
         minBedrooms: 0,
-        amenities: ["wifi"] // WiFi verificado por defecto
+        minBeds: 0,
+        minBathrooms: 0,
+        instantBookOnly: false,
+        selfCheckIn: false,
+        amenities: []
     };
 
     let currentFilters = { ...defaultFilters };
@@ -34,16 +39,20 @@
             let count = 0;
             if (currentFilters.keyword) count++;
             if (currentFilters.neighborhood !== "all") count++;
+            if (currentFilters.category !== "all") count++;
             if (currentFilters.durationMonths !== 3) count++;
             if (currentFilters.minPriceUSD || currentFilters.maxPriceUSD || currentFilters.minPricePYG || currentFilters.maxPricePYG) count++;
             if (currentFilters.minBedrooms > 0) count++;
-            if (currentFilters.amenities && currentFilters.amenities.length > 1) count += (currentFilters.amenities.length - 1);
+            if (currentFilters.minBathrooms > 0) count++;
+            if (currentFilters.instantBookOnly) count++;
+            if (currentFilters.selfCheckIn) count++;
+            if (currentFilters.amenities && currentFilters.amenities.length > 0) count += currentFilters.amenities.length;
             return count;
         },
 
         resetFilters: function () {
             currentFilters = { ...defaultFilters };
-            currentFilters.amenities = ["wifi"];
+            currentFilters.amenities = [];
 
             // Reset UI inputs
             const searchInput = document.getElementById("search-input");
@@ -55,30 +64,30 @@
             const durationSelect = document.getElementById("duration-select");
             if (durationSelect) durationSelect.value = "3";
 
-            const minPriceInput = document.getElementById("filter-min-price");
-            if (minPriceInput) minPriceInput.value = "";
-
-            const maxPriceInput = document.getElementById("filter-max-price");
-            if (maxPriceInput) maxPriceInput.value = "";
-
-            // Reset room buttons
-            document.querySelectorAll(".segmented-btn[data-rooms]").forEach(b => {
-                b.classList.toggle("active", b.dataset.rooms === "0");
+            // Reset category chips
+            document.querySelectorAll(".airbnb-category-item").forEach(el => {
+                el.classList.toggle("active", el.dataset.category === "all");
             });
 
-            // Reset amenities chips
-            document.querySelectorAll(".amenity-filter-chip").forEach(el => {
-                el.classList.toggle("active", el.dataset.amenity === "wifi");
+            // Reset modal inputs
+            const minInput = document.getElementById("modal-filter-min-price");
+            const maxInput = document.getElementById("modal-filter-max-price");
+            if (minInput) minInput.value = "";
+            if (maxInput) maxInput.value = "";
+
+            document.querySelectorAll(".segmented-btn").forEach(b => {
+                const val = b.dataset.val;
+                b.classList.toggle("active", val === "0" || val === "all");
             });
 
-            // Trigger UI update events
+            document.querySelectorAll(".airbnb-filter-checkbox").forEach(cb => cb.checked = false);
+
             window.dispatchEvent(new CustomEvent("filtersReset"));
             this.applyFilters();
         },
 
         applyFilters: function () {
             const allProperties = window.PROPERTIES_DATA || [];
-            const rate = (window.CurrencyManager && window.CurrencyManager.rate) || 7950;
             const duration = parseInt(currentFilters.durationMonths, 10) || 3;
 
             const filtered = allProperties.filter(prop => {
@@ -95,18 +104,29 @@
                     if (!matchText.includes(kw)) return false;
                 }
 
-                // Filtro por Ubicación (Barrio o Ciudad)
+                // Filtro por Categoría Airbnb (Piscina, WFH, Lago, Vistas, etc.)
+                if (currentFilters.category !== "all") {
+                    if (currentFilters.category === "pool" && (!prop.amenities || !prop.amenities.includes("pool"))) return false;
+                    else if (currentFilters.category === "wfh" && (prop.wifiSpeedMbps || 0) < 400 && !prop.wfhSetup) return false;
+                    else if (currentFilters.category === "lake" && prop.city !== "San Bernardino") return false;
+                    else if (currentFilters.category === "views" && (!prop.amenities || !prop.amenities.includes("terrace"))) return false;
+                    else if (currentFilters.category === "luxury" && prop.tier !== "platinum") return false;
+                    else if (currentFilters.category === "pet_friendly" && (!prop.amenities || !prop.amenities.includes("pet_friendly"))) return false;
+                    else if (currentFilters.category === "quincho" && (!prop.amenities || !prop.amenities.includes("quincho"))) return false;
+                }
+
+                // Filtro por Ubicación
                 if (currentFilters.neighborhood !== "all") {
                     if (prop.neighborhood !== currentFilters.neighborhood && prop.city !== currentFilters.neighborhood) {
                         return false;
                     }
                 }
 
-                // Filtro por Duración de Estancia (1 a 11 meses)
+                // Filtro por Duración de Estancia
                 if (prop.minStayMonths && prop.minStayMonths > duration) return false;
                 if (prop.maxStayMonths && prop.maxStayMonths < duration) return false;
 
-                // Precio dinámico mensual con descuento aplicado
+                // Precio dinámico mensual
                 const quote = window.PricingEngine ? window.PricingEngine.calculateQuote(prop.priceUSD, duration) : { monthlyRentUSD: prop.priceUSD, monthlyRentPYG: prop.pricePYG };
                 const propPriceUSD = quote.monthlyRentUSD;
                 const propPricePYG = quote.monthlyRentPYG;
@@ -119,15 +139,24 @@
                     if (currentFilters.maxPriceUSD && propPriceUSD > currentFilters.maxPriceUSD) return false;
                 }
 
-                // Filtro por Habitaciones (Mínimo)
+                // Filtro por Habitaciones
                 if (currentFilters.minBedrooms > 0) {
                     if ((prop.bedrooms || 0) < currentFilters.minBedrooms) return false;
                 }
 
-                // Filtro por Extras / Amenities
+                // Filtro por Baños
+                if (currentFilters.minBathrooms > 0) {
+                    if ((prop.bathrooms || 0) < currentFilters.minBathrooms) return false;
+                }
+
+                // Filtro por Camas
+                if (currentFilters.minBeds > 0) {
+                    if ((prop.bedsCount || 1) < currentFilters.minBeds) return false;
+                }
+
+                // Filtro por Amenities
                 if (currentFilters.amenities && currentFilters.amenities.length > 0) {
                     const hasAllAmenities = currentFilters.amenities.every(amenity => {
-                        if (amenity === "wifi") return (prop.wifiSpeedMbps || 0) >= 300;
                         return prop.amenities && prop.amenities.includes(amenity);
                     });
                     if (!hasAllAmenities) return false;
@@ -136,7 +165,7 @@
                 return true;
             });
 
-            // Disparar evento con los resultados filtrados y filtros activos
+            // Disparar evento
             window.dispatchEvent(new CustomEvent("propertiesFiltered", {
                 detail: {
                     properties: filtered,
