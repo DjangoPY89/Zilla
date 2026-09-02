@@ -1,0 +1,11 @@
+# Dependencias
+node_modules/
+package-lock.json
+
+# Sistema y logs
+.DS_Store
+*.log
+.env
+
+# Antigravity artifacts
+.system_generated/

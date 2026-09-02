@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zilla Flex | Marketplace de Alquileres de Media Estancia (1-11 meses)</title>
+    <meta name="description" content="Encuentra departamentos amoblados de 1 a 11 meses en Paraguay. Sin garantes, con WiFi 300+ Mbps y contratos 100% digitales.">
+
+    <!-- Google Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+
+    <!-- Custom Modern Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/landing.css">
+</head>
+<body>
+
+    <!-- 1. Header de Navegación Principal -->
+    <header class="site-navbar">
+        <div class="navbar-left">
+            <a href="landing.html" class="brand-logo" title="Ir a la Landing Page">
+                <i class="fas fa-building-circle-check"></i>
+                <span>Zilla</span>
+                <span class="brand-badge-flex">Flex</span>
+            </a>
+            
+            <a href="landing.html" class="nav-landing-link" style="margin-left: 14px; font-size: 0.82rem; font-weight: 700; color: var(--text-secondary); text-decoration: none;">
+                <i class="fas fa-arrow-left"></i> Inicio / Landing
+            </a>
+        </div>
+
+        <div class="navbar-right">
+            <!-- Conmutador de Rol (Arrendatario vs Propietario) -->
+            <button class="role-switcher-btn role-tenant-active" id="user-role-toggle-btn" title="Alternar entre modo Inquilino y Propietario">
+                <i class="fas fa-laptop-house"></i>
+                <span class="role-label">Modo Arrendatario</span>
+            </button>
+
+            <!-- Conmutador Modo Oscuro / Claro -->
+            <button class="theme-toggle-btn" id="app-theme-toggle" title="Modo Oscuro / Claro">
+                <i class="fas fa-moon"></i>
+            </button>
+
+            <!-- Conmutador de Moneda Dual USD / PYG -->
+            <div class="currency-switcher-wrapper">
+                <button class="currency-toggle-btn active" data-currency="USD" title="Mostrar precios en Dólares">USD ($)</button>
+                <button class="currency-toggle-btn" data-currency="PYG" title="Mostrar precios en Guaraníes">PYG (₲)</button>
+            </div>
+
+            <!-- Botón de Acción Principal (Dinámico según Rol) -->
+            <button class="btn btn-primary btn-sm" id="navbar-main-action-btn">
+                <i class="fas fa-calendar-check"></i>
+                <span>Mis Reservas</span>
+            </button>
+
+            <!-- Perfil de Usuario -->
+            <button class="user-profile-btn" id="user-profile-menu-btn" title="Mi Cuenta">
+                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Avatar" class="navbar-avatar">
+            </button>
+        </div>
+    </header>
+
+    <!-- 2. Barra Superior de Filtros de Media Estancia (Sticky sobre el mapa) -->
+    <div class="search-filter-bar" id="search-filter-bar">
+        <div class="filter-controls-row">
+            <!-- Buscador por palabra clave -->
+            <div class="search-input-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" placeholder="Buscar por edificio, calle o zona..." autocomplete="off">
+            </div>
+
+            <!-- Selector de Zona / Barrio -->
+            <div class="filter-dropdown-wrapper">
+                <select class="filter-select" id="location-select">
+                    <option value="all">📍 Todas las Zonas Prime</option>
+                    <option value="Villa Morra">Villa Morra (Asunción)</option>
+                    <option value="Santa Teresa">Santa Teresa (Asunción)</option>
+                    <option value="Ycuá Satí">Ycuá Satí (Asunción)</option>
+                    <option value="Recoleta">Recoleta (Asunción)</option>
+                    <option value="Surubi'i">Surubi'i (M.R. Alonso)</option>
+                    <option value="San Bernardino">San Bernardino (Lago)</option>
+                </select>
+            </div>
+
+            <!-- Selector de Duración de Estancia (1 a 11 meses) -->
+            <div class="filter-dropdown-wrapper">
+                <select class="filter-select" id="duration-select">
+                    <option value="1">⏱️ 1 Mes (Base)</option>
+                    <option value="2">⏱️ 2 Meses (Base)</option>
+                    <option value="3" selected>⏱️ 3 Meses (8% OFF)</option>
+                    <option value="6">⏱️ 6 Meses (15% OFF)</option>
+                    <option value="9">⏱️ 9 Meses (22% OFF)</option>
+                    <option value="11">⏱️ 11 Meses (22% OFF)</option>
+                </select>
+            </div>
+
+            <!-- Popover de Rango de Precios -->
+            <div class="filter-dropdown-wrapper" id="price-filter-wrapper">
+                <button type="button" class="filter-dropdown-btn" id="price-dropdown-btn">
+                    <i class="fas fa-dollar-sign"></i>
+                    <span id="price-dropdown-label">Presupuesto</span>
+                    <i class="fas fa-chevron-down arrow-icon"></i>
+                </button>
+
+                <div class="filter-popover-menu" id="price-dropdown-popover">
+                    <div class="popover-header">
+                        <span class="popover-title">Rango de Precio Mensual</span>
+                        <div class="popover-curr-toggle">
+                            <button type="button" class="popover-curr-btn active" data-curr="USD">USD</button>
+                            <button type="button" class="popover-curr-btn" data-curr="PYG">Gs.</button>
+                        </div>
+                    </div>
+                    <div class="price-inputs-row">
+                        <div class="price-input-box">
+                            <label>Mínimo</label>
+                            <div class="input-with-symbol">
+                                <span class="curr-symbol" id="min-price-symbol">US$</span>
+                                <input type="number" id="filter-min-price" placeholder="Ej. 600" step="50">
+                            </div>
+                        </div>
+                        <span class="price-separator">-</span>
+                        <div class="price-input-box">
+                            <label>Máximo</label>
+                            <div class="input-with-symbol">
+                                <span class="curr-symbol" id="max-price-symbol">US$</span>
+                                <input type="number" id="filter-max-price" placeholder="Ej. 2500" step="50">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="price-presets-list" id="price-presets-container"></div>
+                    <div class="popover-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" id="clear-price-btn">Borrar</button>
+                        <button type="button" class="btn btn-primary btn-sm" id="apply-price-btn">Aplicar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popover de Dormitorios -->
+            <div class="filter-dropdown-wrapper" id="rooms-filter-wrapper">
+                <button type="button" class="filter-dropdown-btn" id="rooms-dropdown-btn">
+                    <i class="fas fa-bed"></i>
+                    <span id="rooms-dropdown-label">Dormitorios</span>
+                    <i class="fas fa-chevron-down arrow-icon"></i>
+                </button>
+
+                <div class="filter-popover-menu" id="rooms-dropdown-popover" style="min-width: 300px;">
+                    <div class="popover-header">
+                        <span class="popover-title">Dormitorios</span>
+                    </div>
+                    <div class="popover-section">
+                        <div class="segmented-control" id="bedrooms-segmented">
+                            <button type="button" class="segmented-btn active" data-rooms="0">Todos</button>
+                            <button type="button" class="segmented-btn" data-rooms="1">1</button>
+                            <button type="button" class="segmented-btn" data-rooms="2">2</button>
+                            <button type="button" class="segmented-btn" data-rooms="3">3+</button>
+                        </div>
+                    </div>
+                    <div class="popover-footer">
+                        <button type="button" class="btn btn-secondary btn-sm" id="clear-rooms-btn">Borrar</button>
+                        <button type="button" class="btn btn-primary btn-sm" id="apply-rooms-btn">Aplicar</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Botón Limpiar Filtros -->
+            <button type="button" class="btn-clear-all-filters" id="reset-all-filters-btn" style="display: none;">
+                <i class="fas fa-rotate-left"></i> <span>Limpiar</span>
+            </button>
+        </div>
+
+        <!-- Fila de Chips Rápidos de Comodidades Nómadas -->
+        <div class="amenities-quick-chips">
+            <span class="chips-label"><i class="fas fa-sparkles text-accent"></i> Filtros Flex:</span>
+            <button type="button" class="amenity-filter-chip active" data-amenity="wifi"><i class="fas fa-wifi text-primary"></i> WiFi 500M</button>
+            <button type="button" class="amenity-filter-chip" data-amenity="coworking"><i class="fas fa-laptop-code text-primary"></i> Espacio WFH</button>
+            <button type="button" class="amenity-filter-chip" data-amenity="pool"><i class="fas fa-water-ladder text-primary"></i> Piscina</button>
+            <button type="button" class="amenity-filter-chip" data-amenity="gym"><i class="fas fa-dumbbell text-primary"></i> Gimnasio</button>
+            <button type="button" class="amenity-filter-chip" data-amenity="pet_friendly"><i class="fas fa-paw text-primary"></i> Pet Friendly</button>
+            <button type="button" class="amenity-filter-chip" data-amenity="laundry"><i class="fas fa-jug-detergent text-primary"></i> Laundry</button>
+            <button type="button" class="amenity-filter-chip" data-amenity="security"><i class="fas fa-shield-halved text-primary"></i> Seguridad 24h</button>
+            <button type="button" class="amenity-filter-chip" data-amenity="quincho"><i class="fas fa-fire-burner text-primary"></i> Parrilla</button>
+        </div>
+    </div>
+
+    <!-- 3. Contenedor Principal Split-Screen (55% Feed de Tarjetas / 45% Mapa Interactivo) -->
+    <main class="split-screen-container">
+        <!-- Columna Izquierda: Feed de Tarjetas Bento -->
+        <section class="properties-feed-column" id="properties-feed-column">
+            <div class="feed-header-info">
+                <div class="results-count" id="results-count-label">
+                    Cargando estancias disponibles...
+                </div>
+                <div class="map-sync-toggle">
+                    <input type="checkbox" id="sync-map-checkbox" checked>
+                    <label for="sync-map-checkbox">Mover mapa al filtrar</label>
+                </div>
+            </div>
+
+            <!-- Contenedor Dinámico de Tarjetas -->
+            <div class="properties-grid-container" id="properties-feed">
+                <!-- Skeleton Loaders de Carga -->
+                <div class="property-card-skeleton"></div>
+                <div class="property-card-skeleton"></div>
+                <div class="property-card-skeleton"></div>
+            </div>
+        </section>
+
+        <!-- Columna Derecha: Mapa Interactivo Leaflet -->
+        <section class="map-column-wrapper" id="map-column-wrapper">
+            <div id="leaflet-map" class="map-container"></div>
+            
+            <button class="map-recenter-btn" id="map-recenter-btn" title="Centrar en Asunción">
+                <i class="fas fa-crosshairs"></i> Centrar
+            </button>
+        </section>
+    </main>
+
+    <!-- 4. Botón Flotante para Alternar Vista en Móviles -->
+    <button class="mobile-view-btn" id="mobile-view-toggle">
+        <i class="fas fa-map-marked-alt"></i>
+        <span>Ver Mapa</span>
+    </button>
+
+    <!-- 5. Modal de Detalle de Inmueble con Sticky Booking Card -->
+    <div class="modal-container" id="property-modal-container">
+        <div class="modal-backdrop" id="property-modal-backdrop"></div>
+        <div class="modal-dialog-large" id="property-modal-dialog">
+            <div class="modal-top-bar">
+                <span class="font-bold text-base"><i class="fas fa-bolt text-accent"></i> Zilla Flex • Alquiler de Media Estancia</span>
+                <button class="modal-close-button" id="close-property-modal">&times;</button>
+            </div>
+            <div class="modal-scrollable-content" id="property-modal-content">
+                <!-- Se inyecta dinámicamente vía js/modal.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Modal de Publicación de Unidad (Modo Propietario) -->
+    <div class="modal-container" id="publish-modal-container">
+        <div class="modal-backdrop" id="publish-modal-backdrop"></div>
+        <div class="modal-dialog-large" style="max-width: 760px; height: 90vh;">
+            <div class="modal-top-bar">
+                <span class="font-bold text-base"><i class="fas fa-key text-accent"></i> Publicar Unidad para Media Estancia (Host Zilla)</span>
+                <button class="modal-close-button" id="close-publish-modal">&times;</button>
+            </div>
+            <div class="modal-scrollable-content" style="padding: 28px;">
+                <div class="form-group mb-4">
+                    <label class="font-bold text-sm">Título del Anuncio</label>
+                    <input type="text" id="pub-title" class="filter-select w-full" placeholder="Ej. Studio de Diseño con Balcón y Vista en Torre Santa Teresa" required>
+                </div>
+                <div class="form-grid-2 mb-4">
+                    <div class="form-group">
+                        <label class="font-bold text-sm">Barrio / Ciudad</label>
+                        <select id="pub-neighborhood" class="filter-select w-full">
+                            <option value="Santa Teresa">Santa Teresa (Asunción)</option>
+                            <option value="Villa Morra">Villa Morra (Asunción)</option>
+                            <option value="Ycuá Satí">Ycuá Satí (Asunción)</option>
+                            <option value="Recoleta">Recoleta (Asunción)</option>
+                            <option value="Surubi'i">Surubi'i (Mariano R. Alonso)</option>
+                            <option value="San Bernardino">San Bernardino</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-bold text-sm">Tarifa Base Mensual (USD)</label>
+                        <input type="number" id="pub-price-usd" class="filter-select w-full" placeholder="Ej. 1100" required>
+                    </div>
+                </div>
+                <div class="form-grid-2 mb-4">
+                    <div class="form-group">
+                        <label class="font-bold text-sm">Velocidad de WiFi (Mbps)</label>
+                        <select id="pub-wifi" class="filter-select w-full">
+                            <option value="300">300 Mbps Fibra Óptica</option>
+                            <option value="500" selected>500 Mbps Fibra Óptica Dedicada</option>
+                            <option value="1000">1 Gbps Simétrico</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-bold text-sm">Dormitorios y Baños</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="number" id="pub-bedrooms" class="filter-select" placeholder="Dorms" value="1">
+                            <input type="number" id="pub-bathrooms" class="filter-select" placeholder="Baños" value="1">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group mb-4">
+                    <label class="font-bold text-sm">Descripción & Espacio de Trabajo</label>
+                    <textarea id="pub-description" class="filter-select w-full" rows="3" placeholder="Describe los muebles, amenidades, velocidad de internet y equipamiento WFH..."></textarea>
+                </div>
+                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;">
+                    <button type="button" class="btn btn-secondary" onclick="window.PublishManager.close()">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="publish-submit-form"><i class="fas fa-check-circle"></i> Publicar y Activar Unidad</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet Map JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Scripts de la Aplicación -->
+    <script src="js/data.js"></script>
+    <script src="js/currency.js"></script>
+    <script src="js/pricing.js"></script>
+    <script src="js/auth-roles.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/filter.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/checkout.js"></script>
+    <script src="js/ai-concierge.js"></script>
+    <script src="js/publish.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>

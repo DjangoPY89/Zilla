@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zilla Flex | Alquileres de Media Estancia (1-11 meses) en Paraguay</title>
+    <meta name="description" content="Plataforma líder de alquileres flexibles amoblados de 1 a 11 meses en Asunción y Paraguay. Sin garantes, con WiFi 300+ Mbps verificado y contratos digitales instantáneos.">
+
+    <!-- Google Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Custom Landing Stylesheet -->
+    <link rel="stylesheet" href="css/landing.css">
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+
+    <!-- 1. Barra de Navegación de la Landing Page -->
+    <header class="landing-navbar">
+        <div class="brand-wrapper">
+            <a href="landing.html" class="brand-logo" style="color: var(--primary); display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1.45rem;">
+                <i class="fas fa-building-circle-check"></i>
+                <span>Zilla</span>
+                <span class="brand-badge-flex">Flex</span>
+            </a>
+        </div>
+
+        <nav class="nav-center-links">
+            <a href="#experiencias" class="nav-link">Cómo Funciona</a>
+            <a href="#destacados" class="nav-link">Estancias Nómadas</a>
+            <a href="#propietarios" class="nav-link">Para Propietarios</a>
+            <a href="#faq" class="nav-link">Preguntas Frecuentes</a>
+        </nav>
+
+        <div class="nav-actions-group">
+            <!-- Conmutador Modo Oscuro / Claro -->
+            <button class="theme-toggle-btn" id="landing-theme-toggle" title="Alternar Modo Oscuro/Claro">
+                <i class="fas fa-moon"></i>
+            </button>
+
+            <!-- Conmutador Moneda Dual USD / PYG -->
+            <div class="currency-switcher-wrapper" style="margin: 0;">
+                <button class="currency-toggle-btn active" data-currency="USD">USD ($)</button>
+                <button class="currency-toggle-btn" data-currency="PYG">PYG (₲)</button>
+            </div>
+
+            <!-- Botón de Conexión a la App de Búsqueda -->
+            <a href="index.html" class="btn btn-primary btn-sm">
+                <i class="fas fa-compass"></i>
+                <span>Explorar Mapa</span>
+            </a>
+        </div>
+    </header>
+
+    <!-- 2. Hero Section Inmersivo -->
+    <section class="hero-section">
+        <div class="landing-container">
+            <div class="hero-pill-badge">
+                <i class="fas fa-bolt text-accent"></i> Alquileres Flexibles de 1 a 11 Meses • Sin Garantes
+            </div>
+
+            <h1 class="hero-title">
+                Vive y trabaja donde quieras con <span class="gradient-text">Zilla Flex Paraguay</span>
+            </h1>
+
+            <p class="hero-subtitle">
+                Departamentos de diseño 100% amoblados, con WiFi 300+ Mbps de alta velocidad, servicios incluidos y contratos digitales inmediatos para nómadas digitales, ejecutivos y locales en transición.
+            </p>
+
+            <!-- Buscador Centrado de Vanguardia -->
+            <div class="hero-search-card">
+                <!-- Zona / Barrio -->
+                <div class="search-field-box">
+                    <span class="field-label"><i class="fas fa-location-dot text-primary"></i> Ubicación</span>
+                    <select class="field-select" id="hero-location-select">
+                        <option value="all">📍 Todas las Zonas Prime</option>
+                        <option value="Villa Morra" selected>Asunción - Villa Morra</option>
+                        <option value="Santa Teresa">Asunción - Santa Teresa</option>
+                        <option value="Ycuá Satí">Asunción - Ycuá Satí</option>
+                        <option value="Recoleta">Asunción - Recoleta</option>
+                        <option value="Surubi'i">M.R. Alonso - Surubi'i</option>
+                        <option value="San Bernardino">San Bernardino (Lago Ypacaraí)</option>
+                    </select>
+                </div>
+
+                <!-- Mes de Inicio -->
+                <div class="search-field-box">
+                    <span class="field-label"><i class="fas fa-calendar-alt text-primary"></i> Mes de Entrada</span>
+                    <select class="field-select" id="hero-month-select">
+                        <option value="sep">Septiembre 2026 (Inmediato)</option>
+                        <option value="oct">Octubre 2026</option>
+                        <option value="nov">Noviembre 2026</option>
+                        <option value="dec">Diciembre 2026</option>
+                        <option value="jan">Enero 2027</option>
+                    </select>
+                </div>
+
+                <!-- Duración de la Estancia -->
+                <div class="search-field-box">
+                    <span class="field-label"><i class="fas fa-clock text-primary"></i> Duración de Estancia</span>
+                    <select class="field-select" id="hero-duration-select">
+                        <option value="1">1 Mes (Tarifa Base)</option>
+                        <option value="2">2 Meses (Tarifa Base)</option>
+                        <option value="3" selected>3 Meses (8% Descuento)</option>
+                        <option value="6">6 Meses (15% Descuento)</option>
+                        <option value="9">9 Meses (22% Descuento)</option>
+                        <option value="11">11 Meses (22% Descuento Máximo)</option>
+                    </select>
+                </div>
+
+                <!-- CTA Button -->
+                <button type="button" class="hero-cta-btn" id="hero-search-submit">
+                    <span>Buscar Estancias</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Barra de Confianza & Métricas -->
+    <section class="trust-bar-section">
+        <div class="landing-container">
+            <div class="trust-metrics-grid">
+                <div class="trust-item">
+                    <div class="trust-item-icon"><i class="fas fa-file-signature"></i></div>
+                    <div class="trust-item-title">Contratos 100% Digitales</div>
+                    <div class="trust-item-desc">Firma en 2 minutos bajo ley paraguaya sin escribanías ni garantes locales.</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-item-icon"><i class="fas fa-wifi"></i></div>
+                    <div class="trust-item-title">WiFi 300+ Mbps Verificado</div>
+                    <div class="trust-item-desc">Fibra óptica dedicada probada con routers dual-band en cada unidad.</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-item-icon"><i class="fas fa-hand-holding-dollar"></i></div>
+                    <div class="trust-item-title">Cero Comisiones Inmobiliarias</div>
+                    <div class="trust-item-desc">Sin gastos ocultos de intermediación. Solo pagas tu estancia y servicios.</div>
+                </div>
+                <div class="trust-item">
+                    <div class="trust-item-icon"><i class="fas fa-house-circle-check"></i></div>
+                    <div class="trust-item-title">Check-in Inteligente 24/7</div>
+                    <div class="trust-item-desc">Cerraduras electrónicas y concierge digital a tu disposición día y noche.</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Sección Dual: Inquilinos Nómadas vs Propietarios -->
+    <section class="dual-tabs-section" id="experiencias">
+        <div class="landing-container">
+            <div class="section-header-center">
+                <h2 class="section-title">Una Experiencia Diseñada para Ambas Partes</h2>
+                <p class="section-desc">Ya seas un profesional buscando tu próximo hogar flexible o un propietario maximizando su patrimonio.</p>
+            </div>
+
+            <div class="experience-cards-grid">
+                <!-- Tarjeta Para Inquilinos -->
+                <div class="exp-card exp-card-tenant">
+                    <div>
+                        <span class="exp-tag tag-tenant-pill"><i class="fas fa-laptop-code"></i> Para Inquilinos & Nómadas</span>
+                        <h3 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 12px;">Flexibilidad Total sin Ataduras de 1 Año</h3>
+                        <p class="text-secondary text-sm">Olvídate de comprar muebles o presentar codeudores locales. Llega solo con tus maletas.</p>
+                        
+                        <ul class="exp-feature-list">
+                            <li><i class="fas fa-check-circle"></i> Estancias de 1 a 11 meses con tarifas decrecientes</li>
+                            <li><i class="fas fa-check-circle"></i> Luz, agua, expensas e internet incluidos en un único pago</li>
+                            <li><i class="fas fa-check-circle"></i> Espacio de trabajo dedicado (desk ergonómico y silla)</li>
+                            <li><i class="fas fa-check-circle"></i> Facturación oficial con IVA o invoice corporativa</li>
+                        </ul>
+                    </div>
+
+                    <a href="index.html" class="btn btn-primary" style="margin-top: 20px;">
+                        <span>Ver Departamentos Disponibles</span> <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+
+                <!-- Tarjeta Para Propietarios -->
+                <div class="exp-card exp-card-host" id="propietarios">
+                    <div>
+                        <span class="exp-tag tag-host-pill"><i class="fas fa-key"></i> Para Propietarios & Inversores</span>
+                        <h3 style="font-size: 1.6rem; font-weight: 800; margin-bottom: 12px;">Hasta +40% de Rentabilidad sobre el Alquiler Clásico</h3>
+                        <p class="text-secondary text-sm">Captamos inquilinos corporativos y nómadas de alto poder adquisitivo con 92% de ocupación anual.</p>
+                        
+                        <ul class="exp-feature-list">
+                            <li><i class="fas fa-check-circle"></i> Renta mensual puntual con depósito de garantía asegurado</li>
+                            <li><i class="fas fa-check-circle"></i> Verificación KYC estricta de antecedentes e ingresos</li>
+                            <li><i class="fas fa-check-circle"></i> Mantenimiento e inspección fotográfica continua</li>
+                            <li><i class="fas fa-check-circle"></i> Cero vacancia estacional gracias a la media estancia</li>
+                        </ul>
+                    </div>
+
+                    <button type="button" class="btn btn-secondary" style="margin-top: 20px;" onclick="document.getElementById('calculadora-propietarios').scrollIntoView({behavior: 'smooth'})">
+                        <span>Calcular Mis Ingresos</span> <i class="fas fa-calculator"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Bento Grid de Propiedades Destacadas -->
+    <section class="bento-section" id="destacados">
+        <div class="landing-container">
+            <div class="section-header-center">
+                <h2 class="section-title">Estancias Destacadas en Asunción & Alrededores</h2>
+                <p class="section-desc">Unidades listas para habitar hoy mismo, con acabados premium y diseño contemporáneo.</p>
+            </div>
+
+            <div class="bento-grid">
+                <!-- Bento Card 1 -->
+                <a href="index.html" class="bento-card">
+                    <div class="bento-media">
+                        <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80" alt="Torre Santa Teresa" class="bento-img">
+                        <span class="bento-badge-wifi"><i class="fas fa-wifi"></i> 500 Mbps</span>
+                        <span class="bento-badge-discount">15% OFF en 6m</span>
+                    </div>
+                    <div class="bento-content">
+                        <div>
+                            <span class="text-xs font-bold text-primary text-uppercase">Santa Teresa • Asunción</span>
+                            <h4 class="bento-card-title" style="font-size: 1.15rem; font-weight: 700; margin-top: 4px;">Studio Ejecutivo con Rooftop Pool & Coworking</h4>
+                            <p class="text-muted text-xs mt-1"><i class="fas fa-bed"></i> 1 Dorm • <i class="fas fa-bath"></i> 1 Baño • Balcón con Parrilla</p>
+                        </div>
+                        <div class="bento-price-row">
+                            <div>
+                                <span class="text-xs text-muted">Desde (Estancia 6m+)</span>
+                                <div class="bento-price-val">US$ 1.060 <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">/ mes</span></div>
+                            </div>
+                            <span class="btn btn-outline btn-sm">Ver Unidad</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Bento Card 2 -->
+                <a href="index.html" class="bento-card">
+                    <div class="bento-media">
+                        <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=800&q=80" alt="Penthouse Villa Morra" class="bento-img">
+                        <span class="bento-badge-wifi"><i class="fas fa-wifi"></i> 500 Mbps</span>
+                        <span class="bento-badge-discount">22% OFF en 9m</span>
+                    </div>
+                    <div class="bento-content">
+                        <div>
+                            <span class="text-xs font-bold text-primary text-uppercase">Villa Morra • Asunción</span>
+                            <h4 class="bento-card-title" style="font-size: 1.15rem; font-weight: 700; margin-top: 4px;">Penthouse de Lujo con Terraza Privada</h4>
+                            <p class="text-muted text-xs mt-1"><i class="fas fa-bed"></i> 3 Dorms • <i class="fas fa-bath"></i> 4 Baños • Quincho Gourmet</p>
+                        </div>
+                        <div class="bento-price-row">
+                            <div>
+                                <span class="text-xs text-muted">Desde (Estancia 9m+)</span>
+                                <div class="bento-price-val">US$ 1.450 <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">/ mes</span></div>
+                            </div>
+                            <span class="btn btn-outline btn-sm">Ver Unidad</span>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- Bento Card 3 -->
+                <a href="index.html" class="bento-card">
+                    <div class="bento-media">
+                        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80" alt="Villa San Ber" class="bento-img">
+                        <span class="bento-badge-wifi"><i class="fas fa-wifi"></i> 300 Mbps</span>
+                        <span class="bento-badge-discount">15% OFF en 6m</span>
+                    </div>
+                    <div class="bento-content">
+                        <div>
+                            <span class="text-xs font-bold text-primary text-uppercase">San Bernardino • Lago Ypacaraí</span>
+                            <h4 class="bento-card-title" style="font-size: 1.15rem; font-weight: 700; margin-top: 4px;">Residencia con Piscina y Jardín Tropical</h4>
+                            <p class="text-muted text-xs mt-1"><i class="fas fa-bed"></i> 4 Dorms • <i class="fas fa-bath"></i> 4 Baños • Generador</p>
+                        </div>
+                        <div class="bento-price-row">
+                            <div>
+                                <span class="text-xs text-muted">Desde (Estancia 6m+)</span>
+                                <div class="bento-price-val">US$ 1.870 <span style="font-size: 0.8rem; font-weight: 600; color: var(--text-muted);">/ mes</span></div>
+                            </div>
+                            <span class="btn btn-outline btn-sm">Ver Unidad</span>
+                        </div>
+                    </div>
+                </a>
+            </div>
+
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="index.html" class="btn btn-primary">
+                    <i class="fas fa-grid-2"></i> Explorar Todas las Propiedades en el Mapa
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. Calculadora de Rentabilidad para Propietarios -->
+    <section class="host-calculator-section" id="calculadora-propietarios">
+        <div class="landing-container">
+            <div class="calc-container-box">
+                <div class="calc-slider-box">
+                    <div>
+                        <span class="hero-pill-badge" style="margin-bottom: 10px;"><i class="fas fa-chart-line"></i> Simulador de Ingresos</span>
+                        <h3 style="font-size: 2rem; font-weight: 800; margin-bottom: 8px;">¿Cuánto puedes ganar con tu departamento?</h3>
+                        <p class="text-secondary text-sm">Compara la media estancia Zilla Flex frente al alquiler tradicional a 12 meses.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-bold text-sm">Tipo de Inmueble</label>
+                        <select class="filter-select w-full" id="calc-host-type">
+                            <option value="studio">Monoambiente / Studio Ejecutivo</option>
+                            <option value="1bed" selected>Departamento de 1 Dormitorio</option>
+                            <option value="2bed">Departamento de 2 Dormitorios</option>
+                            <option value="penthouse">Penthouse / Residencia VIP</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="font-bold text-sm">Barrio / Ubicación</label>
+                        <select class="filter-select w-full" id="calc-host-zone">
+                            <option value="santateresa" selected>Eje Santa Teresa / Shopping del Sol</option>
+                            <option value="villamorra">Villa Morra / Manorá</option>
+                            <option value="recoleta">Recoleta / Mariscal López</option>
+                            <option value="sanber">San Bernardino (Temporada & Off-season)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="calc-result-panel">
+                    <span class="text-xs font-bold text-uppercase" style="letter-spacing: 0.08em; opacity: 0.9;">Ingreso Mensual Estimado en Media Estancia</span>
+                    <div class="calc-big-number" id="calc-host-estimate">US$ 1.250</div>
+                    <p style="font-size: 0.85rem; opacity: 0.9; margin-bottom: 20px;">
+                        ≈ ₲ <span id="calc-host-pyg">9.937.500</span> / mes neto estimado (92% ocupación garantizada)
+                    </p>
+                    <a href="index.html" class="btn" style="background: #ffffff; color: var(--primary); font-weight: 700; width: 100%;" onclick="window.AuthRolesManager.setRole('host');">
+                        <i class="fas fa-plus-circle"></i> Publicar Mi Propiedad Ahora
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Testimonios de Nómadas y Ejecutivos -->
+    <section class="testimonials-section">
+        <div class="landing-container">
+            <div class="section-header-center">
+                <h2 class="section-title">Lo que Dicen Quienes ya Viven en Zilla Flex</h2>
+                <p class="section-desc">Experiencias reales de profesionales que eligieron Asunción para estancias de media duración.</p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="test-card">
+                    <div style="color: var(--accent); margin-bottom: 12px;">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-secondary text-sm">
+                        "Como nómada digital de Alemania, alquilar por 4 meses en Asunción solía ser imposible sin pagar precios de hotel o firmar 1 año con escribano. Con Zilla firmé el contrato digital en 5 minutos y el WiFi de 500Mbps vuela."
+                    </p>
+                    <div class="test-user-row">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Sarah Lin" class="test-avatar">
+                        <div>
+                            <div class="font-bold text-sm">Sarah Lin</div>
+                            <div class="text-xs text-muted">UX Designer • Berlín / Asunción (4 meses)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="test-card">
+                    <div style="color: var(--accent); margin-bottom: 12px;">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-secondary text-sm">
+                        "Llegué por una consultoría corporativa de 6 meses para un banco local. El departamento en Santa Teresa tenía todo listo: vajilla, sábanas, escritorio y factura con IVA para mi empresa. Cero fricción."
+                    </p>
+                    <div class="test-user-row">
+                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=150&q=80" alt="Matías Rossi" class="test-avatar">
+                        <div>
+                            <div class="font-bold text-sm">Matías Rossi</div>
+                            <div class="text-xs text-muted">Consultor Financiero • Buenos Aires (6 meses)</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="test-card">
+                    <div style="color: var(--accent); margin-bottom: 12px;">
+                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                    </div>
+                    <p class="text-secondary text-sm">
+                        "Tengo 2 departamentos en Villa Morra. Antes lidiaba con la alta rotación de Airbnb o con inquilinos tradicionales de 2 años. Zilla me asegura 95% de ocupación con nómadas verificados y cero dolores de cabeza."
+                    </p>
+                    <div class="test-user-row">
+                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=150&q=80" alt="Esteban Melgarejo" class="test-avatar">
+                        <div>
+                            <div class="font-bold text-sm">Esteban Melgarejo</div>
+                            <div class="text-xs text-muted">Inversor Inmobiliario • Propietario Zilla</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 8. FAQ Accordion -->
+    <section class="faq-section" id="faq">
+        <div class="landing-container">
+            <div class="section-header-center">
+                <h2 class="section-title">Preguntas Frecuentes</h2>
+                <p class="section-desc">Todo lo que necesitas saber sobre los alquileres de media estancia en Zilla Flex.</p>
+            </div>
+
+            <div class="faq-list">
+                <div class="faq-item active">
+                    <div class="faq-question">
+                        <span>¿Cuál es la duración mínima y máxima de una estancia?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Nuestras estancias van desde <strong>1 mes hasta 11 meses consecutivos</strong>. Si necesitas extender tu contrato al finalizar el periodo, puedes renovarlo fácilmente desde tu panel con prioridad sobre nuevos huéspedes.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>¿Qué documentos necesito si soy extranjero o nómada digital?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Solo necesitas tu <strong>Pasaporte vigente</strong> y un comprobante de ingresos o perfil profesional (LinkedIn). No requerimos codeudores locales, garantías propietarias paraguayas ni depósitos bancarios excesivos.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>¿Cómo funcionan los descuentos por duración?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Nuestro algoritmo dinámico premia estancias más largas: estancias de 3 a 5 meses tienen un <strong>8% OFF mensual</strong>, de 6 a 8 meses un <strong>15% OFF</strong>, y de 9 a 11 meses hasta un <strong>22% OFF</strong> sobre la tarifa base.
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <span>¿Cómo publico mi departamento como propietario?</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        Puedes ingresar en modo propietario desde la barra superior, cargar las fotos y características de tu inmueble. Nuestro equipo coordina la verificación del WiFi y la sesión de inventario antes de activarlo en el marketplace.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 9. Footer -->
+    <footer class="landing-footer">
+        <div class="landing-container">
+            <div class="footer-grid">
+                <div class="footer-col">
+                    <div class="brand-logo" style="color: #ffffff; display: flex; align-items: center; gap: 8px; font-weight: 800; font-size: 1.45rem; margin-bottom: 14px;">
+                        <i class="fas fa-building-circle-check text-primary"></i>
+                        <span>Zilla</span>
+                        <span class="brand-badge-flex">Flex</span>
+                    </div>
+                    <p style="color: #94a3b8; font-size: 0.88rem; max-width: 320px;">
+                        La plataforma PropTech de alquileres flexibles de media estancia líder en Paraguay. Conectamos nómadas globales y empresas con los mejores hogares.
+                    </p>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Para Inquilinos</h5>
+                    <ul>
+                        <li><a href="index.html">Explorar Departamentos</a></li>
+                        <li><a href="#destacados">Estancias en Villa Morra</a></li>
+                        <li><a href="#destacados">Estancias en Santa Teresa</a></li>
+                        <li><a href="index.html">Garantía de WiFi 300+</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Para Propietarios</h5>
+                    <ul>
+                        <li><a href="#calculadora-propietarios">Calculadora de Ingresos</a></li>
+                        <li><a href="index.html">Publicar Propiedad</a></li>
+                        <li><a href="#experiencias">Gestión Integral Zilla</a></li>
+                        <li><a href="#faq">Garantías de Cobro</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h5>Soporte & Legal</h5>
+                    <ul>
+                        <li><a href="#faq">Centro de Ayuda</a></li>
+                        <li><a href="index.html">Términos del Contrato</a></li>
+                        <li><a href="index.html">Política de Privacidad</a></li>
+                        <li><a href="https://wa.me/595981123456" target="_blank"><i class="fab fa-whatsapp text-whatsapp"></i> Contacto WhatsApp</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                &copy; 2026 Zilla Flex Paraguay S.A. Todos los derechos reservados. Diseñado con tecnología PropTech de vanguardia.
+            </div>
+        </div>
+    </footer>
+
+    <!-- Scripts de la Landing Page -->
+    <script src="js/data.js"></script>
+    <script src="js/currency.js"></script>
+    <script src="js/pricing.js"></script>
+    <script src="js/auth-roles.js"></script>
+    <script src="js/ai-concierge.js"></script>
+    
+    <script>
+        // Lógica de interactividad de la Landing Page
+        document.addEventListener("DOMContentLoaded", () => {
+            // Inicializar AI Concierge
+            if (window.AIConciergeManager) window.AIConciergeManager.init();
+
+            // Modo Oscuro / Claro
+            const themeBtn = document.getElementById("landing-theme-toggle");
+            if (themeBtn) {
+                const currentTheme = localStorage.getItem("zilla_theme") || "light";
+                document.documentElement.setAttribute("data-theme", currentTheme);
+                themeBtn.querySelector("i").className = currentTheme === "dark" ? "fas fa-sun text-accent" : "fas fa-moon";
+
+                themeBtn.addEventListener("click", () => {
+                    const theme = document.documentElement.getAttribute("data-theme") === "dark" ? "light" : "dark";
+                    document.documentElement.setAttribute("data-theme", theme);
+                    localStorage.setItem("zilla_theme", theme);
+                    themeBtn.querySelector("i").className = theme === "dark" ? "fas fa-sun text-accent" : "fas fa-moon";
+                });
+            }
+
+            // FAQ Accordion
+            document.querySelectorAll(".faq-item").forEach(item => {
+                item.addEventListener("click", () => {
+                    const isActive = item.classList.contains("active");
+                    document.querySelectorAll(".faq-item").forEach(el => el.classList.remove("active"));
+                    if (!isActive) item.classList.add("active");
+                });
+            });
+
+            // Buscador Hero submit -> Redirige a index.html con parámetros
+            const heroSubmit = document.getElementById("hero-search-submit");
+            if (heroSubmit) {
+                heroSubmit.addEventListener("click", () => {
+                    const loc = document.getElementById("hero-location-select").value;
+                    const duration = document.getElementById("hero-duration-select").value;
+                    const month = document.getElementById("hero-month-select").value;
+
+                    localStorage.setItem("zilla_search_location", loc);
+                    localStorage.setItem("zilla_search_duration", duration);
+                    localStorage.setItem("zilla_search_month", month);
+
+                    window.location.href = `index.html?loc=${encodeURIComponent(loc)}&duration=${duration}&month=${month}`;
+                });
+            }
+
+            // Calculadora de Rentabilidad para Propietarios
+            const hostTypeSelect = document.getElementById("calc-host-type");
+            const hostZoneSelect = document.getElementById("calc-host-zone");
+            const hostEstimateEl = document.getElementById("calc-host-estimate");
+            const hostPygEl = document.getElementById("calc-host-pyg");
+
+            const updateHostCalculation = () => {
+                const type = hostTypeSelect.value;
+                const zone = hostZoneSelect.value;
+                let baseUSD = 850;
+
+                if (type === "studio") baseUSD = 850;
+                else if (type === "1bed") baseUSD = 1250;
+                else if (type === "2bed") baseUSD = 1750;
+                else if (type === "penthouse") baseUSD = 2900;
+
+                if (zone === "santateresa") baseUSD *= 1.15;
+                else if (zone === "villamorra") baseUSD *= 1.10;
+                else if (zone === "sanber") baseUSD *= 1.25;
+
+                const finalUSD = Math.round(baseUSD);
+                const finalPYG = Math.round(finalUSD * 7950);
+
+                if (hostEstimateEl) hostEstimateEl.textContent = `US$ ${finalUSD.toLocaleString('es-PY')}`;
+                if (hostPygEl) hostPygEl.textContent = finalPYG.toLocaleString('es-PY');
+            };
+
+            if (hostTypeSelect && hostZoneSelect) {
+                hostTypeSelect.addEventListener("change", updateHostCalculation);
+                hostZoneSelect.addEventListener("change", updateHostCalculation);
+                updateHostCalculation();
+            }
+
+            // Sincronizar moneda dual en landing
+            document.querySelectorAll(".currency-toggle-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const curr = btn.dataset.currency;
+                    if (window.CurrencyManager) window.CurrencyManager.setCurrency(curr);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

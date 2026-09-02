@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Explorar Inmuebles en Mapa | Zilla Paraguay</title>
+    <meta name="description" content="Busca y filtra casas, departamentos, dúplex y terrenos en Paraguay con mapa interactivo y contacto directo por WhatsApp.">
+    
+    <!-- Google Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Leaflet Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    
+    <!-- Custom Stylesheet -->
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body class="explorer-page-body">
+
+    <!-- 1. Header de Navegación Estilo Airbnb -->
+    <header class="airbnb-header">
+        <div class="header-inner">
+            <!-- Logo Zilla con enlace al Inicio -->
+            <div class="brand-section">
+                <a href="index.html" class="brand-logo" title="Ir a la página principal de Zilla">
+                    <div class="brand-icon-wrapper">
+                        <i class="fas fa-building-user"></i>
+                    </div>
+                    <div class="brand-text-group">
+                        <span class="brand-name">zilla</span>
+                        <span class="brand-domain">.py</span>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Pestañas Centrales de Tipo de Operación -->
+            <nav class="airbnb-nav-tabs">
+                <button class="nav-tab-btn active" data-op="all">
+                    <i class="fas fa-compass"></i>
+                    <span>Todo</span>
+                </button>
+                <button class="nav-tab-btn" data-op="sale">
+                    <i class="fas fa-key"></i>
+                    <span>Comprar</span>
+                </button>
+                <button class="nav-tab-btn" data-op="rent_monthly">
+                    <i class="fas fa-house-chimney"></i>
+                    <span>Alquilar</span>
+                </button>
+                <button class="nav-tab-btn" data-op="rent_temporary">
+                    <i class="fas fa-umbrella-beach"></i>
+                    <span>Alquiler Temporal</span>
+                </button>
+                <button class="nav-tab-btn" data-op="off_plan">
+                    <i class="fas fa-city"></i>
+                    <span>En Pozo</span>
+                </button>
+            </nav>
+
+            <!-- Acciones Derecha (Inicio / Modo Anfitrión / Moneda / Menú) -->
+            <div class="header-actions">
+                <a href="index.html" class="nav-link-inicio" title="Volver a la presentación principal">
+                    <i class="fas fa-house"></i>
+                    <span>Inicio</span>
+                </a>
+
+                <button class="host-mode-btn" id="open-publish-modal-btn">
+                    <i class="fas fa-sparkles text-coral"></i>
+                    <span>Publicar Inmueble</span>
+                </button>
+
+                <!-- Conmutador Dual USD / PYG -->
+                <div class="currency-pill" title="Alternar entre Dólares (USD) y Guaraníes (PYG)">
+                    <button class="curr-btn active" data-currency="USD">USD ($)</button>
+                    <button class="curr-btn" data-currency="PYG">PYG (₲)</button>
+                </div>
+
+                <!-- Menú de Perfil -->
+                <div class="user-menu-btn" title="Menú de cuenta">
+                    <i class="fas fa-bars"></i>
+                    <div class="user-avatar-circle">
+                        <i class="fas fa-user"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Cápsula de Búsqueda Flotante Airbnb -->
+        <div class="search-capsule-container">
+            <div class="search-capsule" id="airbnb-search-capsule">
+                
+                <!-- 1. Segmento Lugar / Destino Inteligente -->
+                <div class="capsule-segment segment-location active-hover" id="segment-location">
+                    <label class="segment-label">Lugar</label>
+                    <input type="text" id="smart-location-input" class="segment-input" placeholder="Explorar destinos, barrios, shoppings..." autocomplete="off">
+                    
+                    <!-- Dropdown Predictivo de Ubicaciones y Puntos de Interés -->
+                    <div class="location-autocomplete-popover" id="location-autocomplete-popover">
+                        <div class="autocomplete-section-title">
+                            <i class="fas fa-fire text-coral"></i> Búsquedas Populares en Paraguay
+                        </div>
+                        <div class="autocomplete-list" id="autocomplete-suggestions-list">
+                            <!-- Inyectado dinámicamente vía app.js -->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="capsule-divider"></div>
+
+                <!-- 2. Segmento Tipo de Inmueble -->
+                <div class="capsule-segment segment-proptype" id="segment-proptype">
+                    <label class="segment-label">Tipo de Propiedad</label>
+                    <div class="segment-value" id="capsule-proptype-label">Cualquier tipo</div>
+                    
+                    <!-- Popover Selector de Inmueble -->
+                    <div class="capsule-dropdown-popover" id="proptype-popover">
+                        <div class="popover-grid-types">
+                            <button type="button" class="prop-type-option active" data-type="all">
+                                <i class="fas fa-layer-group"></i> Todos
+                            </button>
+                            <button type="button" class="prop-type-option" data-type="house">
+                                <i class="fas fa-house"></i> Casas
+                            </button>
+                            <button type="button" class="prop-type-option" data-type="apartment">
+                                <i class="fas fa-building"></i> Departamentos
+                            </button>
+                            <button type="button" class="prop-type-option" data-type="duplex">
+                                <i class="fas fa-house-chimney-window"></i> Dúplex
+                            </button>
+                            <button type="button" class="prop-type-option" data-type="land">
+                                <i class="fas fa-vector-square"></i> Terrenos
+                            </button>
+                            <button type="button" class="prop-type-option" data-type="office">
+                                <i class="fas fa-briefcase"></i> Oficinas
+                            </button>
+                            <button type="button" class="prop-type-option" data-type="warehouse">
+                                <i class="fas fa-warehouse"></i> Tinglados
+                            </button>
+                            <button type="button" class="prop-type-option" data-type="farm">
+                                <i class="fas fa-tree"></i> Fincas / Campos
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="capsule-divider"></div>
+
+                <!-- 3. Segmento Rango de Precios -->
+                <div class="capsule-segment segment-price" id="segment-price">
+                    <label class="segment-label">Precio</label>
+                    <div class="segment-value" id="capsule-price-label">¿Cuánto quieres invertir?</div>
+
+                    <!-- Popover Rango de Precio -->
+                    <div class="capsule-dropdown-popover" id="price-popover-panel">
+                        <div class="popover-header">
+                            <h4>Rango de Precios</h4>
+                            <div class="popover-currency-toggle">
+                                <button type="button" class="popover-curr-btn active" data-curr="USD">USD ($)</button>
+                                <button type="button" class="popover-curr-btn" data-curr="PYG">Gs. (₲)</button>
+                            </div>
+                        </div>
+
+                        <div class="price-inputs-grid">
+                            <div class="price-input-box">
+                                <label>Mínimo</label>
+                                <div class="input-with-symbol">
+                                    <span class="curr-symbol" id="min-price-symbol">US$</span>
+                                    <input type="number" id="filter-min-price" placeholder="Sin mín." min="0">
+                                </div>
+                            </div>
+                            <div class="price-separator">-</div>
+                            <div class="price-input-box">
+                                <label>Máximo</label>
+                                <div class="input-with-symbol">
+                                    <span class="curr-symbol" id="max-price-symbol">US$</span>
+                                    <input type="number" id="filter-max-price" placeholder="Sin máx." min="0">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="price-presets-list" id="price-presets-container">
+                            <!-- Presets -->
+                        </div>
+
+                        <div class="popover-footer">
+                            <button type="button" class="btn-link" id="clear-price-btn">Limpiar</button>
+                            <button type="button" class="btn btn-coral btn-sm" id="apply-price-btn">Aplicar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="capsule-divider"></div>
+
+                <!-- 4. Segmento Habitaciones & Filtros -->
+                <div class="capsule-segment segment-rooms" id="segment-rooms">
+                    <div class="segment-text-col">
+                        <label class="segment-label">Habitaciones & Baños</label>
+                        <div class="segment-value" id="capsule-rooms-label">¿Cuántos cuartos?</div>
+                    </div>
+
+                    <!-- Popover Habitaciones y Baños -->
+                    <div class="capsule-dropdown-popover" id="rooms-popover-panel">
+                        <div class="popover-section">
+                            <label class="popover-section-title"><i class="fas fa-bed text-coral"></i> Dormitorios</label>
+                            <div class="segmented-control" id="bedrooms-segmented">
+                                <button type="button" class="segmented-btn active" data-rooms="0">Cualquiera</button>
+                                <button type="button" class="segmented-btn" data-rooms="1">1+</button>
+                                <button type="button" class="segmented-btn" data-rooms="2">2+</button>
+                                <button type="button" class="segmented-btn" data-rooms="3">3+</button>
+                                <button type="button" class="segmented-btn" data-rooms="4">4+</button>
+                                <button type="button" class="segmented-btn" data-rooms="5">5+</button>
+                            </div>
+                        </div>
+
+                        <div class="popover-section" style="margin-top: 14px;">
+                            <label class="popover-section-title"><i class="fas fa-bath text-coral"></i> Baños</label>
+                            <div class="segmented-control" id="bathrooms-segmented">
+                                <button type="button" class="segmented-btn active" data-baths="0">Cualquiera</button>
+                                <button type="button" class="segmented-btn" data-baths="1">1+</button>
+                                <button type="button" class="segmented-btn" data-baths="2">2+</button>
+                                <button type="button" class="segmented-btn" data-baths="3">3+</button>
+                                <button type="button" class="segmented-btn" data-baths="4">4+</button>
+                            </div>
+                        </div>
+
+                        <div class="popover-footer">
+                            <button type="button" class="btn-link" id="clear-rooms-btn">Limpiar</button>
+                            <button type="button" class="btn btn-coral btn-sm" id="apply-rooms-btn">Aplicar</button>
+                        </div>
+                    </div>
+
+                    <!-- Botón Rojo Coral Circular con Lupa (Airbnb) -->
+                    <button type="button" class="capsule-search-btn" id="capsule-submit-btn" title="Buscar Inmuebles">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3. Barra Horizontal de Categorías Airbnb (Icon Carousel) -->
+    <section class="categories-bar-wrapper">
+        <div class="categories-inner">
+            <div class="categories-scroll-track" id="categories-scroll-track">
+                <button class="category-item active" data-category="all">
+                    <i class="fas fa-globe"></i>
+                    <span>Todo</span>
+                </button>
+                <button class="category-item" data-category="house">
+                    <i class="fas fa-house"></i>
+                    <span>Casas</span>
+                </button>
+                <button class="category-item" data-category="apartment">
+                    <i class="fas fa-building"></i>
+                    <span>Departamentos</span>
+                </button>
+                <button class="category-item" data-category="pool">
+                    <i class="fas fa-water-ladder"></i>
+                    <span>Con Piscina</span>
+                </button>
+                <button class="category-item" data-category="duplex">
+                    <i class="fas fa-house-chimney-window"></i>
+                    <span>Dúplex</span>
+                </button>
+                <button class="category-item" data-category="quincho">
+                    <i class="fas fa-fire-burner"></i>
+                    <span>Con Quincho</span>
+                </button>
+                <button class="category-item" data-category="lake">
+                    <i class="fas fa-water"></i>
+                    <span>Frente al Lago</span>
+                </button>
+                <button class="category-item" data-category="land">
+                    <i class="fas fa-vector-square"></i>
+                    <span>Terrenos</span>
+                </button>
+                <button class="category-item" data-category="gated">
+                    <i class="fas fa-shield-halved"></i>
+                    <span>Barrios Cerrados</span>
+                </button>
+                <button class="category-item" data-category="off_plan">
+                    <i class="fas fa-city"></i>
+                    <span>En Pozo</span>
+                </button>
+                <button class="category-item" data-category="che_roga">
+                    <i class="fas fa-certificate text-emerald-600"></i>
+                    <span>Che Róga Porã</span>
+                </button>
+                <button class="category-item" data-category="furnished">
+                    <i class="fas fa-couch"></i>
+                    <span>Amoblados</span>
+                </button>
+                <button class="category-item" data-category="office">
+                    <i class="fas fa-briefcase"></i>
+                    <span>Oficinas</span>
+                </button>
+                <button class="category-item" data-category="farm">
+                    <i class="fas fa-mountain-sun"></i>
+                    <span>Fincas & Campos</span>
+                </button>
+                <button class="category-item" data-category="pet_friendly">
+                    <i class="fas fa-paw"></i>
+                    <span>Pet Friendly</span>
+                </button>
+            </div>
+
+            <!-- Botón Más Filtros y Limpiar -->
+            <div class="category-actions-right">
+                <button class="filter-pill-btn" id="open-extras-modal-btn">
+                    <i class="fas fa-sliders"></i>
+                    <span>Filtros</span>
+                    <span class="active-filter-badge" id="category-filter-count" style="display: none;">0</span>
+                </button>
+                <button class="btn-clean-filters" id="reset-global-filters-btn" style="display: none;">
+                    <i class="fas fa-rotate-left"></i> Limpiar
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Contenedor Principal Split-Screen (55% Feed de Propiedades / 45% Mapa Interactivo) -->
+    <main class="split-screen-container" id="main-explorer-section">
+        <!-- Columna Izquierda: Feed de Listados de Propiedades -->
+        <section class="properties-feed-column">
+            <div class="feed-header-info">
+                <span class="results-count" id="results-count-label">Cargando inmuebles en Paraguay...</span>
+                <label class="map-sync-toggle">
+                    <input type="checkbox" id="search-on-map-move" checked>
+                    <span>Buscar al mover el mapa</span>
+                </label>
+            </div>
+
+            <!-- Grid de Tarjetas de Propiedades Estilo Airbnb -->
+            <div class="properties-grid" id="properties-feed">
+                <!-- Se inyecta dinámicamente vía app.js -->
+            </div>
+        </section>
+
+        <!-- Columna Derecha: Mapa Interactivo Leaflet -->
+        <section class="map-column-wrapper">
+            <div id="map-container"></div>
+        </section>
+    </main>
+
+    <!-- Botón Flotante Móvil (Alternar Mapa / Lista estilo Airbnb) -->
+    <button class="mobile-map-pill-btn" id="mobile-view-toggle">
+        <i class="fas fa-map"></i>
+        <span>Ver Mapa</span>
+    </button>
+
+    <!-- 5. Modal Detallado de Propiedad (Estilo Airbnb 5-Photo Grid & Sidebar) -->
+    <div class="modal-container" id="property-modal-container">
+        <div class="modal-backdrop" id="property-modal-backdrop"></div>
+        <div class="modal-dialog-large">
+            <div class="modal-top-bar">
+                <span class="font-bold text-sm text-muted">Detalles del Inmueble</span>
+                <button class="modal-close-button" id="close-property-modal" title="Cerrar (Esc)">&times;</button>
+            </div>
+            <div class="modal-scrollable-content" id="property-modal-content">
+                <!-- Inyectado vía modal.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Modal de Publicación de Inmueble en 3 Pasos con Geolocalización -->
+    <div class="modal-container" id="publish-modal-container">
+        <div class="modal-backdrop" id="publish-modal-backdrop"></div>
+        <div class="modal-dialog-large" style="max-width: 800px; height: 85vh;">
+            <div class="modal-top-bar">
+                <span class="font-bold text-base"><i class="fas fa-bullhorn text-coral"></i> Publicar Inmueble en Zilla</span>
+                <button class="modal-close-button" id="close-publish-modal-btn">&times;</button>
+            </div>
+            <div class="modal-scrollable-content" style="padding: 24px;">
+                <!-- Tracker de Pasos -->
+                <div class="steps-tracker-header">
+                    <div class="step-indicator active" data-step="1">
+                        <span class="step-circle">1</span>
+                        <span>Información Básica</span>
+                    </div>
+                    <div class="step-indicator" data-step="2">
+                        <span class="step-circle">2</span>
+                        <span>Ubicación en Mapa</span>
+                    </div>
+                    <div class="step-indicator" data-step="3">
+                        <span class="step-circle">3</span>
+                        <span>Precios & Contacto</span>
+                    </div>
+                </div>
+
+                <!-- Paso 1: Información Básica -->
+                <div class="publish-step-panel active" id="publish-step-1">
+                    <div class="form-group">
+                        <label>Título del Anuncio</label>
+                        <input type="text" id="pub-title" placeholder="Ej. Hermoso Penthouse con Quincho en Villa Morra" value="Hermosa Casa Familiar con Piscina">
+                    </div>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label>Tipo de Operación</label>
+                            <select id="pub-operation">
+                                <option value="sale">Venta</option>
+                                <option value="rent_monthly">Alquiler Mensual</option>
+                                <option value="rent_temporary">Alquiler Temporal</option>
+                                <option value="off_plan">En Pozo</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Tipo de Inmueble</label>
+                            <select id="pub-prop-type">
+                                <option value="house">Casa</option>
+                                <option value="apartment">Departamento</option>
+                                <option value="duplex">Dúplex</option>
+                                <option value="land">Terreno</option>
+                                <option value="office">Oficina</option>
+                                <option value="garage">Garage</option>
+                                <option value="warehouse">Tinglado o Depósito</option>
+                                <option value="farm">Finca o Campo</option>
+                                <option value="gated_community">Casa en Barrio Cerrado</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label>Dormitorios</label>
+                            <input type="number" id="pub-bedrooms" value="3" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Baños</label>
+                            <input type="number" id="pub-bathrooms" value="3" min="0">
+                        </div>
+                    </div>
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label>Cocheras</label>
+                            <input type="number" id="pub-garage" value="2" min="0">
+                        </div>
+                        <div class="form-group">
+                            <label>Superficie Construida (m²)</label>
+                            <input type="number" id="pub-area" value="220" min="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Descripción Completa</label>
+                        <textarea id="pub-description" rows="3" placeholder="Describe los detalles, terminaciones y comodidades...">Excelente propiedad ubicada en una zona residencial tranquila y segura, con amplio patio, piscina y quincho con parrilla.</textarea>
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; margin-top: 10px;">
+                        <button class="btn btn-coral" id="publish-next-1">Siguiente: Ubicación en Mapa <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Paso 2: Ubicación con Mapa Interactivo Pin Picker -->
+                <div class="publish-step-panel" id="publish-step-2">
+                    <p style="font-size: 0.88rem; color: var(--text-secondary); margin-bottom: 12px;">
+                        <i class="fas fa-info-circle text-coral"></i> Haz clic o arrastra el pin en el mapa para fijar la ubicación exacta de tu inmueble.
+                    </p>
+                    <div id="publish-picker-map"></div>
+                    <div class="form-grid-2" style="margin-top: 14px;">
+                        <div class="form-group">
+                            <label>Ciudad</label>
+                            <input type="text" id="pub-city" value="Asunción">
+                        </div>
+                        <div class="form-group">
+                            <label>Barrio</label>
+                            <input type="text" id="pub-neighborhood" value="Ycuá Satí">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Dirección o Calle</label>
+                        <input type="text" id="pub-address" value="Av. San Martín c/ Austria">
+                    </div>
+                    <input type="hidden" id="publish-lat" value="-25.2950">
+                    <input type="hidden" id="publish-lng" value="-57.5750">
+                    <div style="display: flex; justify-content: space-between; margin-top: 14px;">
+                        <button class="btn btn-secondary" id="publish-prev-2"><i class="fas fa-arrow-left"></i> Volver</button>
+                        <button class="btn btn-coral" id="publish-next-2">Siguiente: Precios & Contacto <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- Paso 3: Precios, Amenities & Contacto -->
+                <div class="publish-step-panel" id="publish-step-3">
+                    <div class="form-grid-2">
+                        <div class="form-group">
+                            <label>Precio en Dólares (USD)</label>
+                            <input type="number" id="pub-price-usd" value="185000">
+                        </div>
+                        <div class="form-group">
+                            <label>Nombre del Contacto / Agencia</label>
+                            <input type="text" id="pub-adv-name" value="Juan Solalinde">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Número de WhatsApp para Recibir Consultas</label>
+                        <input type="tel" id="pub-adv-phone" value="+595981123456" placeholder="+595 981 xxx xxx">
+                    </div>
+                    <div class="form-group">
+                        <label>Amenities Incluidos</label>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin-top: 6px;">
+                            <label><input type="checkbox" id="pub-am-quincho" checked> Quincho / Parrilla</label>
+                            <label><input type="checkbox" id="pub-am-pool" checked> Piscina</label>
+                            <label><input type="checkbox" id="pub-am-garage" checked> Cochera Techada</label>
+                            <label><input type="checkbox" id="pub-am-sec" checked> Seguridad 24hs</label>
+                            <label><input type="checkbox" id="pub-am-pet" checked> Acepta Mascotas</label>
+                            <label><input type="checkbox" id="pub-che-roga"> Acepta Che Róga Porã</label>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                        <button class="btn btn-secondary" id="publish-prev-3"><i class="fas fa-arrow-left"></i> Volver</button>
+                        <button class="btn btn-coral" id="publish-submit-form"><i class="fas fa-check"></i> Publicar Inmueble Ahora</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Modal Completo de Extras y Filtros Avanzados -->
+    <div class="modal-container" id="extras-modal-container">
+        <div class="modal-backdrop" id="close-extras-modal-backdrop"></div>
+        <div class="modal-dialog-large" style="max-width: 580px; height: auto;">
+            <div class="modal-top-bar">
+                <span class="font-bold text-base"><i class="fas fa-sliders text-coral"></i> Filtros y Comodidades</span>
+                <button class="modal-close-button" id="close-extras-modal-btn">&times;</button>
+            </div>
+            <div style="padding: 24px; max-height: 70vh; overflow-y: auto;">
+                <h4 style="font-size: 0.95rem; font-weight: 700; margin-bottom: 12px;">Comodidades y Equipamiento</h4>
+                <div class="extras-checkbox-grid" id="modal-extras-grid">
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="pool">
+                        <i class="fas fa-water-ladder text-coral"></i>
+                        <span>Piscina / Pileta</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="gym">
+                        <i class="fas fa-dumbbell text-coral"></i>
+                        <span>Gimnasio / Fitness</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="furnished">
+                        <i class="fas fa-couch text-coral"></i>
+                        <span>Amueblado</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="laundry">
+                        <i class="fas fa-jug-detergent text-coral"></i>
+                        <span>Con Lavandería</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="pet_friendly">
+                        <i class="fas fa-paw text-coral"></i>
+                        <span>Acepta Mascotas</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="security">
+                        <i class="fas fa-shield-halved text-coral"></i>
+                        <span>Guardia de Seguridad 24hs</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="quincho">
+                        <i class="fas fa-fire-burner text-coral"></i>
+                        <span>Quincho / Parrilla</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="garage">
+                        <i class="fas fa-warehouse text-coral"></i>
+                        <span>Cochera Techada</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="air_conditioning">
+                        <i class="fas fa-snowflake text-coral"></i>
+                        <span>Aire Acondicionado</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="garden">
+                        <i class="fas fa-tree text-coral"></i>
+                        <span>Jardín / Patio Amplio</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="terrace">
+                        <i class="fas fa-sun text-coral"></i>
+                        <span>Balcón / Terraza</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="generator">
+                        <i class="fas fa-bolt text-coral"></i>
+                        <span>Generador Eléctrico</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="sports_court">
+                        <i class="fas fa-table-tennis-paddle-ball text-coral"></i>
+                        <span>Cancha Pádel / Tenis</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="jacuzzi">
+                        <i class="fas fa-hot-tub-person text-coral"></i>
+                        <span>Jacuzzi / Hidromasaje</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="coworking">
+                        <i class="fas fa-laptop-code text-coral"></i>
+                        <span>Coworking / Reuniones</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="elevator">
+                        <i class="fas fa-elevator text-coral"></i>
+                        <span>Ascensor</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="smart_home">
+                        <i class="fas fa-mobile-screen text-coral"></i>
+                        <span>Domótica / Smart Home</span>
+                    </label>
+                    <label class="extra-checkbox-item">
+                        <input type="checkbox" value="che_roga">
+                        <i class="fas fa-certificate text-coral"></i>
+                        <span>Che Róga Porã</span>
+                    </label>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-top: 20px;">
+                    <button class="btn btn-secondary btn-sm" id="reset-modal-extras-btn">Restablecer</button>
+                    <button class="btn btn-coral btn-sm" id="apply-modal-extras-btn">Aplicar Filtros</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet Map JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    
+    <!-- Scripts de la Aplicación -->
+    <script src="js/data.js"></script>
+    <script src="js/currency.js"></script>
+    <script src="js/map.js"></script>
+    <script src="js/filter.js"></script>
+    <script src="js/modal.js"></script>
+    <script src="js/publish.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
