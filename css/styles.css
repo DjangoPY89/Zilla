@@ -497,6 +497,209 @@ input:checked + .slider-round:before {
 }
 
 /* ============================================================
+   HERRAMIENTA REGLA / MEDIDOR DE MESES (1 A 11 MESES)
+   ============================================================ */
+.duration-ruler-toolbar {
+    margin: 10px 28px 4px 28px;
+    padding: 12px 20px;
+    border-radius: var(--radius-lg);
+    background: var(--glass-card);
+    backdrop-filter: var(--glass-blur);
+    border: 1.5px solid var(--glass-border);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    position: relative;
+    z-index: 980;
+}
+
+.ruler-tool-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.ruler-title-group {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ruler-icon-badge {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--primary) 0%, #06b6d4 100%);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    box-shadow: 0 4px 12px var(--primary-glow);
+}
+
+.ruler-tool-title {
+    display: block;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+
+.ruler-tool-subtitle {
+    display: block;
+    font-size: 0.74rem;
+    color: var(--text-secondary);
+}
+
+.ruler-active-badge-pill {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: var(--radius-full);
+    background: var(--primary-light);
+    border: 1px solid var(--primary);
+}
+
+.ruler-months-highlight {
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 800;
+    color: var(--primary);
+}
+
+.ruler-discount-tag {
+    font-size: 0.76rem;
+    font-weight: 800;
+    padding: 3px 8px;
+    border-radius: var(--radius-full);
+    background: #059669;
+    color: #ffffff;
+}
+
+/* Track de la Regla Graduada */
+.ruler-track-container {
+    position: relative;
+    padding: 8px 10px 4px 10px;
+}
+
+/* Zonas de Descuento Visuales de Fondo */
+.ruler-zones-bg {
+    display: grid;
+    grid-template-columns: 2fr 3fr 3fr 3fr;
+    height: 18px;
+    border-radius: var(--radius-full);
+    overflow: hidden;
+    margin-bottom: 6px;
+    border: 1px solid var(--border-color);
+    box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.ruler-zone {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.65rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    transition: opacity var(--transition-fast);
+}
+
+.ruler-zone:hover {
+    opacity: 0.85;
+}
+
+.zone-base { background: #e2e8f0; color: #475569; }
+.zone-smart { background: #ccfbf1; color: #0f766e; }
+.zone-mid { background: #e0f2fe; color: #0369a1; }
+.zone-max { background: #fef3c7; color: #b45309; }
+
+[data-theme="dark"] .zone-base { background: #1e293b; color: #94a3b8; }
+[data-theme="dark"] .zone-smart { background: rgba(15, 118, 110, 0.3); color: #5eead4; }
+[data-theme="dark"] .zone-mid { background: rgba(3, 105, 161, 0.3); color: #7dd3fc; }
+[data-theme="dark"] .zone-max { background: rgba(180, 83, 9, 0.3); color: #fde047; }
+
+/* Slider Element */
+.ruler-slider-element {
+    width: 100%;
+    -webkit-appearance: none;
+    appearance: none;
+    height: 8px;
+    border-radius: 4px;
+    background: transparent;
+    outline: none;
+    cursor: pointer;
+    margin: 6px 0;
+    position: relative;
+    z-index: 5;
+}
+
+.ruler-slider-element::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: var(--primary);
+    border: 3px solid #ffffff;
+    box-shadow: 0 4px 14px var(--primary-glow);
+    cursor: pointer;
+    transition: transform var(--transition-bounce);
+}
+
+.ruler-slider-element::-webkit-slider-thumb:hover {
+    transform: scale(1.25);
+}
+
+/* Marcas Graduadas de la Regla (Notches) */
+.ruler-graduations-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0 4px;
+}
+
+.ruler-notch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    cursor: pointer;
+    transition: transform var(--transition-fast);
+}
+
+.ruler-notch:hover {
+    transform: translateY(-2px);
+}
+
+.notch-tick {
+    width: 2px;
+    height: 8px;
+    background: var(--border-color);
+    border-radius: 1px;
+}
+
+.notch-num {
+    font-size: 0.72rem;
+    font-weight: 700;
+    color: var(--text-muted);
+}
+
+.ruler-notch.active .notch-tick {
+    height: 14px;
+    background: var(--primary);
+    width: 3px;
+}
+
+.ruler-notch.active .notch-num {
+    color: var(--primary);
+    font-size: 0.82rem;
+    font-weight: 800;
+}
+
+/* ============================================================
    3. SPLIT-SCREEN & GRID DE ALOJAMIENTOS AIRBNB
    ============================================================ */
 .split-screen-container {

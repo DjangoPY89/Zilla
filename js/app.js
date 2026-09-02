@@ -20,13 +20,22 @@
             // 3. Parámetros de URL iniciales
             this.loadInitialURLParams();
 
-            // 4. Vincular Eventos Airbnb
+            // 4. Vincular Eventos Airbnb y Regla Medidora
             this.bindAirbnbEvents();
+            this.bindDurationRuler();
 
             // 5. Aplicar y Renderizar
             if (window.FilterManager) {
                 currentProperties = window.FilterManager.applyFilters();
             }
+
+            // 6. Asegurar ajuste inicial del mapa para mostrar las 22 propiedades
+            setTimeout(() => {
+                if (window.MapManager) {
+                    window.MapManager.invalidateSize();
+                    window.MapManager.fitToMarkers();
+                }
+            }, 300);
         },
 
         initTheme: function () {
@@ -60,9 +69,67 @@
             if (durationParam && window.FilterManager) {
                 const d = parseInt(durationParam, 10);
                 window.FilterManager.filters.durationMonths = d;
-                const whenVal = document.getElementById("capsule-when-val");
-                if (whenVal) whenVal.textContent = `${d} meses`;
+                this.updateRulerUI(d);
             }
+        },
+
+        bindDurationRuler: function () {
+            const rulerSlider = document.getElementById("duration-ruler-slider");
+            const notches = document.querySelectorAll(".ruler-notch");
+
+            if (rulerSlider) {
+                rulerSlider.addEventListener("input", (e) => {
+                    const months = parseInt(e.target.value, 10);
+                    this.updateRulerUI(months);
+                    if (window.FilterManager) {
+                        window.FilterManager.setFilter("durationMonths", months);
+                    }
+                });
+            }
+
+            notches.forEach(notch => {
+                notch.addEventListener("click", () => {
+                    const m = parseInt(notch.dataset.month, 10);
+                    if (rulerSlider) rulerSlider.value = m;
+                    this.updateRulerUI(m);
+                    if (window.FilterManager) {
+                        window.FilterManager.setFilter("durationMonths", m);
+                    }
+                });
+            });
+        },
+
+        updateRulerUI: function (months) {
+            const monthsText = document.getElementById("ruler-months-text");
+            const discountTag = document.getElementById("ruler-discount-tag");
+            const capsuleWhen = document.getElementById("capsule-when-val");
+            const notches = document.querySelectorAll(".ruler-notch");
+
+            const discountRate = window.PricingEngine ? window.PricingEngine.getDiscountRate(months) : 0;
+            const discountPercent = Math.round(discountRate * 100);
+
+            if (monthsText) {
+                monthsText.textContent = `${months} Mes${months > 1 ? 'es' : ''}`;
+            }
+
+            if (discountTag) {
+                if (discountPercent > 0) {
+                    discountTag.textContent = `${discountPercent}% Descuento Aplicado`;
+                    discountTag.style.display = "inline-block";
+                } else {
+                    discountTag.textContent = "Tarifa Base";
+                    discountTag.style.background = "#64748b";
+                }
+            }
+
+            if (capsuleWhen) {
+                capsuleWhen.textContent = `${months} meses ${discountPercent > 0 ? `(-${discountPercent}%)` : ''}`;
+            }
+
+            notches.forEach(n => {
+                const val = parseInt(n.dataset.month, 10);
+                n.classList.toggle("active", val === months);
+            });
         },
 
         bindAirbnbEvents: function () {
@@ -96,7 +163,7 @@
                 });
             }
 
-            // Barra de Categorías Airbnb (Scroll Horizontal y Selección)
+            // Barra de Categorías Airbnb
             const track = document.getElementById("airbnb-categories-track");
             const leftArrow = document.getElementById("cat-scroll-left");
             const rightArrow = document.getElementById("cat-scroll-right");
@@ -147,14 +214,6 @@
 
             // Filtros en Modal
             if (modal) {
-                // Segmented buttons
-                modal.querySelectorAll(".duration-segmented-airbnb .segmented-btn").forEach(btn => {
-                    btn.addEventListener("click", () => {
-                        modal.querySelectorAll(".duration-segmented-airbnb .segmented-btn").forEach(b => b.classList.remove("active"));
-                        btn.classList.add("active");
-                    });
-                });
-
                 modal.querySelectorAll("#modal-rooms-segmented .segmented-btn").forEach(btn => {
                     btn.addEventListener("click", () => {
                         modal.querySelectorAll("#modal-rooms-segmented .segmented-btn").forEach(b => b.classList.remove("active"));
@@ -174,9 +233,6 @@
                         const minP = parseFloat(document.getElementById("modal-filter-min-price")?.value) || null;
                         const maxP = parseFloat(document.getElementById("modal-filter-max-price")?.value) || null;
 
-                        const activeDurationBtn = modal.querySelector(".duration-segmented-airbnb .segmented-btn.active");
-                        const duration = activeDurationBtn ? parseInt(activeDurationBtn.dataset.months, 10) : 3;
-
                         const activeRoomsBtn = modal.querySelector("#modal-rooms-segmented .segmented-btn.active");
                         const rooms = activeRoomsBtn ? parseInt(activeRoomsBtn.dataset.val, 10) : 0;
 
@@ -189,16 +245,11 @@
                             window.FilterManager.setMultipleFilters({
                                 minPriceUSD: minP,
                                 maxPriceUSD: maxP,
-                                durationMonths: duration,
                                 minBedrooms: rooms,
                                 minBathrooms: baths,
                                 amenities: amenities
                             });
                         }
-
-                        // Actualizar textos en la cápsula
-                        const whenVal = document.getElementById("capsule-when-val");
-                        if (whenVal) whenVal.textContent = `${duration} meses`;
 
                         closeFilterModal();
                     });
@@ -255,7 +306,7 @@
             const duration = (window.FilterManager && window.FilterManager.filters.durationMonths) || 3;
 
             if (countLabel) {
-                countLabel.innerHTML = `Más de <strong>${properties.length} alojamientos</strong> en Asunción • Estancias de ${duration} meses`;
+                countLabel.innerHTML = `Más de <strong>${properties.length} alojamientos</strong> disponibles • Estancias calibradas a ${duration} meses`;
             }
 
             if (!feedContainer) return;
@@ -265,7 +316,7 @@
                     <div class="empty-feed-state" style="grid-column: 1 / -1;">
                         <div class="empty-icon"><i class="fas fa-calendar-xmark"></i></div>
                         <h3>No se encontraron alojamientos</h3>
-                        <p>Intenta ajustar tus fechas o filtros para ver más opciones en Asunción.</p>
+                        <p>Intenta ajustar tus fechas o filtros para ver más opciones en Paraguay.</p>
                         <button class="btn btn-primary btn-sm" onclick="window.FilterManager.resetFilters()">
                             <i class="fas fa-rotate-left"></i> Restablecer filtros
                         </button>
@@ -304,7 +355,6 @@
             const quote = window.PricingEngine ? window.PricingEngine.calculateQuote(prop.priceUSD, duration) : { monthlyRentUSD: prop.priceUSD, monthlyRentPYG: prop.pricePYG, discountPercent: 0 };
             const formattedPrice = window.CurrencyManager.formatPrice(quote.monthlyRentUSD, quote.monthlyRentPYG);
             const formattedOriginal = window.CurrencyManager.formatPrice(quote.baseMonthlyUSD, quote.baseMonthlyPYG);
-            const isPYG = window.CurrencyManager.getCurrency() === "PYG";
 
             const images = prop.images && prop.images.length > 0 ? prop.images : [
                 "https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1000&q=80"

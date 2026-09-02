@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zilla Flex | Explorar Alojamientos de Media Estancia (1 a 11 meses)</title>
-    <meta name="description" content="Explora departamentos y residencias de diseño de 1 a 11 meses en Asunción y Paraguay. Sin garantes, con WiFi 500 Mbps y contratos digitales.">
+    <meta name="description" content="Explora 22 departamentos y residencias amobladas de 1 a 11 meses en Asunción, San Bernardino, Encarnación y CDE. Sin garantes, con WiFi 500 Mbps y contratos digitales.">
 
     <!-- Google Fonts: Outfit & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,17 +37,17 @@
         <div class="airbnb-search-capsule" id="airbnb-search-capsule-btn">
             <button class="capsule-segment" id="capsule-where-btn">
                 <span class="capsule-label">Dónde</span>
-                <span class="capsule-val" id="capsule-where-val">Cualquier zona</span>
+                <span class="capsule-val" id="capsule-where-val">Paraguay (Todas las Zonas)</span>
             </button>
             <span class="capsule-divider"></span>
             <button class="capsule-segment" id="capsule-when-btn">
-                <span class="capsule-label">Estancia</span>
-                <span class="capsule-val" id="capsule-when-val">3 meses</span>
+                <span class="capsule-label">Duración</span>
+                <span class="capsule-val" id="capsule-when-val">3 meses (-8% OFF)</span>
             </button>
             <span class="capsule-divider"></span>
             <button class="capsule-segment capsule-search-action">
                 <span class="capsule-label">Filtros</span>
-                <span class="capsule-val">Buscar</span>
+                <span class="capsule-val">Explorar</span>
                 <div class="capsule-icon-circle">
                     <i class="fas fa-search"></i>
                 </div>
@@ -81,7 +81,7 @@
         </div>
     </header>
 
-    <!-- 2. Barra Horizontal de Categorías con Iconos Estilo Airbnb (Glass Slider) -->
+    <!-- 2. Barra Horizontal de Categorías con Iconos Estilo Airbnb -->
     <nav class="airbnb-categories-bar">
         <div class="categories-scroll-wrapper">
             <button class="cat-nav-arrow prev-arrow" id="cat-scroll-left"><i class="fas fa-chevron-left"></i></button>
@@ -89,7 +89,7 @@
             <div class="airbnb-categories-track" id="airbnb-categories-track">
                 <button class="airbnb-category-item active" data-category="all">
                     <i class="fas fa-globe"></i>
-                    <span>Todas</span>
+                    <span>Todas (22)</span>
                 </button>
                 <button class="airbnb-category-item" data-category="pool">
                     <i class="fas fa-water-ladder"></i>
@@ -105,7 +105,7 @@
                 </button>
                 <button class="airbnb-category-item" data-category="lake">
                     <i class="fas fa-water"></i>
-                    <span>Frente al Lago</span>
+                    <span>Frente al Lago/Río</span>
                 </button>
                 <button class="airbnb-category-item" data-category="luxury">
                     <i class="fas fa-gem"></i>
@@ -133,7 +133,7 @@
             </button>
 
             <div class="airbnb-total-switch-box glass-card">
-                <span class="switch-label">Mostrar total antes de imp.</span>
+                <span class="switch-label">Mostrar total c/ servicios</span>
                 <label class="custom-toggle-switch">
                     <input type="checkbox" id="toggle-total-price-switch">
                     <span class="slider-round"></span>
@@ -142,13 +142,61 @@
         </div>
     </nav>
 
-    <!-- 3. Layout Principal Split-Screen (55% Tarjetas / 45% Mapa Interactivo) -->
+    <!-- 3. HERRAMIENTA INTERACTIVA: REGLA / MEDIDOR DE MESES (1 A 11 MESES) -->
+    <div class="duration-ruler-toolbar glass-card" id="duration-ruler-toolbar">
+        <div class="ruler-tool-header">
+            <div class="ruler-title-group">
+                <div class="ruler-icon-badge"><i class="fas fa-ruler-combined"></i></div>
+                <div>
+                    <span class="ruler-tool-title">Medidor de Estancia Flexible</span>
+                    <span class="ruler-tool-subtitle">Ajusta la regla de 1 a 11 meses para calibrar descuentos automáticos en tiempo real</span>
+                </div>
+            </div>
+
+            <!-- Indicador Activo de Ahorro -->
+            <div class="ruler-active-badge-pill" id="ruler-active-badge">
+                <span class="ruler-months-highlight" id="ruler-months-text">3 Meses</span>
+                <span class="ruler-discount-tag" id="ruler-discount-tag">8% Descuento Aplicado</span>
+            </div>
+        </div>
+
+        <!-- Regla Graduada Interactiva de 1 a 11 con Marcas y Zonas -->
+        <div class="ruler-track-container" id="ruler-interactive-track">
+            <!-- Zonas de Descuento Visuales -->
+            <div class="ruler-zones-bg">
+                <div class="ruler-zone zone-base" title="1 a 2 Meses: Tarifa Base"><span>Base</span></div>
+                <div class="ruler-zone zone-smart" title="3 a 5 Meses: 8% OFF"><span>8% OFF</span></div>
+                <div class="ruler-zone zone-mid" title="6 a 8 Meses: 15% OFF"><span>15% OFF</span></div>
+                <div class="ruler-zone zone-max" title="9 a 11 Meses: 22% OFF"><span>22% Ahorro Máximo</span></div>
+            </div>
+
+            <!-- Input Slider de Precisión -->
+            <input type="range" min="1" max="11" value="3" step="1" id="duration-ruler-slider" class="ruler-slider-element" aria-label="Seleccionar meses de estancia">
+
+            <!-- Marcas Graduadas de la Regla (Notches 1 a 11) -->
+            <div class="ruler-graduations-row">
+                <div class="ruler-notch" data-month="1"><span class="notch-tick"></span><span class="notch-num">1m</span></div>
+                <div class="ruler-notch" data-month="2"><span class="notch-tick"></span><span class="notch-num">2m</span></div>
+                <div class="ruler-notch active" data-month="3"><span class="notch-tick"></span><span class="notch-num">3m</span></div>
+                <div class="ruler-notch" data-month="4"><span class="notch-tick"></span><span class="notch-num">4m</span></div>
+                <div class="ruler-notch" data-month="5"><span class="notch-tick"></span><span class="notch-num">5m</span></div>
+                <div class="ruler-notch" data-month="6"><span class="notch-tick"></span><span class="notch-num">6m</span></div>
+                <div class="ruler-notch" data-month="7"><span class="notch-tick"></span><span class="notch-num">7m</span></div>
+                <div class="ruler-notch" data-month="8"><span class="notch-tick"></span><span class="notch-num">8m</span></div>
+                <div class="ruler-notch" data-month="9"><span class="notch-tick"></span><span class="notch-num">9m</span></div>
+                <div class="ruler-notch" data-month="10"><span class="notch-tick"></span><span class="notch-num">10m</span></div>
+                <div class="ruler-notch" data-month="11"><span class="notch-tick"></span><span class="notch-num">11m</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Layout Principal Split-Screen (55% Tarjetas / 45% Mapa Interactivo) -->
     <main class="split-screen-container">
         <!-- Columna Izquierda: Grid de Tarjetas de Alojamiento Estilo Airbnb -->
         <section class="properties-feed-column" id="properties-feed-column">
             <div class="feed-header-info">
                 <div class="results-count" id="results-count-label">
-                    Cargando estancias en Asunción...
+                    Cargando 22 alojamientos disponibles en Paraguay...
                 </div>
             </div>
 
@@ -173,25 +221,25 @@
 
             <div id="leaflet-map" class="map-container"></div>
             
-            <button class="map-recenter-btn glass-btn" id="map-recenter-btn" title="Centrar en Asunción">
+            <button class="map-recenter-btn glass-btn" id="map-recenter-btn" title="Ajustar vista a todas las propiedades">
                 <i class="fas fa-crosshairs"></i>
             </button>
         </section>
     </main>
 
-    <!-- 4. Botón Flotante Airbnb "Mostrar Mapa / Mostrar Lista" -->
+    <!-- 5. Botón Flotante Airbnb "Mostrar Mapa / Mostrar Lista" -->
     <button class="airbnb-floating-map-btn" id="mobile-view-toggle">
         <i class="fas fa-map"></i>
         <span>Mostrar mapa</span>
     </button>
 
-    <!-- 5. Modal Completo de Filtros Estilo Airbnb (Glassmorphism) -->
+    <!-- 6. Modal Completo de Filtros Estilo Airbnb (Glassmorphism) -->
     <div class="modal-container" id="airbnb-filters-modal">
         <div class="modal-backdrop" id="close-airbnb-filters-backdrop"></div>
         <div class="modal-dialog-large airbnb-filter-modal-dialog">
             <div class="modal-top-bar">
                 <button class="modal-close-button" id="close-airbnb-filters-btn">&times;</button>
-                <span class="font-bold text-base">Filtros</span>
+                <span class="font-bold text-base">Filtros Avanzados</span>
                 <div style="width: 24px;"></div>
             </div>
 
@@ -237,21 +285,7 @@
                     </div>
                 </div>
 
-                <!-- Sección 3: Duración de la Estancia -->
-                <div class="filter-section-block">
-                    <h3 class="filter-section-heading">Duración de la Estancia (Meses)</h3>
-                    <p class="filter-section-sub">Descuentos automáticos desde 3 meses en adelante.</p>
-                    <div class="duration-segmented-airbnb" id="modal-duration-segmented">
-                        <button type="button" class="segmented-btn" data-months="1">1 m</button>
-                        <button type="button" class="segmented-btn" data-months="2">2 m</button>
-                        <button type="button" class="segmented-btn active" data-months="3">3 m (-8%)</button>
-                        <button type="button" class="segmented-btn" data-months="6">6 m (-15%)</button>
-                        <button type="button" class="segmented-btn" data-months="9">9 m (-22%)</button>
-                        <button type="button" class="segmented-btn" data-months="11">11 m (-22%)</button>
-                    </div>
-                </div>
-
-                <!-- Sección 4: Habitaciones y Camas -->
+                <!-- Sección 3: Habitaciones y Camas -->
                 <div class="filter-section-block">
                     <h3 class="filter-section-heading">Habitaciones y Camas</h3>
                     
@@ -277,12 +311,12 @@
                     </div>
                 </div>
 
-                <!-- Sección 5: Servicios Destacados -->
+                <!-- Sección 4: Servicios Destacados -->
                 <div class="filter-section-block">
                     <h3 class="filter-section-heading">Servicios y Equipamiento</h3>
                     <div class="amenities-checkboxes-grid-airbnb">
                         <label class="amenity-checkbox-card">
-                            <input type="checkbox" class="airbnb-filter-checkbox" value="wifi" checked>
+                            <input type="checkbox" class="airbnb-filter-checkbox" value="wifi">
                             <i class="fas fa-wifi"></i>
                             <span>WiFi 500 Mbps</span>
                         </label>
@@ -294,7 +328,7 @@
                         <label class="amenity-checkbox-card">
                             <input type="checkbox" class="airbnb-filter-checkbox" value="garage">
                             <i class="fas fa-car"></i>
-                            <span>Estacionamiento gratuito</span>
+                            <span>Estacionamiento</span>
                         </label>
                         <label class="amenity-checkbox-card">
                             <input type="checkbox" class="airbnb-filter-checkbox" value="air_conditioning">
@@ -319,7 +353,7 @@
                         <label class="amenity-checkbox-card">
                             <input type="checkbox" class="airbnb-filter-checkbox" value="security">
                             <i class="fas fa-shield-halved"></i>
-                            <span>Seguridad 24 horas</span>
+                            <span>Seguridad 24h</span>
                         </label>
                     </div>
                 </div>
@@ -333,7 +367,7 @@
         </div>
     </div>
 
-    <!-- 6. Modal de Detalle con Sticky Booking Card (Glassmorphism) -->
+    <!-- 7. Modal de Detalle con Sticky Booking Card (Glassmorphism) -->
     <div class="modal-container" id="property-modal-container">
         <div class="modal-backdrop" id="property-modal-backdrop"></div>
         <div class="modal-dialog-large glass-modal-dialog" id="property-modal-dialog">
@@ -347,7 +381,7 @@
         </div>
     </div>
 
-    <!-- 7. Modal de Publicación de Unidad (Host Mode) -->
+    <!-- 8. Modal de Publicación de Unidad (Host Mode) -->
     <div class="modal-container" id="publish-modal-container">
         <div class="modal-backdrop" id="publish-modal-backdrop"></div>
         <div class="modal-dialog-large glass-modal-dialog" style="max-width: 760px; height: 90vh;">
