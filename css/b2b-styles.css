@@ -74,7 +74,8 @@ body.b2b-light-theme {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #0f766e;
+    background: #bef264;
+    box-shadow: 0 0 8px #bef264;
     display: inline-block;
 }
 
@@ -83,9 +84,9 @@ body.b2b-light-theme {
     font-size: 0.65rem;
     font-weight: 800;
     padding: 3px 8px;
-    background: #ecfdf5;
-    color: #0f766e;
-    border: 1px solid #a7f3d0;
+    background: #f7fee7;
+    color: #3f6212;
+    border: 1px solid #bef264;
     border-radius: 20px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -144,17 +145,18 @@ body.b2b-light-theme {
 
 .sidebar-nav-btn:hover i, 
 .sidebar-nav-link:hover i {
-    color: #0f766e;
+    color: #65a30d;
 }
 
 .sidebar-nav-btn.active {
-    background: #f0fdfa;
-    color: #0f766e;
+    background: #0f172a;
+    color: #ffffff;
     font-weight: 700;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.18);
 }
 
 .sidebar-nav-btn.active i {
-    color: #0f766e;
+    color: #bef264;
 }
 
 .nav-count-pill {
@@ -335,9 +337,9 @@ body.b2b-light-theme {
 }
 
 .topbar-search-box:focus-within {
-    border-color: #0f766e;
+    border-color: #84cc16;
     background: #ffffff;
-    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.1);
+    box-shadow: 0 0 0 3px rgba(190, 242, 100, 0.3);
 }
 
 .topbar-search-box i {
@@ -421,15 +423,19 @@ body.b2b-light-theme {
 }
 
 .btn-primary {
-    background: #0f766e;
-    color: #ffffff;
+    background: #0f172a;
+    color: #bef264;
+    border: 1px solid rgba(190, 242, 100, 0.4);
     padding: 8px 16px;
     font-size: 0.84rem;
+    font-weight: 800;
 }
 
 .btn-primary:hover {
-    background: #115e59;
-    box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);
+    background: #0f766e;
+    color: #ffffff;
+    border-color: #0f766e;
+    box-shadow: 0 4px 14px rgba(15, 118, 110, 0.35);
 }
 
 .btn-outline {
@@ -521,12 +527,14 @@ body.b2b-light-theme {
 }
 
 .bg-sky-light { background: #e0f2fe; }
-.bg-emerald-light { background: #d1fae5; }
+.bg-emerald-light { background: #ecfccb; }
 .bg-amber-light { background: #fef3c7; }
 .bg-purple-light { background: #f3e8ff; }
 
 .text-sky-600 { color: #0284c7; }
-.text-emerald-600 { color: #059669; }
+.text-emerald-600 { color: #4d7c0f; }
+.text-emerald-700 { color: #3f6212; }
+.text-emerald-500 { color: #65a30d; }
 .text-amber-600 { color: #d97706; }
 .text-purple-600 { color: #9333ea; }
 
@@ -557,7 +565,7 @@ body.b2b-light-theme {
 }
 
 .kpi-trend.positive {
-    color: #059669;
+    color: #4d7c0f;
     font-weight: 700;
 }
 
@@ -569,8 +577,9 @@ body.b2b-light-theme {
 }
 
 .kpi-badge-pill.green {
-    background: #ecfdf5;
-    color: #059669;
+    background: #f7fee7;
+    color: #3f6212;
+    border: 1px solid #bef264;
 }
 
 .kpi-badge-pill.blue {
@@ -612,7 +621,7 @@ body.b2b-light-theme {
     font-size: 0.72rem;
     font-weight: 800;
     text-transform: uppercase;
-    color: #0f766e;
+    color: #4d7c0f;
     letter-spacing: 0.05em;
     margin-bottom: 3px;
 }
@@ -935,7 +944,7 @@ body.b2b-light-theme {
     background: #f8fafc;
     padding: 8px 10px;
     border-radius: 8px;
-    border-left: 3px solid #0f766e;
+    border-left: 3px solid #84cc16;
 }
 
 /* Barra Inferior de Leyenda */
@@ -974,7 +983,7 @@ body.b2b-light-theme {
     width: 140px;
     height: 8px;
     border-radius: var(--radius-full);
-    background: linear-gradient(90deg, #bef264, #10b981, #0f766e, #0284c7, #8b5cf6);
+    background: linear-gradient(90deg, #bef264, #84cc16, #0f766e, #0284c7, #8b5cf6);
 }
 
 .legend-scale-labels {
@@ -1015,14 +1024,14 @@ body.b2b-light-theme {
     align-items: center;
     gap: 5px;
     padding: 5px 10px;
-    background: #0f766e;
-    color: #ffffff;
+    background: #0f172a;
+    color: #bef264;
     font-family: 'Outfit', sans-serif;
     font-size: 0.8rem;
     font-weight: 800;
     border-radius: 20px;
-    box-shadow: 0 4px 14px rgba(15, 118, 110, 0.45);
-    border: 2px solid #ffffff;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.35);
+    border: 1.5px solid rgba(190, 242, 100, 0.4);
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1033,13 +1042,15 @@ body.b2b-light-theme {
 .b2b-zone-price-pill.active {
     background: #0f172a;
     border-color: #bef264;
+    color: #bef264;
     transform: scale(1.15) translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
     z-index: 1000;
 }
 
 .b2b-zone-price-pill.tier-high {
-    background: #0f766e;
+    background: #0f172a;
+    border-color: #84cc16;
 }
 
 .b2b-zone-price-pill.tier-premium {
@@ -1149,9 +1160,9 @@ body.b2b-light-theme {
 .zones-count-badge {
     font-size: 0.76rem;
     font-weight: 700;
-    color: #0f766e;
-    background: #ecfdf5;
-    border: 1px solid #a7f3d0;
+    color: #3f6212;
+    background: #f7fee7;
+    border: 1px solid #bef264;
     padding: 3px 10px;
     border-radius: var(--radius-full);
 }
@@ -1190,8 +1201,8 @@ body.b2b-light-theme {
 
 .zones-search-field:focus {
     background: #ffffff;
-    border-color: #0f766e;
-    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+    border-color: #84cc16;
+    box-shadow: 0 0 0 3px rgba(190, 242, 100, 0.3);
 }
 
 .btn-clear-search {
@@ -1237,10 +1248,10 @@ body.b2b-light-theme {
 }
 
 .btn-city-pill.active {
-    background: #0f766e;
-    color: #ffffff;
-    border-color: #0f766e;
-    box-shadow: 0 2px 6px rgba(15, 118, 110, 0.25);
+    background: #0f172a;
+    color: #bef264;
+    border-color: #bef264;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
 .filter-tier-row {
@@ -2767,7 +2778,7 @@ input:checked + .slider-toggle:before {
     flex-shrink: 0;
 }
 
-.bg-emerald-subtle { background: #ecfdf5; }
+.bg-emerald-subtle { background: #f7fee7; border: 1px solid #bef264; }
 .bg-sky-subtle { background: #f0f9ff; }
 .bg-amber-subtle { background: #fffbeb; }
 .bg-purple-subtle { background: #faf5ff; }
@@ -2847,8 +2858,8 @@ input:checked + .slider-toggle:before {
 }
 
 .excel-search-box:focus-within {
-    border-color: #0f766e;
-    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+    border-color: #84cc16;
+    box-shadow: 0 0 0 3px rgba(190, 242, 100, 0.3);
 }
 
 .excel-search-box i {
@@ -2879,8 +2890,8 @@ input:checked + .slider-toggle:before {
 }
 
 .excel-select:focus {
-    border-color: #0f766e;
-    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+    border-color: #84cc16;
+    box-shadow: 0 0 0 3px rgba(190, 242, 100, 0.3);
 }
 
 .excel-toolbar-right {
@@ -2911,9 +2922,9 @@ input:checked + .slider-toggle:before {
 }
 
 .excel-curr-btn.active {
-    background: #0f766e;
-    color: #ffffff;
-    box-shadow: 0 1px 4px rgba(15, 118, 110, 0.3);
+    background: #0f172a;
+    color: #bef264;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
 .excel-count-pill {
@@ -3060,11 +3071,11 @@ input:checked + .slider-toggle:before {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.74rem;
     font-weight: 800;
-    color: #0f766e;
-    background: #ecfdf5;
+    color: #3f6212;
+    background: #f7fee7;
     padding: 3px 7px;
     border-radius: 6px;
-    border: 1px solid #a7f3d0;
+    border: 1px solid #bef264;
     white-space: nowrap;
 }
 
@@ -3103,7 +3114,7 @@ input:checked + .slider-toggle:before {
 }
 
 .excel-prop-title:hover {
-    color: #0f766e;
+    color: #4d7c0f;
     text-decoration: underline;
 }
 
@@ -3132,9 +3143,9 @@ input:checked + .slider-toggle:before {
 }
 
 .excel-badge-op.sale {
-    background: #ecfdf5;
-    color: #065f46;
-    border: 1px solid #a7f3d0;
+    background: #f7fee7;
+    color: #3f6212;
+    border: 1px solid #bef264;
 }
 
 .excel-badge-op.rent {
@@ -3164,9 +3175,9 @@ input:checked + .slider-toggle:before {
 }
 
 .excel-status-select.status-active {
-    background: #ecfdf5;
-    color: #065f46;
-    border-color: #a7f3d0;
+    background: #f7fee7;
+    color: #3f6212;
+    border-color: #bef264;
 }
 
 .excel-status-select.status-featured {
@@ -3250,9 +3261,9 @@ input:checked + .slider-toggle:before {
 }
 
 .btn-excel-action:hover {
-    background: #0f766e;
-    color: #ffffff;
-    border-color: #0f766e;
+    background: #0f172a;
+    color: #bef264;
+    border-color: #bef264;
 }
 
 .btn-excel-action.danger:hover {
