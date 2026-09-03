@@ -329,8 +329,123 @@
             // Controlador para alternar entre Cuadrícula y Fila Detallada
             this.initFeedLayoutController();
 
+            // Controlador de barra de filtros móvil (menú desplegable y scroll auto-hide)
+            this.initMobileFilterController();
+
             // Enlaces rápidos del Footer
             this.initFooterLinks();
+        },
+
+        initMobileFilterController: function () {
+            const btnMobileToggle = document.getElementById("btn-mobile-filters-toggle");
+            const pillsWrap = document.getElementById("filter-dropdown-pills-wrap");
+            const filterBar = document.getElementById("apple-filter-bar");
+            const feedCol = document.querySelector(".properties-feed-column");
+            const countBadge = document.getElementById("mobile-filter-count-badge");
+
+            // 1. Toggle del menú desplegable móvil
+            if (btnMobileToggle && pillsWrap) {
+                btnMobileToggle.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    const isOpen = pillsWrap.classList.toggle("mobile-expanded");
+                    btnMobileToggle.classList.toggle("active", isOpen);
+                });
+
+                // Cerrar al hacer clic fuera
+                document.addEventListener("click", (e) => {
+                    if (!e.target.closest("#apple-filter-bar")) {
+                        pillsWrap.classList.remove("mobile-expanded");
+                        btnMobileToggle.classList.remove("active");
+                    }
+                });
+            }
+
+            // 2. Contador de filtros activos en la insignia móvil
+            const updateActiveFilterCount = () => {
+                if (!countBadge || !window.FilterManager) return;
+                const f = window.FilterManager.filters || {};
+                let count = 0;
+                if (f.operations && f.operations.length > 0 && !f.operations.includes("all")) count++;
+                if (f.propTypes && f.propTypes.length > 0 && !f.propTypes.includes("all")) count++;
+                if (f.minBedrooms > 0 || f.minBathrooms > 0) count++;
+                if (f.minPriceUSD > 0 || (f.maxPriceUSD && f.maxPriceUSD < 10000000)) count++;
+                if (f.amenities && f.amenities.length > 0) count++;
+                if (f.acceptsCheRogaPora) count++;
+                if (f.polygon && f.polygon.length >= 3) count++;
+
+                if (count > 0) {
+                    countBadge.textContent = count;
+                    countBadge.style.display = "inline-block";
+                } else {
+                    countBadge.style.display = "none";
+                }
+            };
+
+            window.addEventListener("propertiesFiltered", updateActiveFilterCount);
+            window.addEventListener("filtersReset", updateActiveFilterCount);
+
+            // 3. Repliegue automático al scrollear hacia abajo, reaparece al scrollear hacia arriba
+            let lastScrollY = window.scrollY || document.documentElement.scrollTop;
+            let isTicking = false;
+
+            const handleScroll = (currentY) => {
+                if (!filterBar) return;
+                const isMobile = window.innerWidth <= 768;
+                if (!isMobile) {
+                    filterBar.classList.remove("filter-bar-hidden");
+                    return;
+                }
+
+                // Si el menú desplegable está abierto, no ocultarlo
+                if (pillsWrap && pillsWrap.classList.contains("mobile-expanded")) return;
+
+                const delta = currentY - lastScrollY;
+
+                if (currentY <= 15) {
+                    // En la parte superior siempre visible
+                    filterBar.classList.remove("filter-bar-hidden");
+                } else if (delta > 8 && currentY > 50) {
+                    // Scroll hacia abajo: ocultar hacia arriba
+                    filterBar.classList.add("filter-bar-hidden");
+                } else if (delta < -8) {
+                    // Scroll hacia arriba: reaparecer
+                    filterBar.classList.remove("filter-bar-hidden");
+                }
+
+                lastScrollY = currentY;
+            };
+
+            window.addEventListener("scroll", () => {
+                if (!isTicking) {
+                    window.requestAnimationFrame(() => {
+                        handleScroll(window.scrollY || document.documentElement.scrollTop);
+                        isTicking = false;
+                    });
+                    isTicking = true;
+                }
+            }, { passive: true });
+
+            if (feedCol) {
+                let lastFeedY = 0;
+                feedCol.addEventListener("scroll", () => {
+                    const currentY = feedCol.scrollTop;
+                    const delta = currentY - lastFeedY;
+                    const isMobile = window.innerWidth <= 768;
+
+                    if (isMobile && filterBar) {
+                        if (!pillsWrap || !pillsWrap.classList.contains("mobile-expanded")) {
+                            if (currentY <= 15) {
+                                filterBar.classList.remove("filter-bar-hidden");
+                            } else if (delta > 8 && currentY > 50) {
+                                filterBar.classList.add("filter-bar-hidden");
+                            } else if (delta < -8) {
+                                filterBar.classList.remove("filter-bar-hidden");
+                            }
+                        }
+                    }
+                    lastFeedY = currentY;
+                }, { passive: true });
+            }
         },
 
         initFeedLayoutController: function () {

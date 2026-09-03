@@ -73,8 +73,8 @@
         </div>
     </header>
 
-    <!-- 2. Barra de Búsqueda y Filtros Flotantes (Glassmorphism Estilo Apple) -->
-    <section class="search-filter-bar apple-filter-bar">
+    <!-- 2. Barra de Búsqueda y Filtros Flotantes (Glassmorphism Estilo Apple con Modo Móvil Desplegable) -->
+    <section class="search-filter-bar apple-filter-bar" id="apple-filter-bar">
         <div class="filter-pill-group">
             <!-- 1. Buscador Inteligente por Palabra Clave o Zona -->
             <div class="apple-search-wrapper">
@@ -82,11 +82,21 @@
                 <input type="text" id="search-input" placeholder="Buscar por barrio, ciudad o punto de interés..." autocomplete="off">
             </div>
 
-            <!-- 2. Menú Desplegable: Operación (SELECCIÓN MÚLTIPLE) -->
-            <div class="apple-dropdown-container" id="dropdown-operation-container">
-                <button type="button" class="apple-filter-btn" id="btn-dropdown-operation">
-                    <i class="fas fa-tag"></i>
-                    <span id="label-operation">Operación: Todas</span>
+            <!-- Botón Desplegable de Filtros para Móvil (Solo visible en Mobile) -->
+            <button type="button" class="btn-mobile-filters-toggle" id="btn-mobile-filters-toggle" aria-label="Abrir filtros">
+                <i class="fas fa-sliders"></i>
+                <span>Filtros</span>
+                <span class="mobile-filter-badge" id="mobile-filter-count-badge" style="display: none;">0</span>
+                <i class="fas fa-chevron-down toggle-chevron"></i>
+            </button>
+
+            <!-- Contenedor de Píldoras de Filtro (Inline en Desktop, Menú Desplegable en Móvil) -->
+            <div class="filter-dropdown-pills-wrap" id="filter-dropdown-pills-wrap">
+                <!-- 2. Menú Desplegable: Operación (SELECCIÓN MÚLTIPLE) -->
+                <div class="apple-dropdown-container" id="dropdown-operation-container">
+                    <button type="button" class="apple-filter-btn" id="btn-dropdown-operation">
+                        <i class="fas fa-tag"></i>
+                        <span id="label-operation">Operación: Todas</span>
                     <span class="filter-count-badge" id="badge-operation-count" style="display: none;">0</span>
                     <i class="fas fa-chevron-down chevron-icon"></i>
                 </button>
@@ -358,6 +368,7 @@
             <button type="button" class="apple-reset-btn" id="btn-global-reset" title="Restablecer todos los filtros">
                 <i class="fas fa-rotate-left"></i>
             </button>
+            </div><!-- /filter-dropdown-pills-wrap -->
         </div>
     </section>
 
