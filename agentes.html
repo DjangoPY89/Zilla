@@ -1,0 +1,1358 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zilla Pro B2B | Inteligencia Inmobiliaria, CRM & Datos de Mercado Paraguay</title>
+    <meta name="description" content="Plataforma de inteligencia de negocios para agentes inmobiliarios y desarrolladoras en Paraguay. Mapas de precio m², Cap Rate, calificación de leads AFD y Plan Regulador.">
+    
+    <!-- Google Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Leaflet Map Engine for Interactive Heatmap & Zones -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Custom Stylesheet (Self-Contained Light Dashboard) -->
+    <link rel="stylesheet" href="css/b2b-styles.css?v=4.0">
+    <link rel="stylesheet" href="css/mobile-nav.css?v=1.0">
+</head>
+<body class="b2b-light-theme">
+
+    <div class="b2b-app-layout">
+
+        <!-- ============================================================
+             1. BARRA LATERAL IZQUIERDA (LEFT SIDEBAR NAVIGATION)
+             ============================================================ -->
+        <aside class="b2b-sidebar">
+            <!-- Brand Logo -->
+            <div class="b2b-sidebar-brand">
+                <a href="index.html" class="evergreen-brand-logo">
+                    <span class="brand-text">Zilla</span>
+                    <span class="brand-badge-dot"></span>
+                </a>
+                <span class="b2b-sidebar-badge">PRO B2B</span>
+            </div>
+
+            <!-- Navigation Sections -->
+            <nav class="b2b-sidebar-nav">
+                <!-- Group 1: Gestión & Publicaciones (Panel Planilla Excel) -->
+                <div class="sidebar-group-title">PUBLICACIONES & CARTERA</div>
+                <button type="button" class="sidebar-nav-btn b2b-tab-btn active" data-target="publicaciones-excel-tab">
+                    <i class="fas fa-table-cells text-emerald-600"></i>
+                    <span>Mis Publicaciones</span>
+                    <span class="nav-count-pill" id="nav-listings-count">12</span>
+                </button>
+                <a href="publicar.html" class="sidebar-nav-btn" style="text-decoration: none;">
+                    <i class="fas fa-plus text-emerald-600"></i>
+                    <span>+ Publicar Inmueble</span>
+                </a>
+
+                <!-- Group 2: CRM & Leads -->
+                <div class="sidebar-group-title">CRM & CLIENTES</div>
+                <button type="button" class="sidebar-nav-btn b2b-tab-btn" data-target="crm-leads-tab">
+                    <i class="fas fa-users-gear"></i>
+                    <span>Pipeline de Leads</span>
+                    <span class="nav-count-pill active-leads-count" id="nav-leads-badge">42</span>
+                </button>
+                <button type="button" class="sidebar-nav-btn" onclick="scrollToAutomations()">
+                    <i class="fas fa-wand-magic-sparkles text-emerald-600"></i>
+                    <span>Automatizaciones IA</span>
+                </button>
+
+                <!-- Group 3: Analytics & Market (MOVIDO DEBAJO DE CRM & CLIENTES) -->
+                <div class="sidebar-group-title">MERCADO & ANALYTICS</div>
+                <button type="button" class="sidebar-nav-btn b2b-tab-btn" data-target="market-insights-tab">
+                    <i class="fas fa-chart-pie"></i>
+                    <span>Precios m² & Cap Rate</span>
+                </button>
+                <button type="button" class="sidebar-nav-btn b2b-tab-btn" data-target="search-trends-tab">
+                    <i class="fas fa-magnifying-glass-chart"></i>
+                    <span>Tendencias "En Pozo"</span>
+                    <span class="nav-count-pill">HOT</span>
+                </button>
+
+                <!-- Group 4: Legal & Regulatory -->
+                <div class="sidebar-group-title">LEGAL & REGULATORIO</div>
+                <button type="button" class="sidebar-nav-btn b2b-tab-btn" data-target="legal-zoning-tab">
+                    <i class="fas fa-compass-drafting"></i>
+                    <span>Plan Regulador & Legal</span>
+                </button>
+
+                <!-- Group 5: White Label & Tools -->
+                <div class="sidebar-group-title">HERRAMIENTAS B2B</div>
+                <button type="button" class="sidebar-nav-btn b2b-tab-btn" data-target="white-label-tab">
+                    <i class="fas fa-cubes-stacked"></i>
+                    <span>Widgets & Dossier PDF</span>
+                </button>
+
+                <!-- Divider -->
+                <div class="sidebar-divider"></div>
+
+                <!-- Group 6: Public Shortcuts -->
+                <div class="sidebar-group-title">ACCESOS RÁPIDOS</div>
+                <a href="index.html" class="sidebar-nav-link">
+                    <i class="fas fa-house"></i>
+                    <span>Portal Público</span>
+                </a>
+                <a href="explorar.html" class="sidebar-nav-link">
+                    <i class="fas fa-map-location-dot"></i>
+                    <span>Mapa Inmobiliario</span>
+                </a>
+            </nav>
+
+            <!-- Bottom User & Sync Profile -->
+            <div class="b2b-sidebar-footer">
+                <div class="sidebar-user-card">
+                    <div class="user-avatar-wrap" style="width: 36px; height: 36px; min-width: 36px; position: relative;">
+                        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Avatar Agente" class="user-avatar-img" style="width: 36px; height: 36px; border-radius: 50%; object-fit: cover; display: block;">
+                        <span class="user-status-indicator"></span>
+                    </div>
+                    <div class="user-meta">
+                        <strong class="user-name">Juan Solalinde</strong>
+                        <span class="user-role">Broker Inmobiliario</span>
+                    </div>
+                </div>
+
+                <div class="sidebar-sync-pill" title="Sincronizado en tiempo real con Supabase">
+                    <span class="status-dot-pulse"></span>
+                    <span>Supabase Live DB</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- ============================================================
+             2. ÁREA DE CONTENIDO PRINCIPAL (MAIN DASHBOARD WRAPPER)
+             ============================================================ -->
+        <div class="b2b-main-wrapper">
+
+            <!-- Topbar Header -->
+            <header class="b2b-topbar">
+                <div class="topbar-left">
+                    <button type="button" class="btn-zilla-mobile-hamburger" id="topbar-mobile-hamburger-btn" aria-label="Abrir Menú Móvil">
+                        <div class="hamburger-bars">
+                            <span class="bar"></span>
+                            <span class="bar short"></span>
+                            <span class="bar"></span>
+                        </div>
+                    </button>
+                    <div class="topbar-greeting">
+                        <h1 class="greeting-title">Bienvenido de vuelta, Juan <span class="wave-emoji">👋</span></h1>
+                        <p class="greeting-sub">Centro de Inteligencia Inmobiliaria & CRM · Paraguay Q3 2026</p>
+                    </div>
+                </div>
+
+                <div class="topbar-right">
+                    <!-- Global Search Bar -->
+                    <div class="topbar-search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Buscar clientes, zonas, FOT o contratos... (⌘K)" id="global-search-input">
+                    </div>
+
+                    <!-- Date & Region Selector Pill -->
+                    <div class="topbar-pill-select" title="Región activa">
+                        <i class="fas fa-location-dot text-emerald-600"></i>
+                        <span>Asunción & Gran Asunción</span>
+                    </div>
+
+                    <!-- Notification Button -->
+                    <button class="topbar-icon-btn" title="Notificaciones activas" type="button">
+                        <i class="far fa-bell"></i>
+                        <span class="notif-badge">3</span>
+                    </button>
+
+                    <!-- Quick Action: Simular Lead IA -->
+                    <button type="button" class="btn btn-primary topbar-cta-btn" onclick="triggerLeadSimulation()">
+                        <i class="fas fa-bolt"></i>
+                        <span>Simular Lead IA</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Main Content Container -->
+            <main class="b2b-main-body">
+
+                <!-- ============================================================
+                     KPI METRIC CARDS ROW (INSPIRADO EN LAS IMÁGENES)
+                     ============================================================ -->
+                <section class="b2b-kpis-bar">
+                    <!-- Card 1: Precio Promedio -->
+                    <div class="kpi-metric-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-title">Precio Promedio Asunción</span>
+                            <div class="kpi-icon-pill bg-sky-light"><i class="fas fa-tag text-sky-600"></i></div>
+                        </div>
+                        <div class="kpi-card-value">
+                            <strong class="kpi-number">$1,650</strong>
+                            <span class="kpi-unit">/ m²</span>
+                        </div>
+                        <div class="kpi-card-footer">
+                            <span class="kpi-trend positive"><i class="fas fa-arrow-up"></i> +7.8%</span>
+                            <span class="kpi-subtext">vs año anterior</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: Cap Rate Temporal -->
+                    <div class="kpi-metric-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-title">Cap Rate Renta Temporal</span>
+                            <div class="kpi-icon-pill bg-emerald-light"><i class="fas fa-percent text-emerald-600"></i></div>
+                        </div>
+                        <div class="kpi-card-value">
+                            <strong class="kpi-number text-emerald-600">12.4%</strong>
+                            <span class="kpi-unit">Yield Neto</span>
+                        </div>
+                        <div class="kpi-card-footer">
+                            <span class="kpi-badge-pill green">vs 7.8% Tradicional</span>
+                            <span class="kpi-subtext">78% Ocupación</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: Leads Calificados -->
+                    <div class="kpi-metric-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-title">Leads Calificados Hoy</span>
+                            <div class="kpi-icon-pill bg-amber-light"><i class="fas fa-user-check text-amber-600"></i></div>
+                        </div>
+                        <div class="kpi-card-value">
+                            <strong class="kpi-number">42</strong>
+                            <span class="kpi-unit">Dossiers</span>
+                        </div>
+                        <div class="kpi-card-footer">
+                            <span class="kpi-trend positive"><i class="fas fa-shield"></i> 78%</span>
+                            <span class="kpi-subtext">Aptos Crédito AFD</span>
+                        </div>
+                    </div>
+
+                    <!-- Card 4: Plan Regulador -->
+                    <div class="kpi-metric-card">
+                        <div class="kpi-card-header">
+                            <span class="kpi-title">Zonificación & AIM</span>
+                            <div class="kpi-icon-pill bg-purple-light"><i class="fas fa-compass-drafting text-purple-600"></i></div>
+                        </div>
+                        <div class="kpi-card-value">
+                            <strong class="kpi-number">4 Zonas</strong>
+                            <span class="kpi-unit">Reglamentadas</span>
+                        </div>
+                        <div class="kpi-card-footer">
+                            <span class="kpi-badge-pill blue">Plan Regulador</span>
+                            <span class="kpi-subtext">Asunción & Ejes</span>
+                        </div>
+                    </div>
+                </section>
+
+                  <!-- ============================================================
+                     MÓDULO 0: GESTIÓN DE PUBLICACIONES (PANEL PLANILLA EXCEL PRO)
+                     ============================================================ -->
+                <section id="publicaciones-excel-tab" class="b2b-module-section active">
+                    <!-- Top Header & Banner -->
+                    <div class="section-top-header">
+                        <div>
+                            <span class="section-tag-light"><i class="fas fa-table-cells text-emerald-600"></i> Inventario & Publicaciones</span>
+                            <h2 class="section-title-dark">Gestión de Publicaciones Pro (Planilla Excel)</h2>
+                            <p class="section-desc-light">Panel de control estilo hoja de cálculo para administrar precios, estados, visibilidad y métricas de visitas/leads en tiempo real.</p>
+                        </div>
+                        <div class="excel-header-actions">
+                            <button type="button" class="btn btn-outline btn-sm" onclick="exportListingsToCSV()">
+                                <i class="fas fa-file-excel text-emerald-600"></i> Exportar (.CSV)
+                            </button>
+                            <a href="publicar.html" class="btn btn-primary btn-sm" style="text-decoration: none;">
+                                <i class="fas fa-plus"></i> + Publicar Inmueble
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- Quick Stats Cards (KPIs de Publicaciones) -->
+                    <div class="excel-kpi-grid">
+                        <div class="excel-kpi-card">
+                            <div class="kpi-icon-box bg-emerald-subtle"><i class="fas fa-building text-emerald-600"></i></div>
+                            <div class="kpi-info">
+                                <span class="kpi-lbl">Total Publicaciones</span>
+                                <strong class="kpi-val" id="excel-stat-total">12 Inmuebles</strong>
+                                <span class="kpi-sub text-emerald-700" id="excel-stat-active"><i class="fas fa-circle-check"></i> 10 Activas en Zilla</span>
+                            </div>
+                        </div>
+
+                        <div class="excel-kpi-card">
+                            <div class="kpi-icon-box bg-sky-subtle"><i class="fas fa-vault text-sky-600"></i></div>
+                            <div class="kpi-info">
+                                <span class="kpi-lbl">Valor de Cartera</span>
+                                <strong class="kpi-val text-sky-700" id="excel-stat-valuation">$2,840,000 USD</strong>
+                                <span class="kpi-sub text-slate-500" id="excel-stat-val-pyg">≈ ₲ 22.578M Guaraníes</span>
+                            </div>
+                        </div>
+
+                        <div class="excel-kpi-card">
+                            <div class="kpi-icon-box bg-amber-subtle"><i class="fas fa-comments text-amber-600"></i></div>
+                            <div class="kpi-info">
+                                <span class="kpi-lbl">Leads & Consultas</span>
+                                <strong class="kpi-val text-amber-600" id="excel-stat-leads">148 Leads</strong>
+                                <span class="kpi-sub text-amber-700"><i class="fas fa-arrow-trend-up"></i> +24% este mes</span>
+                            </div>
+                        </div>
+
+                        <div class="excel-kpi-card">
+                            <div class="kpi-icon-box bg-purple-subtle"><i class="fas fa-eye text-purple-600"></i></div>
+                            <div class="kpi-info">
+                                <span class="kpi-lbl">Vistas Totales</span>
+                                <strong class="kpi-val text-purple-700" id="excel-stat-views">18,450</strong>
+                                <span class="kpi-sub text-slate-500">Avg. 1,537 / propiedad</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Excel Spreadsheet Container -->
+                    <div class="excel-panel-card">
+                        <!-- Excel Controls Toolbar -->
+                        <div class="excel-toolbar">
+                            <div class="excel-toolbar-left">
+                                <!-- Search Box -->
+                                <div class="excel-search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="excel-search-input" placeholder="Buscar por código, título, barrio o calle..." oninput="filterExcelListings()">
+                                </div>
+
+                                <!-- Status Filter -->
+                                <div class="excel-filter-select-wrap">
+                                    <select id="excel-filter-status" class="excel-select" onchange="filterExcelListings()">
+                                        <option value="all">Estado: Todos</option>
+                                        <option value="active">🟢 Activos</option>
+                                        <option value="featured">⭐ Destacados</option>
+                                        <option value="negotiating">🟡 En Negociación</option>
+                                        <option value="paused">⚪ Pausados</option>
+                                        <option value="sold">🔴 Vendidos</option>
+                                    </select>
+                                </div>
+
+                                <!-- Operation Filter -->
+                                <div class="excel-filter-select-wrap">
+                                    <select id="excel-filter-operation" class="excel-select" onchange="filterExcelListings()">
+                                        <option value="all">Operación: Todas</option>
+                                        <option value="sale">Venta</option>
+                                        <option value="rent_monthly">Alquiler Mensual</option>
+                                        <option value="rent_temporary">Alquiler Temporal</option>
+                                        <option value="off_plan">En Pozo</option>
+                                    </select>
+                                </div>
+
+                                <!-- Property Type Filter -->
+                                <div class="excel-filter-select-wrap">
+                                    <select id="excel-filter-type" class="excel-select" onchange="filterExcelListings()">
+                                        <option value="all">Tipo: Todos</option>
+                                        <option value="apartment">Departamentos</option>
+                                        <option value="house">Casas</option>
+                                        <option value="gated_community">Barrios Cerrados</option>
+                                        <option value="duplex">Dúplex</option>
+                                        <option value="land">Terrenos</option>
+                                        <option value="commercial">Comercial</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="excel-toolbar-right">
+                                <!-- Currency Toggle -->
+                                <div class="excel-currency-toggle">
+                                    <button type="button" class="excel-curr-btn active" id="btn-excel-usd" onclick="setExcelCurrency('USD')">USD ($)</button>
+                                    <button type="button" class="excel-curr-btn" id="btn-excel-pyg" onclick="setExcelCurrency('PYG')">PYG (₲)</button>
+                                </div>
+
+                                <!-- Count Badge -->
+                                <span class="excel-count-pill" id="excel-items-count">Mostrando 12 de 12</span>
+                            </div>
+                        </div>
+
+                        <!-- Bulk Action Floating Bar (Shows when checkboxes selected) -->
+                        <div class="excel-bulk-bar" id="excel-bulk-bar" style="display: none;">
+                            <div class="bulk-bar-left">
+                                <span class="bulk-selected-count" id="bulk-selected-count">0 seleccionados</span>
+                            </div>
+                            <div class="bulk-bar-actions">
+                                <button type="button" class="btn-bulk-action" onclick="bulkSetStatus('active')"><i class="fas fa-play text-emerald-600"></i> Activar</button>
+                                <button type="button" class="btn-bulk-action" onclick="bulkSetStatus('paused')"><i class="fas fa-pause text-amber-600"></i> Pausar</button>
+                                <button type="button" class="btn-bulk-action" onclick="bulkSetStatus('sold')"><i class="fas fa-check-circle text-sky-600"></i> Marcar Vendido</button>
+                                <button type="button" class="btn-bulk-action text-red-600" onclick="bulkDeleteSelected()"><i class="fas fa-trash"></i> Eliminar</button>
+                            </div>
+                        </div>
+
+                        <!-- Spreadsheet Table Container (Scrollable with Sticky Header) -->
+                        <div class="excel-table-scroll-wrap">
+                            <table class="excel-table" id="excel-listings-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-chk"><input type="checkbox" id="excel-select-all-chk" onchange="toggleSelectAllExcelListings(this)"></th>
+                                        <th class="col-code" onclick="sortExcelTable('id')">Código <i class="fas fa-sort sort-icon"></i></th>
+                                        <th class="col-prop" onclick="sortExcelTable('title')">Inmueble / Publicación <i class="fas fa-sort sort-icon"></i></th>
+                                        <th class="col-location" onclick="sortExcelTable('city')">Ubicación <i class="fas fa-sort sort-icon"></i></th>
+                                        <th class="col-type" onclick="sortExcelTable('propType')">Tipo <i class="fas fa-sort sort-icon"></i></th>
+                                        <th class="col-op" onclick="sortExcelTable('operation')">Operación <i class="fas fa-sort sort-icon"></i></th>
+                                        <th class="col-price text-right" onclick="sortExcelTable('priceUSD')">Precio Total <i class="fas fa-sort sort-icon"></i></th>
+                                        <th class="col-area text-right" onclick="sortExcelTable('totalAreaM2')">Área (m²) <i class="fas fa-sort sort-icon"></i></th>
+                                        <th class="col-m2 text-right" onclick="sortExcelTable('propertyM2USD')">US$/m² <i class="fas fa-sort sort-icon"></i></th>
+                                        <th class="col-rooms text-center">Dorms / Baños</th>
+                                        <th class="col-status" onclick="sortExcelTable('status')">Estado <i class="fas fa-sort sort-icon"></i></th>
+                                        <th class="col-stats text-center" onclick="sortExcelTable('views')">Impacto (Vistas / Leads)</th>
+                                        <th class="col-actions text-center">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="excel-listings-tbody">
+                                    <!-- Inyectado dinámicamente vía js/b2b-portal.js -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Excel Table Footer / Summary Bar -->
+                        <div class="excel-table-footer">
+                            <div class="excel-footer-info">
+                                <i class="fas fa-circle-info text-slate-400"></i>
+                                <span>Los cambios de precio y estado se sincronizan automáticamente con la plataforma pública Zilla.</span>
+                            </div>
+                            <div class="excel-footer-stats">
+                                <span class="footer-stat-item">Promedio m²: <strong id="excel-footer-avg-m2">$1,380 USD/m²</strong></span>
+                                <span class="footer-stat-item">Total Cartera: <strong id="excel-footer-total-val" class="text-emerald-700">$2.84M USD</strong></span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============================================================
+                     MÓDULO 1: GESTIÓN DE LEADS, CRM & AUTOMATIZACIONES
+                     ============================================================ -->
+                <section id="crm-leads-tab" class="b2b-module-section">
+                    <div class="section-top-header">
+                        <div>
+                            <span class="section-tag-light"><i class="fas fa-bolt text-amber-500"></i> Pipeline & Automatizaciones</span>
+                            <h2 class="section-title-dark">Gestión de Leads & CRM Inmobiliario B2B</h2>
+                            <p class="section-desc-light">Calificación automática con IA, flujo Kanban por etapas, elegibilidad de crédito AFD y disparadores de WhatsApp.</p>
+                        </div>
+                        <div class="crm-header-actions">
+                            <button type="button" class="btn btn-outline" id="btn-simulate-lead" onclick="triggerLeadSimulation()">
+                                <i class="fas fa-bolt text-amber-500"></i> Simular Lead IA
+                            </button>
+                            <button type="button" class="btn btn-primary" onclick="openNewLeadModal()">
+                                <i class="fas fa-user-plus"></i> + Registrar Lead
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Centro de Automatizaciones Activas -->
+                    <div class="crm-automations-section" id="automations-center-box">
+                        <div class="auto-section-header">
+                            <div class="auto-header-title">
+                                <div class="auto-badge-icon"><i class="fas fa-wand-magic-sparkles text-emerald-600"></i></div>
+                                <div>
+                                    <h4>Centro de Automatizaciones Activas</h4>
+                                    <p>Reglas inteligentes que ejecutan tareas repetitivas y aceleran la conversión de tus clientes.</p>
+                                </div>
+                            </div>
+                            <span class="auto-active-badge">4 Automatizaciones Activas</span>
+                        </div>
+
+                        <div class="automations-cards-grid" id="automations-cards-grid">
+                            <!-- Inyectado vía b2b-portal.js -->
+                        </div>
+
+                        <!-- Logs Stream en Tiempo Real -->
+                        <div class="automation-logs-box">
+                            <div class="logs-header">
+                                <span><i class="fas fa-terminal text-sky-600"></i> Registro de Eventos en Vivo (Live Stream)</span>
+                                <span class="logs-live-indicator"><span class="status-dot-pulse"></span> Escuchando Webhooks</span>
+                            </div>
+                            <div class="automation-logs-stream" id="automation-logs-stream">
+                                <!-- Inyectado vía b2b-portal.js -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Toolbar de Búsqueda y Filtros de CRM -->
+                    <div class="crm-toolbar-panel">
+                        <div class="crm-search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="crm-search-input" placeholder="Buscar cliente por nombre o zona..." oninput="handleCrmFilterChange()">
+                        </div>
+
+                        <div class="crm-filters-group">
+                            <select id="crm-tier-filter" class="crm-toolbar-select" onchange="handleCrmFilterChange()">
+                                <option value="all">Todos los Niveles</option>
+                                <option value="platinum">⭐ Platino (Score ≥ 90)</option>
+                                <option value="gold">🥇 Oro (Score 75-89)</option>
+                                <option value="silver">🥈 Plata</option>
+                            </select>
+
+                            <select id="crm-zone-filter" class="crm-toolbar-select" onchange="handleCrmFilterChange()">
+                                <option value="all">Todas las Zonas</option>
+                                <option value="Santa Teresa">Santa Teresa / Eje</option>
+                                <option value="Villa Morra">Villa Morra</option>
+                                <option value="Barrio Herrera">Barrio Herrera</option>
+                                <option value="Mburucuyá">Mburucuyá</option>
+                                <option value="San Bernardino">San Bernardino</option>
+                                <option value="Luque">Luque</option>
+                            </select>
+
+                            <label class="crm-toolbar-check">
+                                <input type="checkbox" id="crm-afd-filter" onchange="handleCrmFilterChange()">
+                                <span><i class="fas fa-shield-halved text-emerald-600"></i> Solo Apto AFD</span>
+                            </label>
+                        </div>
+
+                        <!-- Conmutador de Vista (Kanban vs Lista) -->
+                        <div class="crm-view-switcher">
+                            <button type="button" id="btn-view-kanban" class="crm-view-btn active" onclick="switchCrmView('kanban')" title="Vista Tablero Kanban">
+                                <i class="fas fa-table-columns"></i> Kanban
+                            </button>
+                            <button type="button" id="btn-view-list" class="crm-view-btn" onclick="switchCrmView('list')" title="Vista Lista Detallada">
+                                <i class="fas fa-list-ul"></i> Lista
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Estadísticas de Pipeline -->
+                    <div class="crm-stats-summary-bar">
+                        <div class="crm-stat-chip">
+                            <span>Leads Activos:</span>
+                            <strong id="crm-total-count">0</strong>
+                        </div>
+                        <div class="crm-stat-chip">
+                            <span>Volumen Total en Pipeline:</span>
+                            <strong id="crm-total-volume" class="text-emerald-700">$0 USD</strong>
+                        </div>
+                        <div class="crm-stat-chip">
+                            <span>Tiempo de Respuesta IA:</span>
+                            <strong class="text-sky-700">&lt; 45 seg</strong>
+                        </div>
+                    </div>
+
+                    <!-- 1. Tablero Kanban -->
+                    <div class="crm-kanban-board" id="crm-kanban-board">
+                        <!-- Inyectado vía b2b-portal.js -->
+                    </div>
+
+                    <!-- 2. Lista Detallada -->
+                    <div class="crm-leads-list" id="crm-leads-list" style="display: none;">
+                        <!-- Inyectado vía b2b-portal.js -->
+                    </div>
+                </section>
+
+                <!-- ============================================================
+                     MÓDULO 2: MERCADO & ANALYTICS - PRECIOS M² & CAP RATE
+                     ============================================================ -->
+                <section id="market-insights-tab" class="b2b-module-section">
+                    <div class="section-top-header">
+                        <div>
+                            <span class="section-tag-light">Inteligencia Geoespacial B2B</span>
+                            <h2 class="section-title-dark">Mapa de Precios por m², Rentabilidad & Cap Rate de Paraguay</h2>
+                            <p class="section-desc-light">Radar geoespacial en tiempo real con cotizaciones por m² en venta, yield de alquiler temporal (Airbnb) y plusvalía en todos los polos de desarrollo de Paraguay.</p>
+                        </div>
+                    </div>
+
+                    <!-- ============================================================
+                         MAPA INTERACTIVO GEOESPACIAL DE PRECIOS & CAP RATE (PARAGUAY)
+                         ============================================================ -->
+                    <div class="b2b-price-map-card" id="b2b-price-map-box">
+                        <!-- Header y Controles del Mapa -->
+                        <div class="b2b-map-card-header">
+                            <div class="b2b-map-header-left">
+                                <div class="b2b-map-header-icon"><i class="fas fa-map-location-dot"></i></div>
+                                <div>
+                                    <h3 class="b2b-map-title">Mapa de Calor Inmobiliario & Zonas de Inversión</h3>
+                                    <p class="b2b-map-subtitle">Haz clic en cualquier zona para inspeccionar métricas de mercado, tickets promedio y proyectar retornos.</p>
+                                </div>
+                            </div>
+                            <div class="b2b-map-tile-controls">
+                                <button type="button" class="btn-map-tile-style active" data-tile="light" title="Vista de Mapa Claro Zilla">
+                                    <i class="fas fa-layer-group"></i> <span>Mapa Claro</span>
+                                </button>
+                                <button type="button" class="btn-map-tile-style" data-tile="satellite" title="Vista Satelital Fotográfica">
+                                    <i class="fas fa-satellite"></i> <span>Satelital HD</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Barra de Herramientas: Filtros de Métrica & Regiones -->
+                        <div class="b2b-map-toolbar">
+                            <!-- Métricas / Capas de Calor -->
+                            <div class="b2b-metric-layer-switcher">
+                                <span class="layer-lbl"><i class="fas fa-sliders text-primary"></i> Métrica:</span>
+                                <button type="button" class="btn-b2b-metric active" data-metric="price_sale">
+                                    <i class="fas fa-tag"></i> <span>Precio m² (USD)</span>
+                                </button>
+                                <button type="button" class="btn-b2b-metric" data-metric="cap_rate_airbnb">
+                                    <i class="fas fa-fire-flame-curved text-emerald-500"></i> <span>Cap Rate Airbnb %</span>
+                                </button>
+                                <button type="button" class="btn-b2b-metric" data-metric="cap_rate_trad">
+                                    <i class="fas fa-building"></i> <span>Cap Rate Tradicional %</span>
+                                </button>
+                                <button type="button" class="btn-b2b-metric" data-metric="price_off_plan">
+                                    <i class="fas fa-hammer"></i> <span>En Pozo (USD/m²)</span>
+                                </button>
+                                <button type="button" class="btn-b2b-metric" data-metric="appreciation">
+                                    <i class="fas fa-chart-line-up"></i> <span>Plusvalía YoY %</span>
+                                </button>
+                            </div>
+
+                            <!-- Selector Rápido de Regiones -->
+                            <div class="b2b-region-jump-switcher">
+                                <span class="layer-lbl"><i class="fas fa-location-crosshairs"></i> Región:</span>
+                                <button type="button" class="btn-b2b-region active" data-region="asuncion">🏙️ Asunción</button>
+                                <button type="button" class="btn-b2b-region" data-region="gran_asuncion">🌳 Gran Asunción</button>
+                                <button type="button" class="btn-b2b-region" data-region="sanber">🏖️ San Bernardino</button>
+                                <button type="button" class="btn-b2b-region" data-region="cde">🌆 Ciudad del Este</button>
+                                <button type="button" class="btn-b2b-region" data-region="encarnacion">🌊 Encarnación</button>
+                                <button type="button" class="btn-b2b-region" data-region="all">🇵🇾 Todo Paraguay</button>
+                            </div>
+                        </div>
+
+                        <!-- Canvas del Mapa Interactivo con Drawer Flotante de Inspección -->
+                        <div class="b2b-map-canvas-container">
+                            <div id="b2b-price-heatmap-canvas"></div>
+
+                            <!-- Drawer Flotante de Inspección de Zona -->
+                            <div class="b2b-zone-inspector-drawer" id="b2b-zone-inspector" style="display: none;">
+                                <div class="inspector-header">
+                                    <div class="inspector-title-wrap">
+                                        <span class="inspector-badge" id="insp-category">Premium Corporativo</span>
+                                        <h4 class="inspector-zone-name" id="insp-name">Santa Teresa & Eje Corporativo</h4>
+                                        <span class="inspector-city" id="insp-city"><i class="fas fa-map-marker-alt"></i> Asunción, Paraguay</span>
+                                    </div>
+                                    <button type="button" class="inspector-close-btn" id="btn-close-inspector" title="Cerrar panel"><i class="fas fa-times"></i></button>
+                                </div>
+
+                                <div class="inspector-stats-grid">
+                                    <div class="inspector-stat-box highlight-main">
+                                        <span class="insp-stat-lbl">Precio Promedio Venta</span>
+                                        <strong class="insp-stat-val" id="insp-price-m2">$2,150 <small>/ m²</small></strong>
+                                        <span class="insp-stat-sub" id="insp-price-pyg">≈ ₲ 16.7M / m²</span>
+                                    </div>
+                                    <div class="inspector-stat-box highlight-green">
+                                        <span class="insp-stat-lbl">Cap Rate Airbnb (Neto)</span>
+                                        <strong class="insp-stat-val text-emerald-600" id="insp-caprate-airbnb">12.4% <small>Yield</small></strong>
+                                        <span class="insp-stat-sub" id="insp-occupancy">78.5% Ocupación</span>
+                                    </div>
+                                    <div class="inspector-stat-box">
+                                        <span class="insp-stat-lbl">Precio "En Pozo"</span>
+                                        <strong class="insp-stat-val" id="insp-price-offplan">$1,720 <small>/ m²</small></strong>
+                                        <span class="insp-stat-sub">Margen Desarrollador: 20%</span>
+                                    </div>
+                                    <div class="inspector-stat-box">
+                                        <span class="insp-stat-lbl">Plusvalía Anual (YoY)</span>
+                                        <strong class="insp-stat-val text-sky-600" id="insp-appreciation">+9.2% <small>YoY</small></strong>
+                                        <span class="insp-stat-sub">Ticket Prom: <span id="insp-ticket">$210,000</span></span>
+                                    </div>
+                                </div>
+
+                                <p class="inspector-description" id="insp-description">
+                                    Penthouses, departamentos de lujo, sedes bancarias y shoppings de alta gama.
+                                </p>
+
+                                <div class="inspector-actions">
+                                    <button type="button" class="btn btn-primary btn-sm btn-block" id="btn-load-zone-to-simulator">
+                                        <i class="fas fa-calculator"></i> <span>Calcular en Simulador de Inversión</span>
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Barra Inferior de Escala y Resumen -->
+                            <div class="b2b-map-legend-bar">
+                                <div class="legend-scale-wrap">
+                                    <span class="legend-scale-title">Escala de Valor / m²:</span>
+                                    <div class="legend-gradient-track"></div>
+                                    <div class="legend-scale-labels">
+                                        <span>$650 (Accesible)</span>
+                                        <span>$1,200</span>
+                                        <span>$1,700</span>
+                                        <span>$2,200+ (Premium)</span>
+                                    </div>
+                                </div>
+                                <div class="legend-summary-stats">
+                                    <span class="legend-chip"><i class="fas fa-chart-pie text-primary"></i> <strong>49 Barrios & Polos</strong> Analizados</span>
+                                    <span class="legend-chip"><i class="fas fa-fire text-amber-500"></i> Top Yield: <strong>San Bernardino (15.2%)</strong></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ============================================================
+                         PANEL DE FILTROS & BÚSQUEDA DE FICHAS DE MERCADO
+                         ============================================================ -->
+                    <div class="market-zones-filter-panel">
+                        <div class="filter-panel-top-row">
+                            <div class="section-subtitle-light" style="margin: 0;">
+                                <i class="fas fa-table-cells-large text-primary"></i>
+                                <span>Fichas Detalladas por Barrio & Polo Inmobiliario</span>
+                            </div>
+                            <span id="zones-count-badge" class="zones-count-badge">Mostrando 49 de 49 barrios</span>
+                        </div>
+
+                        <!-- Barra de Búsqueda y Filtros de Ciudad -->
+                        <div class="filter-controls-wrap">
+                            <div class="zones-search-wrapper">
+                                <i class="fas fa-search search-icon"></i>
+                                <input type="text" id="zones-search-input" class="zones-search-field" placeholder="Buscar barrio o polo (ej: Villa Morra, Yacht, Chaco'i, CDE)...">
+                                <button type="button" id="btn-clear-zone-search" class="btn-clear-search" style="display: none;"><i class="fas fa-times"></i></button>
+                            </div>
+
+                            <!-- Selector por Ciudad -->
+                            <div class="zones-city-pills" id="zones-city-filter-container">
+                                <button type="button" class="btn-city-pill active" data-city="all">Todos (49)</button>
+                                <button type="button" class="btn-city-pill" data-city="Asunción">🏙️ Asunción (17)</button>
+                                <button type="button" class="btn-city-pill" data-city="Lambaré">⛵ Lambaré (5)</button>
+                                <button type="button" class="btn-city-pill" data-city="San Lorenzo">🎓 San Lorenzo (5)</button>
+                                <button type="button" class="btn-city-pill" data-city="Luque">✈️ Luque (5)</button>
+                                <button type="button" class="btn-city-pill" data-city="Nueva Asunción">🌉 Nueva Asunción (3)</button>
+                                <button type="button" class="btn-city-pill" data-city="San Bernardino">🏖️ San Bernardino (4)</button>
+                                <button type="button" class="btn-city-pill" data-city="Ciudad del Este">🌆 Ciudad del Este (5)</button>
+                                <button type="button" class="btn-city-pill" data-city="Encarnación">🌊 Encarnación (5)</button>
+                            </div>
+                        </div>
+
+                        <!-- Filtro Secundario por Rango de Precio / Rendimiento -->
+                        <div class="filter-tier-row">
+                            <span class="filter-tier-lbl"><i class="fas fa-arrow-down-short-wide text-primary"></i> Filtrar por:</span>
+                            <button type="button" class="btn-tier-filter active" data-tier="all">Todos los Perfiles</button>
+                            <button type="button" class="btn-tier-filter" data-tier="premium">💎 Premium (> $1,500/m²)</button>
+                            <button type="button" class="btn-tier-filter" data-tier="mid">🏡 Residencial ($1,000 - $1,500)</button>
+                            <button type="button" class="btn-tier-filter" data-tier="accessible">🏷️ Accesible (< $1,000/m²)</button>
+                            <button type="button" class="btn-tier-filter" data-tier="high_airbnb">🔥 Alto Yield Airbnb (> 12%)</button>
+                            <button type="button" class="btn-tier-filter" data-tier="high_appreciation">🚀 Alta Plusvalía (> 9% YoY)</button>
+                        </div>
+                    </div>
+
+                    <!-- Grilla Compacta de Zonas de Mercado -->
+                    <div class="market-zones-grid compact-grid" id="market-zones-grid">
+                        <!-- Inyectado vía b2b-portal.js -->
+                    </div>
+
+                    <!-- Simulador Comparativo Cap Rate (Tradicional vs Airbnb) -->
+                    <div class="caprate-calculator-card" id="caprate-calc-box">
+                        <div class="calc-card-header">
+                            <div class="calc-header-icon"><i class="fas fa-calculator"></i></div>
+                            <div>
+                                <h3 class="calc-title">Simulador de Rentabilidad Comparativa (Cap Rate & Payback)</h3>
+                                <p class="calc-desc">Proyecta a los inversores el retorno neto entre alquiler tradicional a largo plazo versus gestión de alquiler temporal amoblado.</p>
+                            </div>
+                        </div>
+
+                        <div class="calc-body-grid">
+                            <!-- Controles de Entrada -->
+                            <form id="caprate-calc-form" class="calc-inputs-form">
+                                <div class="calc-input-group">
+                                    <label>Valor de Adquisición del Inmueble (USD)</label>
+                                    <div class="calc-field-wrap">
+                                        <span class="calc-field-prefix">$</span>
+                                        <input type="number" id="calc-prop-price" value="120000" step="5000" min="20000">
+                                    </div>
+                                </div>
+
+                                <div class="calc-input-group">
+                                    <label>Alquiler Mensual Tradicional Estimado (USD)</label>
+                                    <div class="calc-field-wrap">
+                                        <span class="calc-field-prefix">$</span>
+                                        <input type="number" id="calc-monthly-rent" value="850" step="50" min="100">
+                                    </div>
+                                </div>
+
+                                <div class="calc-input-group">
+                                    <label>Expensas y Mantenimiento Mensual (USD)</label>
+                                    <div class="calc-field-wrap">
+                                        <span class="calc-field-prefix">$</span>
+                                        <input type="number" id="calc-monthly-expenses" value="70" step="10" min="0">
+                                    </div>
+                                </div>
+
+                                <div class="calc-input-group">
+                                    <div class="calc-slider-header">
+                                        <label>Tasa de Ocupación Anual Renta Temporal (Airbnb)</label>
+                                        <strong id="occupancy-val-display" class="text-emerald-600">75%</strong>
+                                    </div>
+                                    <input type="range" id="calc-airbnb-occupancy" min="40" max="95" value="75" class="calc-range-slider">
+                                </div>
+                            </form>
+
+                            <!-- Resultados Comparativos lado a lado -->
+                            <div class="calc-results-comparison">
+                                <!-- Columna 1: Tradicional -->
+                                <div class="calc-result-column traditional">
+                                    <div class="res-col-badge">Alquiler Tradicional</div>
+                                    <div class="res-cap-rate" id="trad-cap-rate">7.80%</div>
+                                    <span class="res-cap-lbl">Cap Rate Anual Neto</span>
+                                    
+                                    <div class="res-breakdown-list">
+                                        <div class="res-row">
+                                            <span>Ingreso Neto Anual:</span>
+                                            <strong id="trad-net-annual">$9,360 / año</strong>
+                                        </div>
+                                        <div class="res-row">
+                                            <span>Recupero Inversión:</span>
+                                            <strong id="trad-payback">12.8 años</strong>
+                                        </div>
+                                        <div class="res-row">
+                                            <span>Gestión Operativa:</span>
+                                            <span>Baja (Contrato 12-24 meses)</span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Columna 2: Airbnb / Temporal -->
+                                <div class="calc-result-column airbnb highlight">
+                                    <div class="res-col-badge gold"><i class="fas fa-gem"></i> Renta Temporal Zilla Pro</div>
+                                    <div class="res-cap-rate text-emerald-600" id="airbnb-cap-rate">12.45%</div>
+                                    <span class="res-cap-lbl">Cap Rate Anual Neto Proyectado</span>
+
+                                    <div class="res-breakdown-list">
+                                        <div class="res-row">
+                                            <span>Ingreso Neto Anual:</span>
+                                            <strong id="airbnb-net-annual" class="text-emerald-600">$14,940 / año</strong>
+                                        </div>
+                                        <div class="res-row">
+                                            <span>Tarifa Diaria Promedio:</span>
+                                            <strong id="airbnb-daily-rate">$49 / noche</strong>
+                                        </div>
+                                        <div class="res-row">
+                                            <span>Recupero Inversión:</span>
+                                            <strong id="airbnb-payback">8.0 años</strong>
+                                        </div>
+                                    </div>
+
+                                    <div class="yield-boost-pill">
+                                        <i class="fas fa-arrow-trend-up"></i>
+                                        <span id="yield-boost-display">+59% en Renta Temporal</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ============================================================
+                     MÓDULO 3: TENDENCIAS DE DEMANDA (EN POZO)
+                     ============================================================ -->
+                <section id="search-trends-tab" class="b2b-module-section">
+                    <div class="section-top-header">
+                        <div>
+                            <span class="section-tag-light">Inteligencia de Demanda</span>
+                            <h2 class="section-title-dark">Tendencias de Búsqueda & Patrones de Filtros</h2>
+                            <p class="section-desc-light">Datos consolidados de compradores e inversores para que las desarrolladoras planifiquen sus proyectos "En Pozo".</p>
+                        </div>
+                    </div>
+
+                    <div class="search-trends-grid" id="search-trends-grid">
+                        <!-- Inyectado vía b2b-portal.js -->
+                    </div>
+                </section>
+
+                <!-- ============================================================
+                     MÓDULO 4: PLAN REGULADOR & CENTRO LEGAL
+                     ============================================================ -->
+                <section id="legal-zoning-tab" class="b2b-module-section">
+                    <div class="section-top-header">
+                        <div>
+                            <span class="section-tag-light">Seguridad Jurídica & Normativa</span>
+                            <h2 class="section-title-dark">Plan Regulador de Asunción & Modelos Legales</h2>
+                            <p class="section-desc-light">Calculadora de coeficientes de edificabilidad (AIM, AR, FOT) y plantillas ajustadas al Código Civil Paraguayo.</p>
+                        </div>
+                    </div>
+
+                    <!-- Calculadora de Factibilidad de Terrenos -->
+                    <div class="zoning-calculator-card">
+                        <div class="calc-card-header">
+                            <div class="calc-header-icon"><i class="fas fa-compass-drafting"></i></div>
+                            <div>
+                                <h3 class="calc-title">Calculadora de Edificabilidad de Terrenos (Plan Regulador)</h3>
+                                <p class="calc-desc">Calcula al instante los m² máximos construibles, altura máxima permitida y cantidad estimada de departamentos según la ordenanza municipal.</p>
+                            </div>
+                        </div>
+
+                        <div class="zoning-body-grid">
+                            <form id="zoning-calc-form" class="zoning-inputs-form">
+                                <div class="calc-input-group">
+                                    <label>Zonificación Catastral (Asunción)</label>
+                                    <select id="zone-select" class="calc-select">
+                                        <option value="EJE_CORP">Eje Urbano Santa Teresa / Aviadores (AIM 6.0 | Altura 120m)</option>
+                                        <option value="FM1">Franja Mixta 1 - Villa Morra / Mcal. López (AIM 4.5 | Altura 45m)</option>
+                                        <option value="AR2B" selected>Área Residencial 2B - Barrio Herrera / Ycuá Satí (AIM 3.0 | Altura 24m)</option>
+                                        <option value="AR1A">Área Residencial 1A - Mburucuyá / Carmelitas (AIM 1.8 | Altura 12m)</option>
+                                    </select>
+                                </div>
+
+                                <div class="calc-input-group">
+                                    <label>Superficie Total del Terreno (m²)</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="zone-lot-area" value="600" step="50" min="150">
+                                        <span class="calc-field-suffix">m²</span>
+                                    </div>
+                                </div>
+
+                                <div class="calc-input-group">
+                                    <label>Frente del Lote (Metros Lineales)</label>
+                                    <div class="calc-field-wrap">
+                                        <input type="number" id="zone-lot-front" value="15" step="1" min="6">
+                                        <span class="calc-field-suffix">metros</span>
+                                    </div>
+                                </div>
+                            </form>
+
+                            <!-- Resultados de Factibilidad -->
+                            <div class="zoning-results-panel">
+                                <h4 id="res-zone-name" class="zoning-res-title">Área Residencial 2B</h4>
+                                <div class="zoning-metrics-grid">
+                                    <div class="zoning-metric-item">
+                                        <span>Área Máxima Construible (AIM)</span>
+                                        <strong id="res-max-buildable" class="text-sky-700">1,800 m²</strong>
+                                        <small>Coeficiente AIM: <span id="res-aim-val">3.0</span></small>
+                                    </div>
+                                    <div class="zoning-metric-item">
+                                        <span>Altura Máxima Reglamentaria</span>
+                                        <strong id="res-max-height">24 metros (8 pisos)</strong>
+                                        <small>Retiro frontal: <span id="res-front-setback">3.0 m</span></small>
+                                    </div>
+                                    <div class="zoning-metric-item">
+                                        <span>Departamentos Estimados (2D)</span>
+                                        <strong id="res-estimated-units" class="text-emerald-700">18 Unidades</strong>
+                                        <small>Tipología 75m² útiles</small>
+                                    </div>
+                                    <div class="zoning-metric-item">
+                                        <span>Pisos Estimados</span>
+                                        <strong id="res-estimated-floors">8 pisos</strong>
+                                        <small>FOS footprint: 65%</small>
+                                    </div>
+                                </div>
+                                <div class="zoning-allowed-box">
+                                    <strong>Usos Permitidos:</strong>
+                                    <p id="res-allowed-uses">Edificios de departamentos hasta 8 pisos, dúplex y residencias unifamiliares.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Repositorio Legal -->
+                    <h3 class="section-subtitle-light"><i class="fas fa-folder-open text-teal-700"></i> Repositorio de Documentos Legales (Código Civil Paraguayo)</h3>
+                    <div class="legal-docs-grid" id="legal-docs-grid">
+                        <!-- Inyectado vía b2b-portal.js -->
+                    </div>
+                </section>
+
+                <!-- ============================================================
+                     MÓDULO 5: HERRAMIENTAS MARCA BLANCA & DOSSIER PDF
+                     ============================================================ -->
+                <section id="white-label-tab" class="b2b-module-section">
+                    <div class="section-top-header">
+                        <div>
+                            <span class="section-tag-light">Marca Blanca & Productividad</span>
+                            <h2 class="section-title-dark">Calculadoras Integrables & Generador de Dossier PDF</h2>
+                            <p class="section-desc-light">Inserta calculadoras de cuotas hipotecarias en tu propio sitio web y genera dossiers en PDF listos para enviar a tus clientes.</p>
+                        </div>
+                    </div>
+
+                    <div class="operational-tools-grid">
+                        <!-- 1. Widget Integrable -->
+                        <div class="tool-card widget-generator-card">
+                            <div class="tool-card-header">
+                                <i class="fas fa-code text-sky-600"></i>
+                                <div>
+                                    <h4>Widget de Crédito Hipotecario / AFD</h4>
+                                    <p>Inserta este fragmento en tu web para capturar leads calificados automáticamente.</p>
+                                </div>
+                            </div>
+
+                            <div class="widget-builder-form">
+                                <div class="calc-input-group">
+                                    <label>Nombre de tu Inmobiliaria</label>
+                                    <input type="text" id="widget-agency-name" value="Inmobiliaria Capital" class="calc-input">
+                                </div>
+                                <div class="calc-input-group">
+                                    <label>Color Principal de tu Marca</label>
+                                    <input type="color" id="widget-color-picker" value="#0f766e" class="calc-color-input">
+                                </div>
+
+                                <!-- Preview en Vivo del Widget -->
+                                <div class="widget-preview-box" id="widget-live-preview">
+                                    <div class="widget-sample-header">
+                                        <span class="widget-agency-display">Inmobiliaria Capital</span>
+                                        <small>Impulsado por Zilla Pro</small>
+                                    </div>
+                                    <div class="widget-sample-body">
+                                        <span>Simula tu cuota con Crédito AFD / Bancario</span>
+                                        <button type="button" class="widget-sample-btn">Calcular Cuota Mensual</button>
+                                    </div>
+                                </div>
+
+                                <div class="calc-input-group">
+                                    <label>Código HTML / JS para Insertar en tu Web</label>
+                                    <textarea id="widget-embed-code" class="widget-code-textarea" readonly rows="4"></textarea>
+                                </div>
+
+                                <button type="button" class="btn btn-secondary" onclick="copyWidgetCode()">
+                                    <i class="far fa-copy"></i> Copiar Código para mi Web
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- 2. Generador de Dossier PDF -->
+                        <div class="tool-card pdf-generator-card">
+                            <div class="tool-card-header">
+                                <i class="fas fa-file-pdf text-rose-600"></i>
+                                <div>
+                                    <h4>Generador de Dossier Inmobiliario PDF</h4>
+                                    <p>Compila fotos, datos técnicos y métricas de rentabilidad en un PDF con tu logo y WhatsApp.</p>
+                                </div>
+                            </div>
+
+                            <form id="dossier-builder-form" class="dossier-form">
+                                <div class="calc-input-group">
+                                    <label>Seleccionar Inmueble del Catálogo</label>
+                                    <select id="dossier-prop-select" class="calc-select">
+                                        <option value="prop-1">Torre Santa Teresa - Penthouse 3D (USD $340,000)</option>
+                                        <option value="prop-2">Villa Morra Living - 2 Dormitorios Amoblado (USD $145,000)</option>
+                                        <option value="prop-3">Barrio Herrera Dúplex con Piscina (USD $165,000)</option>
+                                    </select>
+                                </div>
+
+                                <div class="calc-input-group">
+                                    <label>Nombre del Agente / Asesor</label>
+                                    <input type="text" id="dossier-agent-name" value="Juan Solalinde - Broker Inmobiliario" class="calc-input">
+                                </div>
+
+                                <div class="calc-input-group">
+                                    <label>WhatsApp de Contacto Directo</label>
+                                    <input type="text" id="dossier-agent-phone" value="+595 981 123 456" class="calc-input">
+                                </div>
+
+                                <div class="dossier-preview-mockup">
+                                    <div class="dossier-mockup-top">
+                                        <i class="fas fa-file-contract"></i>
+                                        <span>Dossier_Comercial_Zilla_PY.pdf</span>
+                                    </div>
+                                    <p>Incluye: Ficha técnica, precios USD/PYG, mapas satelitales, análisis de Cap Rate y datos de contacto.</p>
+                                </div>
+
+                                <button type="submit" class="btn btn-primary btn-block">
+                                    <i class="fas fa-download"></i> Generar y Descargar Dossier PDF
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <!-- ============================================================
+         MODALES GLOBALES (LEGAL, CRM, FICHA 360°)
+         ============================================================ -->
+
+    <!-- Modal para Vista Previa de Documentos Legales -->
+    <div class="modal-overlay-b2b" id="legal-preview-modal" aria-hidden="true">
+        <div class="modal-card-b2b">
+            <div class="modal-header-b2b">
+                <h3 id="modal-legal-title">Plantilla Legal</h3>
+                <button type="button" class="modal-close-b2b" onclick="closeLegalPreviewModal()">&times;</button>
+            </div>
+            <div class="modal-body-b2b">
+                <p class="modal-hint"><i class="fas fa-info-circle text-sky-600"></i> Puedes editar los campos entre corchetes <code>[CAMPO]</code> antes de copiar o imprimir.</p>
+                <textarea id="modal-legal-content" class="legal-textarea" rows="16"></textarea>
+            </div>
+            <div class="modal-footer-b2b">
+                <button type="button" class="btn btn-secondary" onclick="closeLegalPreviewModal()">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="copyLegalTextareaContent()">
+                    <i class="far fa-copy"></i> Copiar Texto Personalizado
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Registrar Nuevo Lead en CRM -->
+    <div class="modal-overlay-b2b" id="new-lead-modal" aria-hidden="true">
+        <div class="modal-card-b2b">
+            <div class="modal-header-b2b">
+                <h3><i class="fas fa-user-plus text-emerald-600"></i> Registrar Nuevo Lead en CRM</h3>
+                <button type="button" class="modal-close-b2b" onclick="closeNewLeadModal()">&times;</button>
+            </div>
+            <form id="new-lead-form" onsubmit="handleSaveNewLead(event)" class="modal-body-b2b">
+                <div class="calc-input-group">
+                    <label>Nombre y Apellido del Cliente</label>
+                    <input type="text" id="new-lead-name" required class="calc-input" placeholder="Ej. Dr. Carlos Villalba">
+                </div>
+                <div class="calc-input-group">
+                    <label>WhatsApp de Contacto</label>
+                    <input type="text" id="new-lead-phone" required class="calc-input" placeholder="+595 981 xxx xxx">
+                </div>
+                <div class="calc-input-group">
+                    <label>Zona de Preferencia</label>
+                    <select id="new-lead-zone" class="calc-select">
+                        <option value="Santa Teresa & Eje Corporativo">Santa Teresa & Eje Corporativo</option>
+                        <option value="Villa Morra">Villa Morra</option>
+                        <option value="Barrio Herrera">Barrio Herrera</option>
+                        <option value="Mburucuyá & Santísima Trinidad">Mburucuyá</option>
+                        <option value="San Bernardino">San Bernardino</option>
+                    </select>
+                </div>
+                <div class="calc-input-group">
+                    <label>Presupuesto Máximo (USD)</label>
+                    <input type="number" id="new-lead-budget" value="150000" class="calc-input">
+                </div>
+                <div class="calc-input-group">
+                    <label>Finalidad de Compra</label>
+                    <select id="new-lead-intent" class="calc-select">
+                        <option value="Inversión para Renta Temporal (Airbnb)">Inversión para Renta Temporal (Airbnb)</option>
+                        <option value="Vivienda Propia Familiar">Vivienda Propia Familiar</option>
+                        <option value="Residencia Vacacional">Residencia Vacacional</option>
+                    </select>
+                </div>
+                <div class="calc-input-group">
+                    <label>Urgencia de Mudanza / Cierre</label>
+                    <select id="new-lead-urgency" class="calc-select">
+                        <option value="Inmediata (< 30 días)">Inmediata (< 30 días)</option>
+                        <option value="Próximos 60-90 días">Próximos 60-90 días</option>
+                        <option value="Mediano Plazo (En Pozo)">Mediano Plazo (En Pozo)</option>
+                    </select>
+                </div>
+                <div class="calc-input-group">
+                    <label><input type="checkbox" id="new-lead-afd" checked> Aplica a Crédito AFD / Pre-aprobación Bancaria</label>
+                </div>
+                <div class="modal-footer-b2b">
+                    <button type="button" class="btn btn-secondary" onclick="closeNewLeadModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Guardar y Calificar Lead</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal Ficha 360° del Lead & Documentación AFD -->
+    <div class="modal-overlay-b2b" id="lead-360-modal" aria-hidden="true">
+        <div class="modal-card-b2b modal-lg">
+            <div class="modal-header-b2b">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <h3 id="m360-name" style="margin: 0;">Ficha del Lead</h3>
+                    <span id="m360-tier-badge" class="lead-score-pill platinum">Platino · 96 pts</span>
+                </div>
+                <button type="button" class="modal-close-b2b" onclick="closeLeadDetailModal()">&times;</button>
+            </div>
+            
+            <div class="modal-body-b2b">
+                <!-- Info Grid -->
+                <div class="lead-details-grid" style="margin-bottom: 20px;">
+                    <div class="detail-item">
+                        <span class="detail-lbl">WhatsApp</span>
+                        <strong class="detail-val" id="m360-phone">+595 981 xxx xxx</strong>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-lbl">Email</span>
+                        <strong class="detail-val" id="m360-email">correo@dominio.com</strong>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-lbl">Zona Solicitada</span>
+                        <strong class="detail-val text-sky-700" id="m360-zone">Santa Teresa</strong>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-lbl">Presupuesto</span>
+                        <strong class="detail-val text-emerald-700" id="m360-budget">$220,000 USD</strong>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-lbl">Finalidad</span>
+                        <strong class="detail-val" id="m360-intent">Inversión Temporal</strong>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-lbl">Urgencia</span>
+                        <strong class="detail-val" id="m360-urgency">Inmediata (< 30 días)</strong>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-lbl">Entidad Bancaria</span>
+                        <strong class="detail-val" id="m360-bank">Banco Continental</strong>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-lbl">Estado Crédito</span>
+                        <strong class="detail-val text-emerald-700"><i class="fas fa-check-circle"></i> Elegible AFD</strong>
+                    </div>
+                </div>
+
+                <!-- Dossier de Calificación IA -->
+                <div class="lead-dossier-box" style="margin-bottom: 20px;">
+                    <div style="font-weight: 800; margin-bottom: 4px; color: #0f766e;"><i class="fas fa-microchip"></i> Evaluación del Algoritmo IA Zilla:</div>
+                    <p id="m360-dossier-text" style="margin: 0;"></p>
+                </div>
+
+                <!-- Checklist de Documentos para Crédito AFD / Bancario -->
+                <div class="lead-doc-checklist-box">
+                    <h5 style="font-family: 'Outfit', sans-serif; font-size: 1rem; color: #0f172a; margin-bottom: 12px;">
+                        <i class="fas fa-folder-check text-emerald-600"></i> Checklist de Documentación para Crédito Hipotecario AFD
+                    </h5>
+                    <div class="doc-check-grid">
+                        <label class="doc-check-item"><input type="checkbox" checked> Cédula de Identidad (Titular y Cónyuge)</label>
+                        <label class="doc-check-item"><input type="checkbox" checked> Certificado de Ingresos / 6 últimas liquidaciones IPS</label>
+                        <label class="doc-check-item"><input type="checkbox" checked> 12 últimas declaraciones de IVA (Formulario 120)</label>
+                        <label class="doc-check-item"><input type="checkbox"> Carta Oferta de la Inmobiliaria firmada</label>
+                        <label class="doc-check-item"><input type="checkbox"> Título de Propiedad / Ficha Catastral del Inmueble</label>
+                    </div>
+                </div>
+
+                <!-- Notas Privadas del Agente -->
+                <div class="calc-input-group" style="margin-top: 18px;">
+                    <label>Notas Internas de Seguimiento</label>
+                    <textarea id="m360-notes" class="legal-textarea" rows="3" placeholder="Escribe notas privadas sobre este cliente..."></textarea>
+                </div>
+            </div>
+
+            <div class="modal-footer-b2b">
+                <button type="button" class="btn btn-secondary" onclick="closeLeadDetailModal()">Cerrar</button>
+                <a href="#" id="m360-wa-btn" target="_blank" class="btn-lead-whatsapp">
+                    <i class="fab fa-whatsapp"></i> Chatear por WhatsApp
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para Publicar / Editar Inmueble (Gestión de Publicaciones) -->
+    <div class="modal-overlay-b2b" id="listing-modal-b2b" aria-hidden="true">
+        <div class="modal-card-b2b" style="max-width: 650px;">
+            <div class="modal-header-b2b">
+                <h3 id="modal-listing-title"><i class="fas fa-home text-emerald-600"></i> Publicar / Editar Inmueble</h3>
+                <button type="button" class="modal-close-b2b" onclick="closeListingModal()">&times;</button>
+            </div>
+            <form id="listing-modal-form" onsubmit="handleSaveListing(event)" class="modal-body-b2b">
+                <input type="hidden" id="listing-edit-id">
+                
+                <div class="calc-input-group">
+                    <label>Título de la Publicación</label>
+                    <input type="text" id="listing-form-title" required class="calc-input" placeholder="Ej. Penthouse de Lujo con Terraza en Villa Morra">
+                </div>
+
+                <div class="calc-row-2col">
+                    <div class="calc-input-group">
+                        <label>Tipo de Inmueble</label>
+                        <select id="listing-form-type" class="calc-select" required>
+                            <option value="apartment">Departamento</option>
+                            <option value="house">Casa Residencial</option>
+                            <option value="gated_community">Barrio Cerrado</option>
+                            <option value="duplex">Dúplex</option>
+                            <option value="land">Terreno / Lote</option>
+                            <option value="commercial">Comercial / Corporativo</option>
+                        </select>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label>Tipo de Operación</label>
+                        <select id="listing-form-operation" class="calc-select" required>
+                            <option value="sale">Venta</option>
+                            <option value="rent_monthly">Alquiler Mensual</option>
+                            <option value="rent_temporary">Alquiler Temporal</option>
+                            <option value="off_plan">En Pozo / Preventa</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="calc-row-2col">
+                    <div class="calc-input-group">
+                        <label>Ciudad</label>
+                        <input type="text" id="listing-form-city" required class="calc-input" placeholder="Asunción">
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label>Barrio / Zona</label>
+                        <input type="text" id="listing-form-neighborhood" required class="calc-input" placeholder="Villa Morra">
+                    </div>
+                </div>
+
+                <div class="calc-row-2col">
+                    <div class="calc-input-group">
+                        <label>Precio en USD ($)</label>
+                        <input type="number" id="listing-form-price-usd" required class="calc-input" placeholder="185000" step="1000">
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label>Superficie Total (m²)</label>
+                        <input type="number" id="listing-form-area" required class="calc-input" placeholder="120" step="1">
+                    </div>
+                </div>
+
+                <div class="calc-row-2col">
+                    <div class="calc-input-group">
+                        <label>Dormitorios / Baños</label>
+                        <div style="display: flex; gap: 8px;">
+                            <input type="number" id="listing-form-beds" class="calc-input" placeholder="Dorms (3)" value="3" min="0">
+                            <input type="number" id="listing-form-baths" class="calc-input" placeholder="Baños (2)" value="2" min="0">
+                        </div>
+                    </div>
+
+                    <div class="calc-input-group">
+                        <label>Estado de la Publicación</label>
+                        <select id="listing-form-status" class="calc-select">
+                            <option value="active">🟢 Activo (Visible en Zilla)</option>
+                            <option value="featured">⭐ Destacado Platino</option>
+                            <option value="negotiating">🟡 En Negociación</option>
+                            <option value="paused">⚪ Pausado (Oculto)</option>
+                            <option value="sold">🔴 Vendido / Alquilado</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="calc-input-group">
+                    <label>URL de Imagen Principal</label>
+                    <input type="url" id="listing-form-image" class="calc-input" placeholder="https://images.unsplash.com/photo-...">
+                </div>
+
+                <div class="modal-footer-b2b" style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e2e8f0;">
+                    <button type="button" class="btn btn-secondary" onclick="closeListingModal()">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Guardar Publicación
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Google Maps JS API with Places, Drawing & Geometry Libraries -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGAOErwgmCedqHuZzlfUYOthwSoMv1998&libraries=places,drawing,geometry"></script>
+
+    <!-- Scripts -->
+    <script src="js/auth.js"></script>
+    <script src="js/data.js"></script>
+    <script src="js/currency.js"></script>
+    <script src="js/b2b-api.js"></script>
+    <script src="js/b2b-portal.js"></script>
+    <script>
+        function scrollToAutomations() {
+            // Cambiar a pestaña CRM si no está activa
+            const crmTabBtn = document.querySelector('[data-target="crm-leads-tab"]');
+            if (crmTabBtn) crmTabBtn.click();
+            const box = document.getElementById('automations-center-box');
+            if (box) {
+                box.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+        window.openNewLeadModal = function() {
+            document.getElementById('new-lead-modal').classList.add('active');
+        };
+        window.closeNewLeadModal = function() {
+            document.getElementById('new-lead-modal').classList.remove('active');
+        };
+        window.handleSaveNewLead = async function(e) {
+            e.preventDefault();
+            const leadData = {
+                name: document.getElementById('new-lead-name').value,
+                phone: document.getElementById('new-lead-phone').value,
+                zone: document.getElementById('new-lead-zone').value,
+                budget_usd: document.getElementById('new-lead-budget').value,
+                intent: document.getElementById('new-lead-intent').value,
+                urgency: document.getElementById('new-lead-urgency').value,
+                afd: document.getElementById('new-lead-afd').checked,
+                bank: 'Banco Itaú / Continental'
+            };
+            await window.ZillaB2B.createCRMLead(leadData);
+            closeNewLeadModal();
+            renderCRMLeads();
+            alert('¡Lead calificado y guardado con éxito en el CRM!');
+        };
+        window.copyLegalTextareaContent = function() {
+            const content = document.getElementById('modal-legal-content').value;
+            navigator.clipboard.writeText(content).then(() => {
+                alert('¡Documento personalizado copiado al portapapeles!');
+            });
+        };
+    </script>
+    <script src="js/mobile-nav.js"></script>
+</body>
+</html>

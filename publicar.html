@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Publicar Inmueble | Zilla PropTech Paraguay</title>
+    <meta name="description" content="Publica tu propiedad en Zilla Paraguay. Publicador multipasos profesional con geolocalización, carga de fotos en alta resolución y sincronización con Supabase.">
+
+    <!-- Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+    <!-- FontAwesome Pro Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <!-- Leaflet Fallback Engine -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Supabase JS Client (v2) -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <!-- Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css?v=4.0">
+    <link rel="stylesheet" href="css/publicar.css?v=1.0">
+    <link rel="stylesheet" href="css/mobile-nav.css?v=1.0">
+</head>
+<body class="publish-page-body">
+
+    <!-- ============================================================
+         1. TOPBAR DEL PUBLICADOR
+         ============================================================ -->
+    <header class="publish-topbar">
+        <div class="publish-brand-group">
+            <a href="index.html" class="publish-logo-badge">
+                Zilla<span>.</span>
+            </a>
+            <span class="publish-pro-tag"><i class="fas fa-bolt"></i> Publicador Pro</span>
+        </div>
+
+        <div class="publish-topbar-center">
+            <span class="topbar-progress-text">Paso <strong id="topbar-step-num">1</strong> de 6: <span id="topbar-step-name">Tipo & Operación</span></span>
+        </div>
+
+        <div class="publish-topbar-actions">
+            <button type="button" class="btn-publish-exit" onclick="saveDraftAndNotify()">
+                <i class="fas fa-bookmark text-emerald-400"></i> Guardar Borrador
+            </button>
+            <a href="agentes.html" class="btn-publish-exit">
+                <i class="fas fa-arrow-left"></i> Salir a Panel Agentes
+            </a>
+        </div>
+    </header>
+
+    <!-- Barra de Progreso de Stepper -->
+    <div class="publish-stepper-progress-bar">
+        <div class="stepper-progress-fill" id="stepper-progress-fill"></div>
+    </div>
+
+    <!-- ============================================================
+         2. LAYOUT PRINCIPAL (FORMULARIO MULTIPASOS + LIVE PREVIEW)
+         ============================================================ -->
+    <main class="publish-main-container">
+        
+        <!-- Columna Izquierda: Formulario de Publicación -->
+        <div class="publish-form-wrapper">
+            
+            <!-- Stepper Navigation Header -->
+            <div class="publish-stepper-pills">
+                <button type="button" class="step-pill active" data-step="1" onclick="goToStep(1)">
+                    <span class="step-num">1</span>
+                    <span class="step-title">Operación & Tipo</span>
+                </button>
+                <button type="button" class="step-pill" data-step="2" onclick="goToStep(2)">
+                    <span class="step-num">2</span>
+                    <span class="step-title">Ubicación GPS</span>
+                </button>
+                <button type="button" class="step-pill" data-step="3" onclick="goToStep(3)">
+                    <span class="step-num">3</span>
+                    <span class="step-title">Características</span>
+                </button>
+                <button type="button" class="step-pill" data-step="4" onclick="goToStep(4)">
+                    <span class="step-num">4</span>
+                    <span class="step-title">Galería de Fotos</span>
+                </button>
+                <button type="button" class="step-pill" data-step="5" onclick="goToStep(5)">
+                    <span class="step-num">5</span>
+                    <span class="step-title">Precio & Financiación</span>
+                </button>
+                <button type="button" class="step-pill" data-step="6" onclick="goToStep(6)">
+                    <span class="step-num">6</span>
+                    <span class="step-title">Contacto & Publicar</span>
+                </button>
+            </div>
+
+            <form id="property-publish-form" novalidate onsubmit="handleFinalPublish(event)">
+
+                <!-- ============================================================
+                     PASO 1: TIPO DE OPERACIÓN & CATEGORÍA DEL INMUEBLE
+                     ============================================================ -->
+                <div class="publish-step-view active" id="publish-step-1">
+                    <div class="step-header">
+                        <span class="step-badge"><i class="fas fa-tag"></i> Paso 1 / 6</span>
+                        <h2 class="step-title-main">¿Qué tipo de inmueble deseas publicar?</h2>
+                        <p class="step-subtitle">Selecciona la modalidad de negocio y la tipología arquitectónica de la propiedad.</p>
+                    </div>
+
+                    <!-- 1.1 Tipo de Operación -->
+                    <div class="pub-form-group">
+                        <label>Tipo de Operación <span class="req">*</span></label>
+                        <div class="visual-cards-grid">
+                            <div class="visual-select-card selected" data-field="operation" data-value="sale" onclick="selectVisualCard(this)">
+                                <div class="card-icon-box"><i class="fas fa-hand-holding-dollar"></i></div>
+                                <div class="card-info">
+                                    <strong class="card-title">Venta</strong>
+                                    <span class="card-desc">Propiedad lista para escriturar o cesión</span>
+                                </div>
+                                <div class="card-check-dot"><i class="fas fa-check"></i></div>
+                            </div>
+
+                            <div class="visual-select-card" data-field="operation" data-value="rent_monthly" onclick="selectVisualCard(this)">
+                                <div class="card-icon-box"><i class="fas fa-key"></i></div>
+                                <div class="card-info">
+                                    <strong class="card-title">Alquiler Tradicional</strong>
+                                    <span class="card-desc">Contrato anual o mensual recurrente</span>
+                                </div>
+                                <div class="card-check-dot"><i class="fas fa-check"></i></div>
+                            </div>
+
+                            <div class="visual-select-card" data-field="operation" data-value="rent_temporary" onclick="selectVisualCard(this)">
+                                <div class="card-icon-box"><i class="fas fa-umbrella-beach"></i></div>
+                                <div class="card-info">
+                                    <strong class="card-title">Alquiler Temporal</strong>
+                                    <span class="card-desc">Temporada en San Ber o Airbnb</span>
+                                </div>
+                                <div class="card-check-dot"><i class="fas fa-check"></i></div>
+                            </div>
+
+                            <div class="visual-select-card" data-field="operation" data-value="off_plan" onclick="selectVisualCard(this)">
+                                <div class="card-icon-box"><i class="fas fa-city"></i></div>
+                                <div class="card-info">
+                                    <strong class="card-title">En Pozo / Preventa</strong>
+                                    <span class="card-desc">Desarrollo inmobiliario en construcción</span>
+                                </div>
+                                <div class="card-check-dot"><i class="fas fa-check"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 1.2 Categoría de Inmueble -->
+                    <div class="pub-form-group">
+                        <label>Categoría del Inmueble <span class="req">*</span></label>
+                        <div class="visual-cards-grid grid-3col">
+                            <div class="visual-select-card selected" data-field="propType" data-value="apartment" onclick="selectVisualCard(this)">
+                                <div class="card-icon-box"><i class="fas fa-building"></i></div>
+                                <div class="card-info">
+                                    <strong class="card-title">Departamento</strong>
+                                    <span class="card-desc">Penthouses, lofts o semipisos</span>
+                                </div>
+                                <div class="card-check-dot"><i class="fas fa-check"></i></div>
+                            </div>
+
+                            <div class="visual-select-card" data-field="propType" data-value="house" onclick="selectVisualCard(this)">
+                                <div class="card-icon-box"><i class="fas fa-house"></i></div>
+                                <div class="card-info">
+                                    <strong class="card-title">Casa Residencial</strong>
+                                    <span class="card-desc">Unifamiliar, chalets y villas</span>
+                                </div>
+                                <div class="card-check-dot"><i class="fas fa-check"></i></div>
+                            </div>
+
+                            <div class="visual-select-card" data-field="propType" data-value="gated_community" onclick="selectVisualCard(this)">
+                                <div class="card-icon-box"><i class="fas fa-shield-halved"></i></div>
+                                <div class="card-info">
+                                    <strong class="card-title">Barrio Cerrado</strong>
+                                    <span class="card-desc">Condominios privados (Surubi'i, etc.)</span>
+                                </div>
+                                <div class="card-check-dot"><i class="fas fa-check"></i></div>
+                            </div>
+
+                            <div class="visual-select-card" data-field="propType" data-value="duplex" onclick="selectVisualCard(this)">
+                                <div class="card-icon-box"><i class="fas fa-cubes-stacked"></i></div>
+                                <div class="card-info">
+                                    <strong class="card-title">Dúplex / Triplex</strong>
+                                    <span class="card-desc">Viviendas pareadas modernas</span>
+                                </div>
+                                <div class="card-check-dot"><i class="fas fa-check"></i></div>
+                            </div>
+
+                            <div class="visual-select-card" data-field="propType" data-value="land" onclick="selectVisualCard(this)">
+                                <div class="card-icon-box"><i class="fas fa-draw-polygon"></i></div>
+                                <div class="card-info">
+                                    <strong class="card-title">Terreno / Lote</strong>
+                                    <span class="card-desc">Fracciones, lotes y chacras</span>
+                                </div>
+                                <div class="card-check-dot"><i class="fas fa-check"></i></div>
+                            </div>
+
+                            <div class="visual-select-card" data-field="propType" data-value="commercial" onclick="selectVisualCard(this)">
+                                <div class="card-icon-box"><i class="fas fa-store"></i></div>
+                                <div class="card-info">
+                                    <strong class="card-title">Comercial / Oficina</strong>
+                                    <span class="card-desc">Oficinas corporativas y salones</span>
+                                </div>
+                                <div class="card-check-dot"><i class="fas fa-check"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 1.3 Título Principal de la Publicación -->
+                    <div class="pub-form-group">
+                        <label>Título Atractivo del Inmueble <span class="req">*</span></label>
+                        <div class="pub-input-wrap">
+                            <input type="text" id="pub-title" class="pub-input" required placeholder="Ej. Penthouse de Lujo con Terraza y Parrilla Privada en Villa Morra" oninput="syncLivePreview()">
+                        </div>
+                        <div style="font-size: 0.72rem; color: #64748b; margin-top: 4px; display: flex; justify-content: space-between;">
+                            <span>Recomendación: Incluye tipología, barrio y el atributo más destacado.</span>
+                            <span id="title-char-count">0 / 120 caracteres</span>
+                        </div>
+                    </div>
+
+                    <div class="publish-nav-footer">
+                        <div></div>
+                        <button type="button" class="btn-nav-next" onclick="goToStep(2)">
+                            Siguiente: Ubicación GPS <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     PASO 2: UBICACIÓN EXACTA Y MAPA GPS
+                     ============================================================ -->
+                <div class="publish-step-view" id="publish-step-2">
+                    <div class="step-header">
+                        <span class="step-badge"><i class="fas fa-location-dot"></i> Paso 2 / 6</span>
+                        <h2 class="step-title-main">¿Dónde se encuentra la propiedad?</h2>
+                        <p class="step-subtitle">Indica la ciudad, el barrio y ajusta el pin arrastrándolo en el mapa de alta precisión.</p>
+                    </div>
+
+                    <div class="form-grid-3col">
+                        <div class="pub-form-group">
+                            <label>Departamento <span class="req">*</span></label>
+                            <select id="pub-department" class="pub-select" onchange="handleDepartmentChange(); syncLivePreview();">
+                                <option value="Capital">Capital (Asunción)</option>
+                                <option value="Central" selected>Central</option>
+                                <option value="Cordillera">Cordillera (San Ber / Altos)</option>
+                                <option value="Alto Paraná">Alto Paraná (CDE / Hernandarias)</option>
+                                <option value="Itapúa">Itapúa (Encarnación)</option>
+                            </select>
+                        </div>
+
+                        <div class="pub-form-group">
+                            <label>Ciudad <span class="req">*</span></label>
+                            <select id="pub-city" class="pub-select" onchange="handleCityChange(); syncLivePreview();">
+                                <option value="Asunción">Asunción</option>
+                                <option value="Mariano Roque Alonso">Mariano Roque Alonso</option>
+                                <option value="Luque">Luque</option>
+                                <option value="San Lorenzo">San Lorenzo</option>
+                                <option value="Lambaré">Lambaré</option>
+                                <option value="Fernando de la Mora">Fernando de la Mora</option>
+                                <option value="San Bernardino">San Bernardino</option>
+                                <option value="Ciudad del Este">Ciudad del Este</option>
+                                <option value="Encarnación">Encarnación</option>
+                            </select>
+                        </div>
+
+                        <div class="pub-form-group">
+                            <label>Barrio / Zona <span class="req">*</span></label>
+                            <input type="text" id="pub-neighborhood" class="pub-input" required placeholder="Ej. Villa Morra, Surubi'i, Santa Teresa" oninput="syncLivePreview()">
+                        </div>
+                    </div>
+
+                    <div class="pub-form-group">
+                        <label>Dirección / Calle y Número <span class="req">*</span></label>
+                        <div class="pub-input-wrap">
+                            <i class="fas fa-map-pin prefix-icon"></i>
+                            <input type="text" id="pub-address" class="pub-input has-prefix" required placeholder="Ej. Av. Mariscal López c/ Senador Long, Edificio Torre del Sol" oninput="syncLivePreview()">
+                        </div>
+                    </div>
+
+                    <!-- Mapa Interactivo con Pin Arrastrable -->
+                    <div class="pub-form-group">
+                        <label>Geolocalización en el Mapa (Arrastra el pin para fijar coordenadas GPS exactas)</label>
+                        <div class="publish-map-box">
+                            <div class="publish-map-header">
+                                <span style="font-size: 0.78rem; font-weight: 700; color: #cbd5e1;">
+                                    <i class="fas fa-crosshairs text-emerald-400"></i> Pin Activo Zilla
+                                </span>
+                                <span class="map-coords-badge" id="pub-coords-display">-25.2950, -57.5750</span>
+                            </div>
+                            <div id="publish-picker-canvas"></div>
+                        </div>
+                    </div>
+
+                    <div class="publish-nav-footer">
+                        <button type="button" class="btn-nav-prev" onclick="goToStep(1)">
+                            <i class="fas fa-arrow-left"></i> Anterior
+                        </button>
+                        <button type="button" class="btn-nav-next" onclick="goToStep(3)">
+                            Siguiente: Características <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     PASO 3: CARACTERÍSTICAS FÍSICAS & AMENITIES
+                     ============================================================ -->
+                <div class="publish-step-view" id="publish-step-3">
+                    <div class="step-header">
+                        <span class="step-badge"><i class="fas fa-sliders"></i> Paso 3 / 6</span>
+                        <h2 class="step-title-main">Dimensiones, Ambientes y Comodidades</h2>
+                        <p class="step-subtitle">Detalla las superficies y selecciona todos los amenities disponibles.</p>
+                    </div>
+
+                    <!-- Dimensiones en m² -->
+                    <div class="form-grid-2col">
+                        <div class="pub-form-group">
+                            <label>Superficie Total (m²) <span class="req">*</span></label>
+                            <div class="pub-input-wrap">
+                                <i class="fas fa-ruler-combined prefix-icon"></i>
+                                <input type="number" id="pub-total-m2" class="pub-input has-prefix" required value="140" min="1" oninput="calcM2Price(); syncLivePreview();">
+                            </div>
+                        </div>
+
+                        <div class="pub-form-group">
+                            <label>Superficie Construida (m²)</label>
+                            <div class="pub-input-wrap">
+                                <i class="fas fa-vector-square prefix-icon"></i>
+                                <input type="number" id="pub-built-m2" class="pub-input has-prefix" value="120" min="1" oninput="syncLivePreview();">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Contadores: Dormitorios, Baños, Cocheras -->
+                    <div class="form-grid-3col" style="margin-bottom: 24px;">
+                        <div class="counter-card">
+                            <span class="counter-label"><i class="fas fa-bed text-emerald-400"></i> Dorms</span>
+                            <div class="counter-controls">
+                                <button type="button" class="btn-counter" onclick="changeCounter('pub-bedrooms', -1)">-</button>
+                                <span class="counter-val" id="pub-bedrooms-val">3</span>
+                                <input type="hidden" id="pub-bedrooms" value="3">
+                                <button type="button" class="btn-counter" onclick="changeCounter('pub-bedrooms', 1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="counter-card">
+                            <span class="counter-label"><i class="fas fa-bath text-sky-400"></i> Baños</span>
+                            <div class="counter-controls">
+                                <button type="button" class="btn-counter" onclick="changeCounter('pub-bathrooms', -1)">-</button>
+                                <span class="counter-val" id="pub-bathrooms-val">2</span>
+                                <input type="hidden" id="pub-bathrooms" value="2">
+                                <button type="button" class="btn-counter" onclick="changeCounter('pub-bathrooms', 1)">+</button>
+                            </div>
+                        </div>
+
+                        <div class="counter-card">
+                            <span class="counter-label"><i class="fas fa-car text-amber-400"></i> Cocheras</span>
+                            <div class="counter-controls">
+                                <button type="button" class="btn-counter" onclick="changeCounter('pub-parking', -1)">-</button>
+                                <span class="counter-val" id="pub-parking-val">2</span>
+                                <input type="hidden" id="pub-parking" value="2">
+                                <button type="button" class="btn-counter" onclick="changeCounter('pub-parking', 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Amenities & Comodidades -->
+                    <div class="pub-form-group">
+                        <label>Amenities y Equipamiento</label>
+                        <div class="amenities-pills-grid">
+                            <label class="amenity-pill-checkbox">
+                                <input type="checkbox" name="pub_amenities" value="pool" checked onchange="syncLivePreview()">
+                                <span class="amenity-pill-body"><i class="fas fa-water-ladder"></i> Piscina</span>
+                            </label>
+                            <label class="amenity-pill-checkbox">
+                                <input type="checkbox" name="pub_amenities" value="quincho" checked onchange="syncLivePreview()">
+                                <span class="amenity-pill-body"><i class="fas fa-fire-burner"></i> Quincho con Parrilla</span>
+                            </label>
+                            <label class="amenity-pill-checkbox">
+                                <input type="checkbox" name="pub_amenities" value="security" checked onchange="syncLivePreview()">
+                                <span class="amenity-pill-body"><i class="fas fa-shield-halved"></i> Seguridad 24/7</span>
+                            </label>
+                            <label class="amenity-pill-checkbox">
+                                <input type="checkbox" name="pub_amenities" value="garage" checked onchange="syncLivePreview()">
+                                <span class="amenity-pill-body"><i class="fas fa-warehouse"></i> Cochera Techada</span>
+                            </label>
+                            <label class="amenity-pill-checkbox">
+                                <input type="checkbox" name="pub_amenities" value="pet_friendly" checked onchange="syncLivePreview()">
+                                <span class="amenity-pill-body"><i class="fas fa-paw"></i> Pet Friendly</span>
+                            </label>
+                            <label class="amenity-pill-checkbox">
+                                <input type="checkbox" name="pub_amenities" value="gym" onchange="syncLivePreview()">
+                                <span class="amenity-pill-body"><i class="fas fa-dumbbell"></i> Gimnasio</span>
+                            </label>
+                            <label class="amenity-pill-checkbox">
+                                <input type="checkbox" name="pub_amenities" value="balcony" onchange="syncLivePreview()">
+                                <span class="amenity-pill-body"><i class="fas fa-sun"></i> Balcón Aterrazado</span>
+                            </label>
+                            <label class="amenity-pill-checkbox">
+                                <input type="checkbox" name="pub_amenities" value="generator" onchange="syncLivePreview()">
+                                <span class="amenity-pill-body"><i class="fas fa-bolt"></i> Generador Eléctrico</span>
+                            </label>
+                            <label class="amenity-pill-checkbox">
+                                <input type="checkbox" name="pub_amenities" value="furnished" onchange="syncLivePreview()">
+                                <span class="amenity-pill-body"><i class="fas fa-couch"></i> Amoblado de Lujo</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Descripción Detallada -->
+                    <div class="pub-form-group">
+                        <label>Descripción de la Propiedad <span class="req">*</span></label>
+                        <textarea id="pub-description" class="pub-textarea" rows="4" required placeholder="Describe los acabados, distribución, cercanía a servicios y detalles únicos..." oninput="syncLivePreview()"></textarea>
+                    </div>
+
+                    <div class="publish-nav-footer">
+                        <button type="button" class="btn-nav-prev" onclick="goToStep(2)">
+                            <i class="fas fa-arrow-left"></i> Anterior
+                        </button>
+                        <button type="button" class="btn-nav-next" onclick="goToStep(4)">
+                            Siguiente: Galería de Fotos <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     PASO 4: GALERÍA DE FOTOS Y MATERIAL MULTIMEDIA
+                     ============================================================ -->
+                <div class="publish-step-view" id="publish-step-4">
+                    <div class="step-header">
+                        <span class="step-badge"><i class="fas fa-camera"></i> Paso 4 / 6</span>
+                        <h2 class="step-title-main">Fotos y Galería en Alta Resolución</h2>
+                        <p class="step-subtitle">Arrastra tus fotos o súbelas directamente. Los anuncios con 5+ fotos reciben 4x más consultas.</p>
+                    </div>
+
+                    <!-- Dropzone de Subida de Archivos -->
+                    <div class="dropzone-upload-box" id="publish-dropzone" onclick="document.getElementById('file-upload-input').click()">
+                        <input type="file" id="file-upload-input" multiple accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+                        <div class="dropzone-icon-glow">
+                            <i class="fas fa-cloud-arrow-up"></i>
+                        </div>
+                        <h4 class="dropzone-title">Arrastra tus fotos aquí o haz clic para explorar</h4>
+                        <p class="dropzone-subtitle">Soporta JPG, PNG, WEBP en alta resolución (hasta 10 MB por foto)</p>
+                        <button type="button" class="btn-choose-files">
+                            <i class="fas fa-images"></i> Seleccionar Fotos desde tu Dispositivo
+                        </button>
+                    </div>
+
+                    <!-- Opción de agregar por URL -->
+                    <div class="pub-form-group">
+                        <label>O agrega una foto por enlace web (URL)</label>
+                        <div style="display: flex; gap: 10px;">
+                            <input type="url" id="pub-url-photo-input" class="pub-input" placeholder="https://images.unsplash.com/photo-...">
+                            <button type="button" class="btn btn-outline btn-sm" onclick="addPhotoFromUrl()" style="white-space: nowrap;">
+                                <i class="fas fa-plus"></i> Añadir URL
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Cuadrícula de Fotos Subidas -->
+                    <div class="pub-form-group">
+                        <label>Fotos Cargadas (<span id="uploaded-photos-count">0</span> fotos)</label>
+                        <div class="uploaded-photos-grid" id="uploaded-photos-grid">
+                            <!-- Inyectado dinámicamente vía js/publicar.js -->
+                        </div>
+                    </div>
+
+                    <div class="publish-nav-footer">
+                        <button type="button" class="btn-nav-prev" onclick="goToStep(3)">
+                            <i class="fas fa-arrow-left"></i> Anterior
+                        </button>
+                        <button type="button" class="btn-nav-next" onclick="goToStep(5)">
+                            Siguiente: Precio & Financiación <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     PASO 5: PRECIO, MONEDA & FINANCIACIÓN
+                     ============================================================ -->
+                <div class="publish-step-view" id="publish-step-5">
+                    <div class="step-header">
+                        <span class="step-badge"><i class="fas fa-coins"></i> Paso 5 / 6</span>
+                        <h2 class="step-title-main">Precio, Moneda y Opciones de Financiación</h2>
+                        <p class="step-subtitle">Configura los valores con conversión automática en vivo entre Dólares y Guaraníes.</p>
+                    </div>
+
+                    <!-- Tarjeta de Visualización de Precios Duales -->
+                    <div class="price-dual-display-card">
+                        <div class="price-dual-left">
+                            <span class="dual-lbl">Valor Total de Publicación</span>
+                            <strong class="dual-val-usd" id="calc-preview-usd">$185,000 USD</strong>
+                            <span class="dual-val-pyg" id="calc-preview-pyg">≈ ₲ 1.470.750.000 Guaraníes</span>
+                        </div>
+                        <div class="dual-m2-pill">
+                            <span class="dual-m2-lbl">Precio por m²</span>
+                            <strong class="dual-m2-val" id="calc-preview-m2">$1,321 / m²</strong>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2col">
+                        <div class="pub-form-group">
+                            <label>Precio Total en USD ($) <span class="req">*</span></label>
+                            <div class="pub-input-wrap">
+                                <i class="fas fa-dollar-sign prefix-icon"></i>
+                                <input type="number" id="pub-price-usd" class="pub-input has-prefix" required value="185000" step="1000" oninput="handlePriceUsdInput(); syncLivePreview();">
+                            </div>
+                        </div>
+
+                        <div class="pub-form-group">
+                            <label>Expensas Mensuales en Guaraníes (₲)</label>
+                            <div class="pub-input-wrap">
+                                <i class="fas fa-receipt prefix-icon"></i>
+                                <input type="number" id="pub-expenses-pyg" class="pub-input has-prefix" value="850000" step="50000" oninput="syncLivePreview();">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Opciones de Crédito y Financiación Local -->
+                    <div class="pub-form-group">
+                        <label>Elegibilidad de Financiación y Programas de Crédito en Paraguay</label>
+                        <div class="finance-options-group">
+                            <label class="finance-check-item">
+                                <input type="checkbox" id="pub-fin-bank" checked onchange="syncLivePreview()">
+                                <span><i class="fas fa-building-columns text-emerald-400"></i> Apto para Crédito Hipotecario Bancario Tradicional</span>
+                            </label>
+
+                            <label class="finance-check-item">
+                                <input type="checkbox" id="pub-fin-afd" checked onchange="syncLivePreview()">
+                                <span><i class="fas fa-shield-halved text-sky-400"></i> Elegible para Financiación AFD (Primera Vivienda / Mi Casa)</span>
+                            </label>
+
+                            <label class="finance-check-item">
+                                <input type="checkbox" id="pub-fin-cherogapora" onchange="syncLivePreview()">
+                                <span><i class="fas fa-star text-amber-400"></i> Califica para Programa Che Róga Porã (MUVH)</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="publish-nav-footer">
+                        <button type="button" class="btn-nav-prev" onclick="goToStep(4)">
+                            <i class="fas fa-arrow-left"></i> Anterior
+                        </button>
+                        <button type="button" class="btn-nav-next" onclick="goToStep(6)">
+                            Siguiente: Contacto & Publicar <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- ============================================================
+                     PASO 6: DATOS DE CONTACTO & CONFIRMACIÓN SUPABASE
+                     ============================================================ -->
+                <div class="publish-step-view" id="publish-step-6">
+                    <div class="step-header">
+                        <span class="step-badge"><i class="fas fa-user-check"></i> Paso 6 / 6</span>
+                        <h2 class="step-title-main">Datos del Agente y Publicación Inmediata</h2>
+                        <p class="step-subtitle">Tu anuncio se sincronizará en tiempo real con Supabase y el portal público Zilla.</p>
+                    </div>
+
+                    <div class="form-grid-2col">
+                        <div class="pub-form-group">
+                            <label>Nombre y Apellido del Agente / Anunciante <span class="req">*</span></label>
+                            <div class="pub-input-wrap">
+                                <i class="fas fa-user prefix-icon"></i>
+                                <input type="text" id="pub-agent-name" class="pub-input has-prefix" required value="Juan Solalinde" oninput="syncLivePreview()">
+                            </div>
+                        </div>
+
+                        <div class="pub-form-group">
+                            <label>Inmobiliaria o Desarrolladora</label>
+                            <div class="pub-input-wrap">
+                                <i class="fas fa-briefcase prefix-icon"></i>
+                                <input type="text" id="pub-agent-agency" class="pub-input has-prefix" value="Zilla Realty & Partners" oninput="syncLivePreview()">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-grid-2col">
+                        <div class="pub-form-group">
+                            <label>WhatsApp de Contacto Directo <span class="req">*</span></label>
+                            <div class="pub-input-wrap">
+                                <i class="fab fa-whatsapp prefix-icon" style="color: #25d366;"></i>
+                                <input type="tel" id="pub-agent-phone" class="pub-input has-prefix" required value="+595 981 123 456">
+                            </div>
+                        </div>
+
+                        <div class="pub-form-group">
+                            <label>Correo Electrónico</label>
+                            <div class="pub-input-wrap">
+                                <i class="fas fa-envelope prefix-icon"></i>
+                                <input type="email" id="pub-agent-email" class="pub-input has-prefix" value="juan.solalinde@zillaparaguay.com">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Nivel de Publicación -->
+                    <div class="pub-form-group">
+                        <label>Nivel de Visibilidad en Zilla</label>
+                        <div class="form-grid-3col">
+                            <div class="visual-select-card selected" data-field="tier" data-value="platinum" onclick="selectVisualCard(this)">
+                                <div class="card-icon-box" style="background: rgba(15, 118, 110, 0.3); color: #bef264;"><i class="fas fa-crown"></i></div>
+                                <div class="card-info">
+                                    <strong class="card-title">Platino VIP</strong>
+                                    <span class="card-desc">Top del feed + Pin resaltado</span>
+                                </div>
+                                <div class="card-check-dot"><i class="fas fa-check"></i></div>
+                            </div>
+
+                            <div class="visual-select-card" data-field="tier" data-value="gold" onclick="selectVisualCard(this)">
+                                <div class="card-icon-box"><i class="fas fa-star"></i></div>
+                                <div class="card-info">
+                                    <strong class="card-title">Oro Destacado</strong>
+                                    <span class="card-desc">Alta prioridad en búsquedas</span>
+                                </div>
+                                <div class="card-check-dot"><i class="fas fa-check"></i></div>
+                            </div>
+
+                            <div class="visual-select-card" data-field="tier" data-value="free" onclick="selectVisualCard(this)">
+                                <div class="card-icon-box"><i class="fas fa-circle-check"></i></div>
+                                <div class="card-info">
+                                    <strong class="card-title">Estándar</strong>
+                                    <span class="card-desc">Publicación clásica gratuita</span>
+                                </div>
+                                <div class="card-check-dot"><i class="fas fa-check"></i></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="publish-nav-footer">
+                        <button type="button" class="btn-nav-prev" onclick="goToStep(5)">
+                            <i class="fas fa-arrow-left"></i> Anterior
+                        </button>
+                        <button type="button" class="btn-nav-finish" id="btn-submit-publish" onclick="handleFinalPublish(event)">
+                            <i class="fas fa-cloud-arrow-up"></i> Publicar Inmueble en Zilla & Supabase
+                        </button>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+
+        <!-- Columna Derecha: Vista Previa Flotante en Tiempo Real -->
+        <aside class="publish-preview-sidebar">
+            <div class="live-preview-box">
+                <div class="preview-top-header">
+                    <span class="live-badge-pulse"><span class="pulse-dot"></span> Vista Previa en Vivo</span>
+                    <span style="font-size: 0.72rem; color: #94a3b8;"><i class="fas fa-eye"></i> Simulación Zilla Feed</span>
+                </div>
+
+                <!-- Tarjeta de Propiedad Simulada -->
+                <div class="preview-prop-card">
+                    <div class="preview-img-wrap">
+                        <img id="live-prev-img" src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80" alt="Vista previa">
+                        <span class="preview-tier-badge" id="live-prev-tier">Destacado Platino</span>
+                        <span class="preview-op-badge" id="live-prev-op">Venta</span>
+                    </div>
+
+                    <div class="preview-card-body">
+                        <div class="preview-location" id="live-prev-location">
+                            <i class="fas fa-location-dot"></i> Villa Morra, Asunción
+                        </div>
+
+                        <h4 class="preview-title" id="live-prev-title">Penthouse de Lujo con Terraza y Parrilla Privada</h4>
+
+                        <div class="preview-specs-row">
+                            <span><i class="fas fa-bed text-emerald-400"></i> <strong id="live-prev-beds">3</strong> dorms</span>
+                            <span><i class="fas fa-bath text-sky-400"></i> <strong id="live-prev-baths">2</strong> baños</span>
+                            <span><i class="fas fa-ruler-combined text-amber-400"></i> <strong id="live-prev-m2">140</strong> m²</span>
+                        </div>
+
+                        <div class="preview-price-row">
+                            <div>
+                                <div class="prev-price-usd" id="live-prev-price-usd">$185,000 USD</div>
+                                <div class="prev-price-pyg" id="live-prev-price-pyg">₲ 1.470M</div>
+                            </div>
+                            <div class="prev-price-m2" id="live-prev-price-m2">$1,321/m²</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tarjeta de Agente Anunciante -->
+                <div class="preview-agent-card">
+                    <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Avatar" class="prev-agent-avatar">
+                    <div>
+                        <div class="prev-agent-name" id="live-prev-agent-name">Juan Solalinde</div>
+                        <div class="prev-agent-agency" id="live-prev-agent-agency">Zilla Realty & Partners</div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+    </main>
+
+    <!-- ============================================================
+         3. MODAL DE CONFIRMACIÓN DE ÉXITO SUPABASE
+         ============================================================ -->
+    <div class="publish-modal-overlay" id="publish-success-modal" aria-hidden="true">
+        <div class="publish-success-card">
+            <div class="success-icon-badge">
+                <i class="fas fa-check"></i>
+            </div>
+            <h3 class="success-heading">¡Inmueble Publicado con Éxito!</h3>
+            <p class="success-message">
+                Tu publicación ha sido procesada y sincronizada en tiempo real con la base de datos de <strong>Supabase</strong> y el portal inmobiliario <strong>Zilla Paraguay</strong>.
+            </p>
+            <div class="success-code-pill" id="success-property-code">
+                Código Asignado: PY-107
+            </div>
+            <div class="success-actions-grid">
+                <a href="#" id="btn-view-published-live" class="btn-success-primary">
+                    <i class="fas fa-eye"></i> Ver Publicación en el Portal Zilla
+                </a>
+                <a href="agentes.html" class="btn-success-secondary">
+                    <i class="fas fa-table-cells"></i> Ir a Gestionar en Planilla Excel (Agentes)
+                </a>
+                <button type="button" class="btn-success-secondary" onclick="publishAnotherProperty()">
+                    <i class="fas fa-plus"></i> Publicar Otro Inmueble
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Google Maps JS API with Places & Geometry -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGAOErwgmCedqHuZzlfUYOthwSoMv1998&libraries=places,drawing,geometry"></script>
+
+    <!-- Scripts -->
+    <script src="js/data.js"></script>
+    <script src="js/currency.js"></script>
+    <script src="js/publicar.js"></script>
+</body>
+</html>

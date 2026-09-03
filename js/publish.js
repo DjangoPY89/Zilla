@@ -76,42 +76,83 @@
             const mapContainer = document.getElementById("publish-picker-map");
             if (!mapContainer) return;
 
-            if (!publishMap) {
-                publishMap = L.map("publish-picker-map", {
-                    center: selectedCoords,
-                    zoom: 14,
-                    zoomControl: true
-                });
+            if (window.google && window.google.maps) {
+                if (!publishMap) {
+                    const centerLatLng = { lat: selectedCoords[0], lng: selectedCoords[1] };
+                    publishMap = new google.maps.Map(mapContainer, {
+                        center: centerLatLng,
+                        zoom: 15,
+                        streetViewControl: false,
+                        mapTypeControl: false,
+                        fullscreenControl: false
+                    });
 
-                L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-                    maxZoom: 19
-                }).addTo(publishMap);
+                    publishMarker = new google.maps.Marker({
+                        position: centerLatLng,
+                        map: publishMap,
+                        draggable: true,
+                        title: "Ubicación del inmueble"
+                    });
 
-                // Marcador arrastrable para ubicar el inmueble exactamente
-                const pinIcon = L.divIcon({
-                    className: 'custom-publish-pin',
-                    html: `<div class="publish-pin-icon"><i class="fas fa-map-marker-alt"></i></div>`,
-                    iconSize: [40, 40],
-                    iconAnchor: [20, 40]
-                });
+                    publishMarker.addListener("dragend", (e) => {
+                        const lat = e.latLng.lat();
+                        const lng = e.latLng.lng();
+                        selectedCoords = [lat, lng];
+                        document.getElementById("publish-lat").value = lat.toFixed(6);
+                        document.getElementById("publish-lng").value = lng.toFixed(6);
+                    });
 
-                publishMarker = L.marker(selectedCoords, { draggable: true, icon: pinIcon }).addTo(publishMap);
+                    publishMap.addListener("click", (e) => {
+                        publishMarker.setPosition(e.latLng);
+                        const lat = e.latLng.lat();
+                        const lng = e.latLng.lng();
+                        selectedCoords = [lat, lng];
+                        document.getElementById("publish-lat").value = lat.toFixed(6);
+                        document.getElementById("publish-lng").value = lng.toFixed(6);
+                    });
+                } else {
+                    google.maps.event.trigger(publishMap, "resize");
+                    if (publishMarker) {
+                        publishMap.setCenter(publishMarker.getPosition());
+                    }
+                }
+            } else if (window.L) {
+                if (!publishMap) {
+                    publishMap = L.map("publish-picker-map", {
+                        center: selectedCoords,
+                        zoom: 14,
+                        zoomControl: true
+                    });
 
-                publishMarker.on('dragend', function (e) {
-                    const pos = e.target.getLatLng();
-                    selectedCoords = [pos.lat, pos.lng];
-                    document.getElementById("publish-lat").value = pos.lat.toFixed(6);
-                    document.getElementById("publish-lng").value = pos.lng.toFixed(6);
-                });
+                    L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+                        maxZoom: 19
+                    }).addTo(publishMap);
 
-                publishMap.on('click', function (e) {
-                    publishMarker.setLatLng(e.latlng);
-                    selectedCoords = [e.latlng.lat, e.latlng.lng];
-                    document.getElementById("publish-lat").value = e.latlng.lat.toFixed(6);
-                    document.getElementById("publish-lng").value = e.latlng.lng.toFixed(6);
-                });
-            } else {
-                publishMap.invalidateSize();
+                    const pinIcon = L.divIcon({
+                        className: 'custom-publish-pin',
+                        html: `<div class="publish-pin-icon"><i class="fas fa-map-marker-alt"></i></div>`,
+                        iconSize: [40, 40],
+                        iconAnchor: [20, 40]
+                    });
+
+                    publishMarker = L.marker(selectedCoords, { draggable: true, icon: pinIcon }).addTo(publishMap);
+
+                    publishMarker.on('dragend', function (e) {
+                        const pos = e.target.getLatLng();
+                        selectedCoords = [pos.lat, pos.lng];
+                        document.getElementById("publish-lat").value = pos.lat.toFixed(6);
+                        document.getElementById("publish-lng").value = pos.lng.toFixed(6);
+                    });
+
+                    publishMap.on('click', function (e) {
+                        publishMarker.setLatLng(e.latlng);
+                        selectedCoords = [e.latlng.lat, e.latlng.lng];
+                        document.getElementById("publish-lat").value = e.latlng.lat.toFixed(6);
+                        document.getElementById("publish-lng").value = e.latlng.lng.toFixed(6);
+                    });
+                } else {
+                    publishMap.invalidateSize();
+                }
             }
         },
 

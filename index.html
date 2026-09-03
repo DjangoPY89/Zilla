@@ -1,459 +1,1326 @@
 <!DOCTYPE html>
-<html lang="es" data-theme="light">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zilla Flex | Explorar Alojamientos de Media Estancia (1 a 11 meses)</title>
-    <meta name="description" content="Explora 22 departamentos y residencias amobladas de 1 a 11 meses en Asunción, San Bernardino, Encarnación y CDE. Sin garantes, con WiFi 500 Mbps y contratos digitales.">
-
+    <title>Zilla Paraguay | El Nuevo Estándar Inmobiliario</title>
+    <meta name="description" content="La plataforma inmobiliaria y PropTech líder en Paraguay. Casas, departamentos, dúplex y terrenos en venta y alquiler en Asunción, San Bernardino, Surubi'i y todo el país.">
+    
     <!-- Google Fonts: Outfit & Inter -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
     <!-- FontAwesome 6 Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    <!-- Leaflet Map CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
-
-    <!-- Custom Modern Stylesheets -->
+    
+    <!-- Custom Stylesheet -->
     <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/mobile-nav.css?v=1.0">
 </head>
-<body>
+<body class="landing-body">
 
-    <!-- 1. Header de Navegación Glassmorphic Estilo Airbnb -->
-    <header class="airbnb-glass-navbar">
-        <!-- Logo -->
-        <div class="navbar-brand-area">
-            <a href="landing.html" class="brand-logo" title="Ir a la Landing Page">
-                <i class="fas fa-building-circle-check"></i>
+    <!-- 1. Barra de Navegación Estilo EverGreen / Apple Glassmorphism -->
+    <header class="evergreen-landing-nav">
+        <div class="evergreen-nav-container">
+            <!-- Brand Logo -->
+            <a href="index.html" class="evergreen-brand-logo">
                 <span>Zilla</span>
-                <span class="brand-badge-flex">Flex</span>
+                <span class="brand-badge-dot"></span>
             </a>
-        </div>
 
-        <!-- Airbnb Search Capsule Flotante (Glassmorphism) -->
-        <div class="airbnb-search-capsule" id="airbnb-search-capsule-btn">
-            <button class="capsule-segment" id="capsule-where-btn">
-                <span class="capsule-label">Dónde</span>
-                <span class="capsule-val" id="capsule-where-val">Paraguay (Todas las Zonas)</span>
-            </button>
-            <span class="capsule-divider"></span>
-            <button class="capsule-segment" id="capsule-when-btn">
-                <span class="capsule-label">Duración</span>
-                <span class="capsule-val" id="capsule-when-val">3 meses (-8% OFF)</span>
-            </button>
-            <span class="capsule-divider"></span>
-            <button class="capsule-segment capsule-search-action">
-                <span class="capsule-label">Filtros</span>
-                <span class="capsule-val">Explorar</span>
-                <div class="capsule-icon-circle">
-                    <i class="fas fa-search"></i>
+            <!-- Enlaces Centrales en Cápsula Flotante -->
+            <nav class="evergreen-nav-capsule">
+                <a href="index.html" class="capsule-nav-item active">Inicio</a>
+                <a href="#experiencia" class="capsule-nav-item">Nosotros</a>
+                <a href="explorar.html" class="capsule-nav-item">Inmuebles</a>
+                <a href="agentes.html" class="capsule-nav-item">Agentes B2B</a>
+                <a href="#contacto" class="capsule-nav-item">Contacto</a>
+            </nav>
+
+            <!-- Acciones Derecha -->
+            <div class="evergreen-nav-actions">
+                <!-- Conmutador de Moneda USD / PYG -->
+                <div class="currency-switcher-wrapper">
+                    <button class="currency-toggle-btn active" data-currency="USD">USD ($)</button>
+                    <button class="currency-toggle-btn" data-currency="PYG">PYG (₲)</button>
                 </div>
-            </button>
-        </div>
 
-        <!-- Opciones de Usuario y Configuración -->
-        <div class="navbar-user-area">
-            <!-- Conmutador de Rol (Arrendatario / Propietario) -->
-            <button class="glass-role-btn role-tenant-active" id="user-role-toggle-btn" title="Alternar entre modo Inquilino y Propietario">
-                <i class="fas fa-laptop-house"></i>
-                <span class="role-label">Inquilino</span>
-            </button>
+                <!-- Botón Publicar Propiedad (Sign Up / Publicar) -->
+                <a href="publicar.html" class="btn-evergreen-cta">
+                    <span>Publicar Inmueble</span>
+                </a>
 
-            <!-- Modo Oscuro / Claro -->
-            <button class="theme-toggle-btn glass-btn" id="app-theme-toggle" title="Modo Oscuro / Claro">
-                <i class="fas fa-moon"></i>
-            </button>
+                <!-- Botón de Inicio de Sesión de Usuario (Glassmorphism) -->
+                <button class="btn-nav-auth-glass" id="open-auth-modal-btn" type="button" aria-label="Iniciar Sesión" title="Iniciar Sesión / Mi Cuenta">
+                    <div class="auth-icon-wrap">
+                        <i class="far fa-user-circle"></i>
+                    </div>
+                    <span class="auth-btn-text">Ingresar</span>
+                </button>
 
-            <!-- Moneda Dual USD / PYG -->
-            <div class="currency-switcher-wrapper glass-currency">
-                <button class="currency-toggle-btn active" data-currency="USD">USD</button>
-                <button class="currency-toggle-btn" data-currency="PYG">Gs.</button>
+                <!-- Botón Menú Móvil -->
+                <button type="button" class="btn-zilla-mobile-hamburger" id="topbar-mobile-hamburger-btn" aria-label="Abrir Menú Móvil">
+                    <div class="hamburger-bars">
+                        <span class="bar"></span>
+                        <span class="bar short"></span>
+                        <span class="bar"></span>
+                    </div>
+                </button>
             </div>
-
-            <!-- Perfil de Usuario con Menú Glass -->
-            <button class="user-pill-btn glass-btn" id="user-profile-menu-btn" title="Mi Cuenta">
-                <i class="fas fa-bars"></i>
-                <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=150&q=80" alt="Avatar" class="user-avatar-tiny">
-            </button>
         </div>
     </header>
 
-    <!-- 2. Barra Horizontal de Categorías con Iconos Estilo Airbnb -->
-    <nav class="airbnb-categories-bar">
-        <div class="categories-scroll-wrapper">
-            <button class="cat-nav-arrow prev-arrow" id="cat-scroll-left"><i class="fas fa-chevron-left"></i></button>
-
-            <div class="airbnb-categories-track" id="airbnb-categories-track">
-                <button class="airbnb-category-item active" data-category="all">
-                    <i class="fas fa-globe"></i>
-                    <span>Todas (22)</span>
-                </button>
-                <button class="airbnb-category-item" data-category="pool">
-                    <i class="fas fa-water-ladder"></i>
-                    <span>Con Piscina</span>
-                </button>
-                <button class="airbnb-category-item" data-category="wfh">
-                    <i class="fas fa-laptop-code"></i>
-                    <span>Home Office 500M</span>
-                </button>
-                <button class="airbnb-category-item" data-category="views">
-                    <i class="fas fa-city"></i>
-                    <span>Vistas a la Ciudad</span>
-                </button>
-                <button class="airbnb-category-item" data-category="lake">
-                    <i class="fas fa-water"></i>
-                    <span>Frente al Lago/Río</span>
-                </button>
-                <button class="airbnb-category-item" data-category="luxury">
-                    <i class="fas fa-gem"></i>
-                    <span>Penthouses VIP</span>
-                </button>
-                <button class="airbnb-category-item" data-category="pet_friendly">
-                    <i class="fas fa-paw"></i>
-                    <span>Pet Friendly</span>
-                </button>
-                <button class="airbnb-category-item" data-category="quincho">
-                    <i class="fas fa-fire-burner"></i>
-                    <span>Con Parrilla</span>
-                </button>
+    <!-- 2. Hero Section Principal Estilo EverGreen -->
+    <section class="evergreen-hero-section">
+        <div class="evergreen-hero-frame">
+            <div class="evergreen-hero-bg-media">
+                <img src="img/hero-bg.jpg" alt="Edificio Residencial Moderno con Terraza y Piscina" class="evergreen-hero-img">
+                <div class="evergreen-hero-overlay"></div>
             </div>
 
-            <button class="cat-nav-arrow next-arrow" id="cat-scroll-right"><i class="fas fa-chevron-right"></i></button>
-        </div>
-
-        <!-- Acciones a la Derecha: Botón de Filtros Airbnb & Toggle de Total -->
-        <div class="categories-actions-group">
-            <button class="airbnb-filters-trigger-btn glass-btn" id="open-airbnb-filters-modal-btn">
-                <i class="fas fa-sliders"></i>
-                <span>Filtros</span>
-                <span class="filters-badge" id="active-filters-count-badge" style="display: none;">0</span>
-            </button>
-
-            <div class="airbnb-total-switch-box glass-card">
-                <span class="switch-label">Mostrar total c/ servicios</span>
-                <label class="custom-toggle-switch">
-                    <input type="checkbox" id="toggle-total-price-switch">
-                    <span class="slider-round"></span>
-                </label>
-            </div>
-        </div>
-    </nav>
-
-    <!-- 3. HERRAMIENTA INTERACTIVA: REGLA / MEDIDOR DE MESES (1 A 11 MESES) -->
-    <div class="duration-ruler-toolbar glass-card" id="duration-ruler-toolbar">
-        <div class="ruler-tool-header">
-            <div class="ruler-title-group">
-                <div class="ruler-icon-badge"><i class="fas fa-ruler-combined"></i></div>
-                <div>
-                    <span class="ruler-tool-title">Medidor de Estancia Flexible</span>
-                    <span class="ruler-tool-subtitle">Ajusta la regla de 1 a 11 meses para calibrar descuentos automáticos en tiempo real</span>
+            <div class="evergreen-hero-content-wrap">
+                <!-- Tags superiores flotantes -->
+                <div class="hero-top-tags">
+                    <button type="button" class="hero-tag-pill" onclick="setHeroPropType('house', this)">Casa</button>
+                    <button type="button" class="hero-tag-pill" onclick="setHeroPropType('apartment', this)">Departamento</button>
+                    <button type="button" class="hero-tag-pill" onclick="setHeroPropType('gated_community', this)">Residencial</button>
+                    <button type="button" class="hero-tag-pill" onclick="setHeroPropType('off_plan', this)">En Pozo</button>
                 </div>
-            </div>
 
-            <!-- Indicador Activo de Ahorro -->
-            <div class="ruler-active-badge-pill" id="ruler-active-badge">
-                <span class="ruler-months-highlight" id="ruler-months-text">3 Meses</span>
-                <span class="ruler-discount-tag" id="ruler-discount-tag">8% Descuento Aplicado</span>
-            </div>
-        </div>
-
-        <!-- Regla Graduada Interactiva de 1 a 11 con Marcas y Zonas -->
-        <div class="ruler-track-container" id="ruler-interactive-track">
-            <!-- Zonas de Descuento Visuales -->
-            <div class="ruler-zones-bg">
-                <div class="ruler-zone zone-base" title="1 a 2 Meses: Tarifa Base"><span>Base</span></div>
-                <div class="ruler-zone zone-smart" title="3 a 5 Meses: 8% OFF"><span>8% OFF</span></div>
-                <div class="ruler-zone zone-mid" title="6 a 8 Meses: 15% OFF"><span>15% OFF</span></div>
-                <div class="ruler-zone zone-max" title="9 a 11 Meses: 22% OFF"><span>22% Ahorro Máximo</span></div>
-            </div>
-
-            <!-- Input Slider de Precisión -->
-            <input type="range" min="1" max="11" value="3" step="1" id="duration-ruler-slider" class="ruler-slider-element" aria-label="Seleccionar meses de estancia">
-
-            <!-- Marcas Graduadas de la Regla (Notches 1 a 11) -->
-            <div class="ruler-graduations-row">
-                <div class="ruler-notch" data-month="1"><span class="notch-tick"></span><span class="notch-num">1m</span></div>
-                <div class="ruler-notch" data-month="2"><span class="notch-tick"></span><span class="notch-num">2m</span></div>
-                <div class="ruler-notch active" data-month="3"><span class="notch-tick"></span><span class="notch-num">3m</span></div>
-                <div class="ruler-notch" data-month="4"><span class="notch-tick"></span><span class="notch-num">4m</span></div>
-                <div class="ruler-notch" data-month="5"><span class="notch-tick"></span><span class="notch-num">5m</span></div>
-                <div class="ruler-notch" data-month="6"><span class="notch-tick"></span><span class="notch-num">6m</span></div>
-                <div class="ruler-notch" data-month="7"><span class="notch-tick"></span><span class="notch-num">7m</span></div>
-                <div class="ruler-notch" data-month="8"><span class="notch-tick"></span><span class="notch-num">8m</span></div>
-                <div class="ruler-notch" data-month="9"><span class="notch-tick"></span><span class="notch-num">9m</span></div>
-                <div class="ruler-notch" data-month="10"><span class="notch-tick"></span><span class="notch-num">10m</span></div>
-                <div class="ruler-notch" data-month="11"><span class="notch-tick"></span><span class="notch-num">11m</span></div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 4. Layout Principal Split-Screen (55% Tarjetas / 45% Mapa Interactivo) -->
-    <main class="split-screen-container">
-        <!-- Columna Izquierda: Grid de Tarjetas de Alojamiento Estilo Airbnb -->
-        <section class="properties-feed-column" id="properties-feed-column">
-            <div class="feed-header-info">
-                <div class="results-count" id="results-count-label">
-                    Cargando 22 alojamientos disponibles en Paraguay...
-                </div>
-            </div>
-
-            <!-- Grid de Tarjetas Airbnb -->
-            <div class="airbnb-homes-grid" id="properties-feed">
-                <!-- Skeleton Loaders -->
-                <div class="airbnb-card-skeleton"></div>
-                <div class="airbnb-card-skeleton"></div>
-                <div class="airbnb-card-skeleton"></div>
-                <div class="airbnb-card-skeleton"></div>
-            </div>
-        </section>
-
-        <!-- Columna Derecha: Mapa Interactivo con Pines de Precio Glassmorphism -->
-        <section class="map-column-wrapper" id="map-column-wrapper">
-            <div class="map-floating-search-this-area" id="search-this-area-container">
-                <label class="glass-pill-checkbox">
-                    <input type="checkbox" id="sync-map-checkbox" checked>
-                    <span><i class="fas fa-arrows-rotate"></i> Buscar al mover el mapa</span>
-                </label>
-            </div>
-
-            <div id="leaflet-map" class="map-container"></div>
-            
-            <button class="map-recenter-btn glass-btn" id="map-recenter-btn" title="Ajustar vista a todas las propiedades">
-                <i class="fas fa-crosshairs"></i>
-            </button>
-        </section>
-    </main>
-
-    <!-- 5. Botón Flotante Airbnb "Mostrar Mapa / Mostrar Lista" -->
-    <button class="airbnb-floating-map-btn" id="mobile-view-toggle">
-        <i class="fas fa-map"></i>
-        <span>Mostrar mapa</span>
-    </button>
-
-    <!-- 6. Modal Completo de Filtros Estilo Airbnb (Glassmorphism) -->
-    <div class="modal-container" id="airbnb-filters-modal">
-        <div class="modal-backdrop" id="close-airbnb-filters-backdrop"></div>
-        <div class="modal-dialog-large airbnb-filter-modal-dialog">
-            <div class="modal-top-bar">
-                <button class="modal-close-button" id="close-airbnb-filters-btn">&times;</button>
-                <span class="font-bold text-base">Filtros Avanzados</span>
-                <div style="width: 24px;"></div>
-            </div>
-
-            <div class="modal-scrollable-content airbnb-filters-body">
-                <!-- Sección 1: Tipo de Lugar -->
-                <div class="filter-section-block">
-                    <h3 class="filter-section-heading">Tipo de lugar</h3>
-                    <p class="filter-section-sub">Busca departamentos enteros o espacios ejecutivos privados.</p>
-                    <div class="place-type-grid">
-                        <label class="place-type-card selected">
-                            <input type="radio" name="place-type" value="entire" checked>
-                            <span class="font-bold text-sm">Cualquier tipo</span>
-                            <span class="text-xs text-muted">Departamentos, casas y lofts de media estancia</span>
-                        </label>
-                        <label class="place-type-card">
-                            <input type="radio" name="place-type" value="room">
-                            <span class="font-bold text-sm">Studio / 1 Dorm</span>
-                            <span class="text-xs text-muted">Ideal para nómadas y ejecutivos solos</span>
-                        </label>
+                <!-- Titular Principal, Descripción Lateral y Botón Animado -->
+                <div class="evergreen-hero-titles-row">
+                    <div class="hero-titles-left">
+                        <h1 class="evergreen-hero-heading">
+                            Construye Tu Futuro,<br>Una Propiedad a la Vez.
+                        </h1>
+                    </div>
+                    <div class="hero-titles-right">
+                        <p class="evergreen-hero-subtext">
+                            El nuevo estándar inmobiliario en Paraguay. Encuentra tu hogar ideal en Asunción, San Bernardino y todo el país con transparencia en precio por m², mapas satelitales y contacto directo.
+                        </p>
+                        <div class="hero-explore-cta-wrap">
+                            <a href="explorar.html" class="btn-hero-explore-animated">
+                                <span class="explore-glow-pulse"></span>
+                                <span class="explore-btn-content">
+                                    <i class="fas fa-compass explore-icon-spin"></i>
+                                    <span>Explorar Inmuebles</span>
+                                    <i class="fas fa-arrow-right explore-arrow-slide"></i>
+                                </span>
+                            </a>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Sección 2: Rango de Precios -->
-                <div class="filter-section-block">
-                    <h3 class="filter-section-heading">Rango de precios</h3>
-                    <p class="filter-section-sub">Precios mensuales para estancias flexibles con servicios.</p>
-                    
-                    <div class="price-inputs-grid-airbnb">
-                        <div class="price-input-glass-box">
-                            <label>Mínimo</label>
-                            <div class="symbol-input-wrap">
-                                <span class="curr-prefix" id="modal-curr-symbol-min">US$</span>
-                                <input type="number" id="modal-filter-min-price" placeholder="600" step="50">
+                <!-- Tarjeta de Búsqueda Flotante ("Find the best place") -->
+                <div class="evergreen-search-card">
+                    <h3 class="search-card-title">Encuentra el mejor lugar</h3>
+
+                    <form action="explorar.html" method="GET" class="evergreen-search-form" id="hero-search-form">
+                        <div class="search-fields-grid">
+                            <!-- 1. Ubicación -->
+                            <div class="search-col">
+                                <label class="search-col-lbl">Ubicación</label>
+                                <div class="search-input-wrap">
+                                    <input type="text" name="keyword" id="hero-location-input" class="search-text-input" placeholder="Ej. Villa Morra, San Ber..." autocomplete="off">
+                                    <input type="hidden" name="lat" id="hero-lat-input">
+                                    <input type="hidden" name="lng" id="hero-lng-input">
+                                </div>
+                            </div>
+
+                            <!-- 2. Tipo de Operación (Selección Múltiple - Preseleccionado: Todas) -->
+                            <div class="search-col multi-select-col" id="col-operation-multiselect">
+                                <label class="search-col-lbl">Tipo de Operación</label>
+                                <div class="multi-select-wrap">
+                                    <button type="button" class="multi-select-btn" id="btn-hero-operation" onclick="toggleMultiSelectMenu('menu-hero-operation')">
+                                        <span class="btn-text" id="text-hero-operation">Todas las operaciones</span>
+                                        <i class="fas fa-chevron-down chevron-icon"></i>
+                                    </button>
+                                    <div class="multi-select-menu" id="menu-hero-operation">
+                                        <div class="multi-select-header-row">
+                                            <span class="multi-select-title">Operaciones</span>
+                                            <button type="button" class="btn-select-all" onclick="selectAllHeroOps()">Todas</button>
+                                        </div>
+                                        <label class="multi-select-item item-all">
+                                            <input type="checkbox" id="chk-hero-op-all" checked onchange="toggleHeroOpAll(this)">
+                                            <span class="custom-chk"></span>
+                                            <span class="item-label">Todas las Operaciones</span>
+                                        </label>
+                                        <label class="multi-select-item">
+                                            <input type="checkbox" name="hero_op_chk" value="sale" checked onchange="updateHeroOpSelection()">
+                                            <span class="custom-chk"></span>
+                                            <span class="item-label">Comprar (Venta)</span>
+                                        </label>
+                                        <label class="multi-select-item">
+                                            <input type="checkbox" name="hero_op_chk" value="rent_monthly" checked onchange="updateHeroOpSelection()">
+                                            <span class="custom-chk"></span>
+                                            <span class="item-label">Alquiler Mensual</span>
+                                        </label>
+                                        <label class="multi-select-item">
+                                            <input type="checkbox" name="hero_op_chk" value="rent_temporary" checked onchange="updateHeroOpSelection()">
+                                            <span class="custom-chk"></span>
+                                            <span class="item-label">Alquiler Temporal</span>
+                                        </label>
+                                        <label class="multi-select-item">
+                                            <input type="checkbox" name="hero_op_chk" value="off_plan" checked onchange="updateHeroOpSelection()">
+                                            <span class="custom-chk"></span>
+                                            <span class="item-label">En Pozo / Proyectos</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="operation" id="hero-operation-hidden" value="all">
+                            </div>
+
+                            <!-- 3. Tipo de Inmueble (Selección Múltiple - Preseleccionado: Todos) -->
+                            <div class="search-col multi-select-col" id="col-proptype-multiselect">
+                                <label class="search-col-lbl">Tipo de Inmueble</label>
+                                <div class="multi-select-wrap">
+                                    <button type="button" class="multi-select-btn" id="btn-hero-proptype" onclick="toggleMultiSelectMenu('menu-hero-proptype')">
+                                        <span class="btn-text" id="text-hero-proptype">Todos los inmuebles</span>
+                                        <i class="fas fa-chevron-down chevron-icon"></i>
+                                    </button>
+                                    <div class="multi-select-menu" id="menu-hero-proptype">
+                                        <div class="multi-select-header-row">
+                                            <span class="multi-select-title">Tipos de Inmueble</span>
+                                            <button type="button" class="btn-select-all" onclick="selectAllHeroTypes()">Todos</button>
+                                        </div>
+                                        <label class="multi-select-item item-all">
+                                            <input type="checkbox" id="chk-hero-type-all" checked onchange="toggleHeroTypeAll(this)">
+                                            <span class="custom-chk"></span>
+                                            <span class="item-label">Todos los Inmuebles</span>
+                                        </label>
+                                        <label class="multi-select-item">
+                                            <input type="checkbox" name="hero_type_chk" value="house" checked onchange="updateHeroTypeSelection()">
+                                            <span class="custom-chk"></span>
+                                            <span class="item-label">Casas Residenciales</span>
+                                        </label>
+                                        <label class="multi-select-item">
+                                            <input type="checkbox" name="hero_type_chk" value="apartment" checked onchange="updateHeroTypeSelection()">
+                                            <span class="custom-chk"></span>
+                                            <span class="item-label">Departamentos</span>
+                                        </label>
+                                        <label class="multi-select-item">
+                                            <input type="checkbox" name="hero_type_chk" value="gated_community" checked onchange="updateHeroTypeSelection()">
+                                            <span class="custom-chk"></span>
+                                            <span class="item-label">Barrios Cerrados</span>
+                                        </label>
+                                        <label class="multi-select-item">
+                                            <input type="checkbox" name="hero_type_chk" value="duplex" checked onchange="updateHeroTypeSelection()">
+                                            <span class="custom-chk"></span>
+                                            <span class="item-label">Dúplex</span>
+                                        </label>
+                                        <label class="multi-select-item">
+                                            <input type="checkbox" name="hero_type_chk" value="land" checked onchange="updateHeroTypeSelection()">
+                                            <span class="custom-chk"></span>
+                                            <span class="item-label">Terrenos / Lotes</span>
+                                        </label>
+                                        <label class="multi-select-item">
+                                            <input type="checkbox" name="hero_type_chk" value="commercial" checked onchange="updateHeroTypeSelection()">
+                                            <span class="custom-chk"></span>
+                                            <span class="item-label">Comercial / Oficinas</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="propType" id="hero-proptype-hidden" value="all">
+                            </div>
+
+                            <!-- 4. Rango de Precio (Espacioso con Visibilidad Total de Números) -->
+                            <div class="search-col multi-select-col" id="col-price-multiselect">
+                                <label class="search-col-lbl">Rango de Precio</label>
+                                <div class="multi-select-wrap">
+                                    <button type="button" class="multi-select-btn" id="btn-hero-price" onclick="toggleMultiSelectMenu('menu-hero-price')">
+                                        <span class="btn-text" id="text-hero-price">Cualquier Precio</span>
+                                        <i class="fas fa-chevron-down chevron-icon"></i>
+                                    </button>
+                                    <div class="multi-select-menu apple-dropdown-medium price-popover-wide" id="menu-hero-price">
+                                        <div class="apple-dropdown-header">
+                                            <span>Rango de Precio</span>
+                                            <button type="button" class="btn-text-action" onclick="resetHeroPrice()">Limpiar</button>
+                                        </div>
+                                        <div class="price-inputs-container">
+                                            <div class="price-box">
+                                                <span class="price-label">Mínimo</span>
+                                                <div class="price-field">
+                                                    <span class="price-symbol">US$</span>
+                                                    <input type="number" id="hero-min-price-input" placeholder="0" min="0" step="10000" oninput="updateHeroPriceSelection()">
+                                                </div>
+                                            </div>
+                                            <span class="price-dash">—</span>
+                                            <div class="price-box">
+                                                <span class="price-label">Máximo</span>
+                                                <div class="price-field">
+                                                    <span class="price-symbol">US$</span>
+                                                    <input type="number" id="hero-max-price-input" placeholder="Sin límite" min="0" step="10000" oninput="updateHeroPriceSelection()">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Preset chips -->
+                                        <div class="price-presets-chips">
+                                            <button type="button" class="price-chip" onclick="setHeroPricePreset(0, 150000)">&lt; $150K</button>
+                                            <button type="button" class="price-chip" onclick="setHeroPricePreset(150000, 300000)">$150K - $300K</button>
+                                            <button type="button" class="price-chip" onclick="setHeroPricePreset(300000, 600000)">$300K - $600K</button>
+                                            <button type="button" class="price-chip" onclick="setHeroPricePreset(600000, 10000000)">&gt; $600K</button>
+                                        </div>
+                                        <div class="apple-dropdown-footer">
+                                            <button type="button" class="btn btn-primary btn-sm w-full" onclick="toggleMultiSelectMenu('menu-hero-price')">Listo</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="minPrice" id="hero-min-price-hidden" value="">
+                                <input type="hidden" name="maxPrice" id="hero-max-price-hidden" value="">
+                            </div>
+
+                            <!-- 5. Habitaciones & Baños -->
+                            <div class="search-col multi-select-col" id="col-rooms-multiselect">
+                                <label class="search-col-lbl">Habitaciones & Baños</label>
+                                <div class="multi-select-wrap">
+                                    <button type="button" class="multi-select-btn" id="btn-hero-rooms" onclick="toggleMultiSelectMenu('menu-hero-rooms')">
+                                        <span class="btn-text" id="text-hero-rooms">Cualquiera</span>
+                                        <i class="fas fa-chevron-down chevron-icon"></i>
+                                    </button>
+                                    <div class="multi-select-menu apple-dropdown-medium rooms-popover-wide" id="menu-hero-rooms">
+                                        <div class="apple-dropdown-header">
+                                            <span>Dormitorios & Baños</span>
+                                            <button type="button" class="btn-text-action" onclick="resetHeroRooms()">Limpiar</button>
+                                        </div>
+                                        
+                                        <div class="apple-section-group">
+                                            <label class="apple-section-title"><i class="fas fa-bed text-primary"></i> Dormitorios Mínimos</label>
+                                            <div class="apple-segmented-control" id="hero-control-bedrooms">
+                                                <button type="button" class="seg-item active" data-val="0" onclick="setHeroBedrooms(0, this)">Todos</button>
+                                                <button type="button" class="seg-item" data-val="1" onclick="setHeroBedrooms(1, this)">1+</button>
+                                                <button type="button" class="seg-item" data-val="2" onclick="setHeroBedrooms(2, this)">2+</button>
+                                                <button type="button" class="seg-item" data-val="3" onclick="setHeroBedrooms(3, this)">3+</button>
+                                                <button type="button" class="seg-item" data-val="4" onclick="setHeroBedrooms(4, this)">4+</button>
+                                                <button type="button" class="seg-item" data-val="5" onclick="setHeroBedrooms(5, this)">5+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="apple-section-group" style="margin-top: 14px;">
+                                            <label class="apple-section-title"><i class="fas fa-bath text-primary"></i> Baños Mínimos</label>
+                                            <div class="apple-segmented-control" id="hero-control-bathrooms">
+                                                <button type="button" class="seg-item active" data-val="0" onclick="setHeroBathrooms(0, this)">Todos</button>
+                                                <button type="button" class="seg-item" data-val="1" onclick="setHeroBathrooms(1, this)">1+</button>
+                                                <button type="button" class="seg-item" data-val="2" onclick="setHeroBathrooms(2, this)">2+</button>
+                                                <button type="button" class="seg-item" data-val="3" onclick="setHeroBathrooms(3, this)">3+</button>
+                                                <button type="button" class="seg-item" data-val="4" onclick="setHeroBathrooms(4, this)">4+</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="apple-dropdown-footer">
+                                            <button type="button" class="btn btn-primary btn-sm w-full" onclick="toggleMultiSelectMenu('menu-hero-rooms')">Listo</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <input type="hidden" name="bedrooms" id="hero-bedrooms-hidden" value="0">
+                                <input type="hidden" name="bathrooms" id="hero-bathrooms-hidden" value="0">
                             </div>
                         </div>
-                        <div class="price-input-glass-box">
-                            <label>Máximo</label>
-                            <div class="symbol-input-wrap">
-                                <span class="curr-prefix" id="modal-curr-symbol-max">US$</span>
-                                <input type="number" id="modal-filter-max-price" placeholder="3000" step="50">
+
+                        <!-- Fila Inferior: Filtros Rápidos y Botón Buscar -->
+                        <div class="search-card-bottom-row">
+                            <div class="quick-filter-pills">
+                                <span class="quick-filter-lbl">Filtros:</span>
+                                <a href="explorar.html?keyword=Asuncion" class="q-pill">Asunción</a>
+                                <a href="explorar.html?keyword=San+Bernardino" class="q-pill">San Bernardino</a>
+                                <a href="explorar.html?propType=house" class="q-pill">Casas</a>
+                                <a href="explorar.html?propType=apartment" class="q-pill">Departamentos</a>
+                                <a href="explorar.html?che_roga=true" class="q-pill pill-che-roga"><i class="fas fa-certificate text-emerald-600"></i> Che Róga Porã</a>
                             </div>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Sección 3: Habitaciones y Camas -->
-                <div class="filter-section-block">
-                    <h3 class="filter-section-heading">Habitaciones y Camas</h3>
+                            <button type="submit" class="btn-evergreen-search" id="hero-search-btn">
+                                <i class="fas fa-search"></i>
+                                <span>Buscar Inmuebles</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Segunda Sección: "Tu próximo hogar te está esperando" (3-Card Showcase) -->
+    <section class="showcase-triplet-section" id="experiencia">
+        <div class="showcase-container">
+            <!-- Cabecera de la sección -->
+            <div class="showcase-header-row">
+                <h2 class="showcase-master-heading">
+                    Tu próximo hogar te está<br>esperando en Paraguay.
+                </h2>
+                <div class="showcase-video-capsule">
+                    <div class="capsule-play-icon">
+                        <i class="fas fa-play"></i>
+                    </div>
+                    <p class="capsule-desc">
+                        Cada inmueble ofrece características únicas, máxima calidad constructiva y ubicaciones de alta plusvalía.
+                    </p>
+                </div>
+            </div>
+
+            <!-- Grilla de 3 Tarjetas Bento -->
+            <div class="showcase-cards-grid">
+                <!-- Tarjeta 1 (Izquierda: Gran Casa Iluminada con Thumbnails) -->
+                <div class="showcase-card-large" onclick="window.location.href='explorar.html?keyword=Villa+Morra'">
+                    <img src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&q=85" alt="Residencia de Lujo" class="showcase-large-img">
+                    <div class="showcase-large-overlay"></div>
                     
-                    <div class="rooms-counter-row">
-                        <span>Dormitorios</span>
-                        <div class="segmented-control" id="modal-rooms-segmented">
-                            <button type="button" class="segmented-btn active" data-val="0">Cualquiera</button>
-                            <button type="button" class="segmented-btn" data-val="1">1</button>
-                            <button type="button" class="segmented-btn" data-val="2">2</button>
-                            <button type="button" class="segmented-btn" data-val="3">3</button>
-                            <button type="button" class="segmented-btn" data-val="4">4+</button>
-                        </div>
+                    <div class="showcase-card-badges-top">
+                        <span class="badge-pill-blur auto-price" data-usd="680000">US$ 680.000</span>
+                        <span class="badge-pill-plat"><i class="fas fa-gem"></i> Platino</span>
                     </div>
 
-                    <div class="rooms-counter-row mt-3">
-                        <span>Baños</span>
-                        <div class="segmented-control" id="modal-baths-segmented">
-                            <button type="button" class="segmented-btn active" data-val="0">Cualquiera</button>
-                            <button type="button" class="segmented-btn" data-val="1">1</button>
-                            <button type="button" class="segmented-btn" data-val="2">2</button>
-                            <button type="button" class="segmented-btn" data-val="3">3+</button>
+                    <div class="showcase-bottom-meta">
+                        <div class="showcase-info-text">
+                            <h4>Mansión Moderna con Piscina</h4>
+                            <p><i class="fas fa-location-dot text-primary"></i> Villa Morra, Asunción • 450 m²</p>
+                        </div>
+                        <div class="mini-thumbs-cluster">
+                            <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=120&q=80" alt="Thumb 1">
+                            <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=120&q=80" alt="Thumb 2">
+                            <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=120&q=80" alt="Thumb 3">
                         </div>
                     </div>
                 </div>
 
-                <!-- Sección 4: Servicios Destacados -->
-                <div class="filter-section-block">
-                    <h3 class="filter-section-heading">Servicios y Equipamiento</h3>
-                    <div class="amenities-checkboxes-grid-airbnb">
-                        <label class="amenity-checkbox-card">
-                            <input type="checkbox" class="airbnb-filter-checkbox" value="wifi">
-                            <i class="fas fa-wifi"></i>
-                            <span>WiFi 500 Mbps</span>
-                        </label>
-                        <label class="amenity-checkbox-card">
-                            <input type="checkbox" class="airbnb-filter-checkbox" value="pool">
-                            <i class="fas fa-water-ladder"></i>
-                            <span>Piscina</span>
-                        </label>
-                        <label class="amenity-checkbox-card">
-                            <input type="checkbox" class="airbnb-filter-checkbox" value="garage">
-                            <i class="fas fa-car"></i>
-                            <span>Estacionamiento</span>
-                        </label>
-                        <label class="amenity-checkbox-card">
-                            <input type="checkbox" class="airbnb-filter-checkbox" value="air_conditioning">
-                            <i class="fas fa-snowflake"></i>
-                            <span>Aire acondicionado</span>
-                        </label>
-                        <label class="amenity-checkbox-card">
-                            <input type="checkbox" class="airbnb-filter-checkbox" value="pet_friendly">
-                            <i class="fas fa-paw"></i>
-                            <span>Acepta mascotas</span>
-                        </label>
-                        <label class="amenity-checkbox-card">
-                            <input type="checkbox" class="airbnb-filter-checkbox" value="gym">
-                            <i class="fas fa-dumbbell"></i>
-                            <span>Gimnasio</span>
-                        </label>
-                        <label class="amenity-checkbox-card">
-                            <input type="checkbox" class="airbnb-filter-checkbox" value="quincho">
-                            <i class="fas fa-fire-burner"></i>
-                            <span>Quincho / Parrilla</span>
-                        </label>
-                        <label class="amenity-checkbox-card">
-                            <input type="checkbox" class="airbnb-filter-checkbox" value="security">
-                            <i class="fas fa-shield-halved"></i>
-                            <span>Seguridad 24h</span>
-                        </label>
+                <!-- Tarjeta 2 (Centro: Minimalista Editorial) -->
+                <div class="showcase-card-editorial">
+                    <div class="editorial-content">
+                        <h3 class="editorial-title">Grandes cosas suceden en los mejores espacios.</h3>
+                        <p class="editorial-subtext">
+                            Con diseño arquitectónico inteligente, transparencia de valor por m² y asesoramiento especializado, te ayudamos a tomar la mejor decisión inmobiliaria.
+                        </p>
+                        <a href="explorar.html" class="btn-editorial-pill">
+                            <span>Ver Detalles</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
-            </div>
 
-            <!-- Footer Fijo de Filtros -->
-            <div class="modal-footer-sticky airbnb-filters-footer">
-                <button type="button" class="btn-clear-underline" id="modal-clear-all-filters-btn">Quitar todos</button>
-                <button type="button" class="btn btn-primary" id="modal-apply-filters-btn">Mostrar alojamientos</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- 7. Modal de Detalle con Sticky Booking Card (Glassmorphism) -->
-    <div class="modal-container" id="property-modal-container">
-        <div class="modal-backdrop" id="property-modal-backdrop"></div>
-        <div class="modal-dialog-large glass-modal-dialog" id="property-modal-dialog">
-            <div class="modal-top-bar">
-                <span class="font-bold text-base"><i class="fas fa-bolt text-accent"></i> Zilla Flex • Media Estancia</span>
-                <button class="modal-close-button" id="close-property-modal">&times;</button>
-            </div>
-            <div class="modal-scrollable-content" id="property-modal-content">
-                <!-- Se inyecta dinámicamente vía js/modal.js -->
-            </div>
-        </div>
-    </div>
-
-    <!-- 8. Modal de Publicación de Unidad (Host Mode) -->
-    <div class="modal-container" id="publish-modal-container">
-        <div class="modal-backdrop" id="publish-modal-backdrop"></div>
-        <div class="modal-dialog-large glass-modal-dialog" style="max-width: 760px; height: 90vh;">
-            <div class="modal-top-bar">
-                <span class="font-bold text-base"><i class="fas fa-key text-accent"></i> Publicar Unidad para Media Estancia</span>
-                <button class="modal-close-button" id="close-publish-modal">&times;</button>
-            </div>
-            <div class="modal-scrollable-content" style="padding: 28px;">
-                <div class="form-group mb-4">
-                    <label class="font-bold text-sm">Título del Alojamiento</label>
-                    <input type="text" id="pub-title" class="filter-select w-full" placeholder="Ej. Studio de Diseño con Balcón en Torre Santa Teresa" required>
-                </div>
-                <div class="form-grid-2 mb-4">
-                    <div class="form-group">
-                        <label class="font-bold text-sm">Barrio / Zona</label>
-                        <select id="pub-neighborhood" class="filter-select w-full">
-                            <option value="Santa Teresa">Santa Teresa (Asunción)</option>
-                            <option value="Villa Morra">Villa Morra (Asunción)</option>
-                            <option value="Ycuá Satí">Ycuá Satí (Asunción)</option>
-                            <option value="Recoleta">Recoleta (Asunción)</option>
-                            <option value="Surubi'i">Surubi'i (M.R. Alonso)</option>
-                            <option value="San Bernardino">San Bernardino</option>
-                        </select>
+                <!-- Tarjeta 3 (Derecha: Villa con Piscina y Precio) -->
+                <div class="showcase-card-compact">
+                    <div class="compact-media-wrap">
+                        <img src="https://images.unsplash.com/photo-1580587771525-78b9dba3b914?auto=format&fit=crop&w=800&q=80" alt="Villa Moderna" class="compact-img">
+                        <span class="compact-tag">Oportunidad</span>
                     </div>
-                    <div class="form-group">
-                        <label class="font-bold text-sm">Tarifa Base Mensual (USD)</label>
-                        <input type="number" id="pub-price-usd" class="filter-select w-full" placeholder="Ej. 1100" required>
-                    </div>
-                </div>
-                <div class="form-grid-2 mb-4">
-                    <div class="form-group">
-                        <label class="font-bold text-sm">Velocidad de WiFi (Mbps)</label>
-                        <select id="pub-wifi" class="filter-select w-full">
-                            <option value="300">300 Mbps Fibra Óptica</option>
-                            <option value="500" selected>500 Mbps Fibra Dedicada</option>
-                            <option value="1000">1 Gbps Simétrico</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="font-bold text-sm">Dormitorios y Baños</label>
-                        <div style="display: flex; gap: 8px;">
-                            <input type="number" id="pub-bedrooms" class="filter-select" placeholder="Dorms" value="1">
-                            <input type="number" id="pub-bathrooms" class="filter-select" placeholder="Baños" value="1">
+                    <div class="compact-body">
+                        <div class="compact-price-tag">
+                            <span class="price-lbl">Precios desde</span>
+                            <span class="price-num auto-price" data-usd="145000">US$ 145.000</span>
                         </div>
+                        <a href="explorar.html?keyword=San+Bernardino" class="btn-compact-explore">
+                            <span>Explorar Inmuebles</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="form-group mb-4">
-                    <label class="font-bold text-sm">Descripción & Espacio de Trabajo</label>
-                    <textarea id="pub-description" class="filter-select w-full" rows="3" placeholder="Describe los muebles, amenidades, velocidad de internet y equipamiento WFH..."></textarea>
+            </div>
+
+            <!-- Fila de Navegación y Nota Inferior -->
+            <div class="showcase-footer-row">
+                <p class="showcase-footer-note">
+                    Ya sea que busques un refugio para desconectar en San Ber o un penthouse en el eje corporativo de Asunción.
+                </p>
+                <div class="showcase-arrow-nav">
+                    <button class="btn-nav-circle" onclick="window.location.href='explorar.html'"><i class="fas fa-chevron-left"></i></button>
+                    <button class="btn-nav-circle" onclick="window.location.href='explorar.html'"><i class="fas fa-chevron-right"></i></button>
                 </div>
-                <div style="display: flex; justify-content: flex-end; gap: 10px; margin-top: 24px;">
-                    <button type="button" class="btn btn-secondary" onclick="window.PublishManager.close()">Cancelar</button>
-                    <button type="button" class="btn btn-primary" id="publish-submit-form"><i class="fas fa-check-circle"></i> Publicar y Activar Unidad</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Bento Grid Showcase Estilo Apple ("La Experiencia Zilla") -->
+    <section class="bento-showcase-section">
+        <div class="section-header-centered">
+            <span class="section-tag-badge">Innovación PropTech</span>
+            <h2 class="section-headline">Diseñado para la forma en que buscas hoy.</h2>
+            <p class="section-subheadline">
+                Herramientas interactivas, bimonetarismo inteligente y datos precisos para tomar la mejor decisión de tu vida.
+            </p>
+        </div>
+
+        <div class="bento-grid-container">
+            <!-- Bento Card 1 (Grande 2-columnas): Dibujo Libre en el Mapa -->
+            <div class="bento-card bento-card-large bento-card-drawing">
+                <div class="bento-card-content">
+                    <span class="bento-tag"><i class="fas fa-pencil-alt"></i> Exclusivo Zilla</span>
+                    <h3 class="bento-title">Dibuja tu zona soñada con el dedo o el ratón.</h3>
+                    <p class="bento-desc">
+                        Olvida los límites tradicionales. Dibuja cualquier circuito sobre Asunción, el Lago de San Ber o el Eje Corporativo y filtra al instante solo las propiedades dentro de tu trazo.
+                    </p>
+                    <a href="explorar.html" class="bento-link">Probar Dibujo en el Mapa <i class="fas fa-arrow-right"></i></a>
                 </div>
+                <div class="bento-visual-preview preview-drawing-mockup">
+                    <div class="drawing-mockup-pin pin-1"><span class="pill-price">$345K</span></div>
+                    <div class="drawing-mockup-pin pin-2"><span class="pill-price">$185K</span></div>
+                    <div class="drawing-mockup-pin pin-3"><span class="pill-price">₲ 580M</span></div>
+                    <div class="drawing-lasso-svg">
+                        <svg viewBox="0 0 300 200" class="lasso-path">
+                            <path d="M 40 70 Q 90 20 180 30 T 260 90 T 240 160 T 110 170 T 35 120 Z" fill="rgba(37, 99, 235, 0.18)" stroke="#2563eb" stroke-width="3" stroke-dasharray="6,4" />
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bento Card 2: Bimonetarismo Inteligente USD / PYG -->
+            <div class="bento-card bento-card-currency">
+                <div class="bento-card-content">
+                    <span class="bento-tag"><i class="fas fa-repeat"></i> Bimonetarismo</span>
+                    <h3 class="bento-title">USD y Guaraníes en tiempo real.</h3>
+                    <p class="bento-desc">
+                        Visualiza precios, expensas y valores por metro cuadrado ($/m²) con la cotización referencial del BCP sincronizada en un clic.
+                    </p>
+                    <div class="currency-demo-pill">
+                        <div class="curr-badge active">US$ 240.000</div>
+                        <i class="fas fa-arrow-right-arrow-left text-primary"></i>
+                        <div class="curr-badge">₲ 1.908.000.000</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bento Card 3: Che Róga Porã al 6.5% -->
+            <div class="bento-card bento-card-cheroga">
+                <div class="bento-card-content">
+                    <span class="bento-tag tag-emerald"><i class="fas fa-certificate"></i> Crédito 6.5%</span>
+                    <h3 class="bento-title">Che Róga Porã a tu alcance.</h3>
+                    <p class="bento-desc">
+                        Filtra fácilmente las viviendas que califican al crédito hipotecario de la AFD y el MUVH con cuotas fijas a 30 años.
+                    </p>
+                    <a href="explorar.html?che_roga=true" class="bento-link link-emerald">Ver Inmuebles Calificados <i class="fas fa-arrow-right"></i></a>
+                </div>
+            </div>
+
+            <!-- Bento Card 4: Contacto Directo WhatsApp -->
+            <div class="bento-card bento-card-whatsapp">
+                <div class="bento-card-content">
+                    <span class="bento-tag tag-whatsapp"><i class="fab fa-whatsapp"></i> Sin Esperas</span>
+                    <h3 class="bento-title">Contacto directo por WhatsApp.</h3>
+                    <p class="bento-desc">
+                        Chatea con propietarios particulares o agentes certificados de RE/MAX, Century 21 y desarrolladoras con un solo toque.
+                    </p>
+                    <div class="whatsapp-mock-btn">
+                        <i class="fab fa-whatsapp"></i>
+                        <span>Consultar Disponibilidad</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bento Card 5 (Grande 2-columnas): Fichas 4K & Análisis de Zona -->
+            <div class="bento-card bento-card-large bento-card-details">
+                <div class="bento-card-content">
+                    <span class="bento-tag"><i class="fas fa-layer-group"></i> Alta Precisión</span>
+                    <h3 class="bento-title">Fichas técnicas con todo lo que importa en Paraguay.</h3>
+                    <p class="bento-desc">
+                        Quinchos y parrillas, expensas en guaraníes, seguridad 24hs, generadores eléctricos para cortes de ANDE y distancias exactas a colegios y shoppings.
+                    </p>
+                    <div class="specs-preview-chips">
+                        <span class="spec-pill"><i class="fas fa-fire-burner text-amber-500"></i> Quincho / Parrilla</span>
+                        <span class="spec-pill"><i class="fas fa-water-ladder text-sky-500"></i> Piscina</span>
+                        <span class="spec-pill"><i class="fas fa-shield-halved text-emerald-500"></i> Guardia 24h</span>
+                        <span class="spec-pill"><i class="fas fa-bolt text-yellow-500"></i> Generador</span>
+                        <span class="spec-pill"><i class="fas fa-paw text-orange-500"></i> Pet Friendly</span>
+                    </div>
+                </div>
+                <div class="bento-visual-preview preview-photo-grid">
+                    <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80" alt="Inmueble de Lujo Zilla" class="preview-img">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Sección Pro: Propietarios y Desarrolladores (Estilo Apple Pro Dark) -->
+    <section class="pro-owners-section" id="propietarios">
+        <!-- Real Estate Ambient Background Animation -->
+        <div class="pro-bg-animation" aria-hidden="true">
+            <!-- Aurora & Glow Orbs -->
+            <div class="pro-glow-orb pro-glow-1"></div>
+            <div class="pro-glow-orb pro-glow-2"></div>
+            <div class="pro-glow-orb pro-glow-3"></div>
+
+            <!-- Architectural Blueprint Cadastral Grid -->
+            <div class="pro-blueprint-grid"></div>
+
+            <!-- Floating Real Estate PropTech Badges & Markers -->
+            <div class="pro-float-item pro-float-pin">
+                <div class="pro-pin-marker">
+                    <span class="pro-pin-pulse"></span>
+                    <span class="pro-pin-pulse delay-1"></span>
+                    <i class="fas fa-location-dot"></i>
+                </div>
+                <div class="pro-pin-text">Santa Teresa · Asunción</div>
+            </div>
+
+            <div class="pro-float-item pro-float-building">
+                <div class="pro-glass-pill">
+                    <i class="fas fa-city text-sky-400"></i>
+                    <span>Eje Corporativo</span>
+                </div>
+            </div>
+
+            <div class="pro-float-item pro-float-stat">
+                <div class="pro-glass-pill">
+                    <i class="fas fa-chart-line text-emerald-400"></i>
+                    <span>+150% Consultas</span>
+                </div>
+            </div>
+
+            <div class="pro-float-item pro-float-deal">
+                <div class="pro-glass-pill">
+                    <i class="fas fa-key text-amber-400"></i>
+                    <span>Trato Directo 0% Com.</span>
+                </div>
+            </div>
+
+            <!-- Animated Real Estate Skyline & Blueprint Wireframe -->
+            <div class="pro-skyline-wrap">
+                <svg class="pro-skyline-svg" viewBox="0 0 1440 280" preserveAspectRatio="none" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Distant buildings silhouette -->
+                    <path class="skyline-distant" d="M0,280 L0,220 L60,220 L60,200 L90,200 L90,230 L160,230 L160,180 L200,180 L200,280 L320,280 L320,190 L360,190 L360,150 L410,150 L410,210 L480,210 L480,280 L620,280 L620,170 L670,170 L670,130 L730,130 L730,200 L800,200 L800,280 L950,280 L950,160 L1010,160 L1010,120 L1070,120 L1070,220 L1150,220 L1150,280 L1280,280 L1280,180 L1340,180 L1340,140 L1390,140 L1390,280 L1440,280 Z"/>
+                    
+                    <!-- Midground Buildings with wireframe stroke -->
+                    <path class="skyline-wireframe" d="M30,280 L30,190 L90,190 L90,130 L140,130 L140,100 L170,80 L200,100 L200,160 L270,160 L270,280 M410,280 L410,170 L460,170 L460,90 L510,60 L560,90 L560,170 L630,170 L630,280 M770,280 L770,150 L830,150 L830,70 L880,70 L880,110 L950,110 L950,280 M1090,280 L1090,160 L1150,160 L1150,95 L1200,75 L1250,95 L1250,180 L1320,180 L1320,280"/>
+                    
+                    <!-- Foreground Modern Towers Outline -->
+                    <path class="skyline-glow" d="M110,280 L110,150 L180,150 L180,70 L240,70 L240,190 L300,190 L300,280 M500,280 L500,130 L580,130 L580,50 L650,50 L650,160 L710,160 L710,280 M870,280 L870,130 L940,130 L940,40 L1010,40 L1010,150 L1070,150 L1070,280 M1230,280 L1230,140 L1300,140 L1300,60 L1360,60 L1360,280"/>
+                    
+                    <!-- Tower Beacon Lights -->
+                    <circle cx="210" cy="70" r="3.5" class="skyline-beacon beacon-1"/>
+                    <circle cx="615" cy="50" r="3.5" class="skyline-beacon beacon-2"/>
+                    <circle cx="975" cy="40" r="3.5" class="skyline-beacon beacon-3"/>
+                    <circle cx="1330" cy="60" r="3.5" class="skyline-beacon beacon-4"/>
+
+                    <!-- Glowing Horizon Base Grid Line -->
+                    <line x1="0" y1="279" x2="1440" y2="279" stroke="rgba(56, 189, 248, 0.3)" stroke-width="1.5"/>
+                </svg>
+            </div>
+
+            <!-- Floating Ambient Tech Particles -->
+            <div class="pro-particles">
+                <span class="particle p-1"></span>
+                <span class="particle p-2"></span>
+                <span class="particle p-3"></span>
+                <span class="particle p-4"></span>
+                <span class="particle p-5"></span>
+                <span class="particle p-6"></span>
+            </div>
+        </div>
+
+        <div class="pro-container">
+            <div class="pro-header">
+                <span class="pro-badge-pill">Zilla Pro para Propietarios</span>
+                <h2 class="pro-headline">Vende o alquila más rápido. Con la potencia de la tecnología.</h2>
+                <p class="pro-subheadline">
+                    La plataforma que conecta tu inmueble con compradores calificados, inversores extranjeros y familias en busca de su próximo hogar.
+                </p>
+            </div>
+
+            <div class="pro-cards-grid">
+                <!-- Columna 1 -->
+                <div class="pro-card">
+                    <div class="pro-icon-box"><i class="fas fa-location-crosshairs"></i></div>
+                    <h3 class="pro-card-title">Geolocalización Satelital</h3>
+                    <p class="pro-card-text">
+                        Ubica tu propiedad con un pin exacto en Google Maps y Leaflet para que los interesados encuentren tu anuncio de forma instantánea.
+                    </p>
+                </div>
+
+                <!-- Columna 2 -->
+                <div class="pro-card">
+                    <div class="pro-icon-box"><i class="fas fa-gem text-amber-400"></i></div>
+                    <h3 class="pro-card-title">Visibilidad Platino</h3>
+                    <p class="pro-card-text">
+                        Posicionamiento preferente en el feed de búsqueda y pines dorados destacados en el mapa interactivo para triplicar tus consultas.
+                    </p>
+                </div>
+
+                <!-- Columna 3 -->
+                <div class="pro-card">
+                    <div class="pro-icon-box"><i class="fas fa-handshake-simple"></i></div>
+                    <h3 class="pro-card-title">Cero Comisiones de Plataforma</h3>
+                    <p class="pro-card-text">
+                        Negociación transparente y directa. Tú defines el precio, recibes las consultas en tu propio WhatsApp y cierras el trato.
+                    </p>
+                </div>
+            </div>
+
+            <div class="pro-cta-wrapper">
+                <div style="display: flex; gap: 14px; flex-wrap: wrap; justify-content: center;">
+                    <a href="publicar.html" class="btn btn-primary btn-lg">
+                        <i class="fas fa-plus"></i>
+                        <span>Publicar mi Inmueble Ahora</span>
+                    </a>
+                    <a href="agentes.html" class="btn btn-outline btn-lg" style="border-color: rgba(45, 212, 191, 0.5); color: #2dd4bf;">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Portal Agentes & Desarrolladoras B2B</span>
+                    </a>
+                </div>
+                <span class="pro-cta-hint"><i class="fas fa-check-circle text-emerald-400"></i> Publicación gratuita y panel de inteligencia para profesionales</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Zonas y Ciudades Más Cotizadas de Paraguay -->
+    <section class="zones-showcase-section" id="zonas">
+        <div class="section-header-centered">
+            <span class="section-tag-badge">Ubicaciones Estratégicas</span>
+            <h2 class="section-headline">Explora las zonas más demandadas de Paraguay.</h2>
+            <p class="section-subheadline">
+                Desde las torres corporativas de Asunción hasta residencias vacacionales frente al Lago Ypacaraí.
+            </p>
+        </div>
+
+        <div class="zones-cards-grid">
+            <!-- Zona 1: Villa Morra & Santa Teresa -->
+            <a href="explorar.html?keyword=Villa+Morra" class="zone-card">
+                <img src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=600&q=80" alt="Villa Morra Asunción" class="zone-card-bg">
+                <div class="zone-card-overlay">
+                    <span class="zone-card-tag">Asunción</span>
+                    <h3 class="zone-card-name">Villa Morra & Santa Teresa</h3>
+                    <p class="zone-card-desc">Penthouses, departamentos de lujo y el nuevo eje corporativo.</p>
+                    <span class="zone-card-link">Ver Inmuebles <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <!-- Zona 2: San Bernardino -->
+            <a href="explorar.html?keyword=San+Bernardino" class="zone-card">
+                <img src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=600&q=80" alt="San Bernardino Lago Ypacaraí" class="zone-card-bg">
+                <div class="zone-card-overlay">
+                    <span class="zone-card-tag">Cordillera</span>
+                    <h3 class="zone-card-name">San Bernardino & Lago</h3>
+                    <p class="zone-card-desc">Casas de verano con piscina, vistas al lago y quinchos climatizados.</p>
+                    <span class="zone-card-link">Ver Inmuebles <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <!-- Zona 3: Surubi'i & Luque -->
+            <a href="explorar.html?keyword=Surubi'i" class="zone-card">
+                <img src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=600&q=80" alt="Surubi'i Barrio Cerrado" class="zone-card-bg">
+                <div class="zone-card-overlay">
+                    <span class="zone-card-tag">Gran Asunción</span>
+                    <h3 class="zone-card-name">Surubi'i & Luque</h3>
+                    <p class="zone-card-desc">Barrios cerrados náuticos, seguridad 24hs y naturaleza.</p>
+                    <span class="zone-card-link">Ver Inmuebles <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+
+            <!-- Zona 4: Ciudad del Este & Costa del Lago -->
+            <a href="explorar.html?keyword=Costa+del+Lago" class="zone-card">
+                <img src="https://images.unsplash.com/photo-1600573472550-8090b5e0745e?auto=format&fit=crop&w=600&q=80" alt="Ciudad del Este Costa del Lago" class="zone-card-bg">
+                <div class="zone-card-overlay">
+                    <span class="zone-card-tag">Alto Paraná</span>
+                    <h3 class="zone-card-name">CDE & Costa del Lago</h3>
+                    <p class="zone-card-desc">Condominios privados sobre el Lago Itaipú y oportunidades de inversión.</p>
+                    <span class="zone-card-link">Ver Inmuebles <i class="fas fa-arrow-right"></i></span>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- 6. Gran CTA Final Estilo Apple -->
+    <section class="apple-grand-cta-section">
+        <div class="grand-cta-container">
+            <h2 class="grand-cta-title">Tu próximo espacio te está esperando en Paraguay.</h2>
+            <p class="grand-cta-text">
+                Únete a la comunidad de miles de compradores, inquilinos y propietarios que ya usan Zilla.
+            </p>
+            <div class="grand-cta-buttons">
+                <a href="explorar.html" class="btn btn-primary btn-lg">
+                    <i class="fas fa-compass"></i>
+                    <span>Explorar en el Mapa Interactivo</span>
+                </a>
+                <a href="https://wa.me/595981123456" target="_blank" class="btn btn-whatsapp btn-lg">
+                    <i class="fab fa-whatsapp"></i>
+                    <span>Contactar con un Asesor</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. Footer Corporativo y Completo -->
+    <footer class="site-footer">
+        <div class="footer-top-container">
+            <!-- Columna Brand -->
+            <div class="footer-brand-col">
+                <a href="index.html" class="evergreen-brand-logo footer-logo">
+                    <span>Zilla</span>
+                    <span class="brand-badge-dot"></span>
+                </a>
+                <p class="footer-tagline">
+                    La plataforma inmobiliaria y PropTech líder en Paraguay. Conectando compradores, inquilinos y desarrolladores con las mejores propiedades, proyectos en pozo y créditos Che Róga Porã.
+                </p>
+                <div class="footer-contact-pill">
+                    <i class="fab fa-whatsapp text-emerald-400"></i>
+                    <span>Atención Directa: <strong>+595 981 123 456</strong></span>
+                </div>
+            </div>
+
+            <!-- Columna 1: Zonas Populares -->
+            <div class="footer-nav-col">
+                <h4 class="footer-heading"><i class="fas fa-location-dot text-primary"></i> Zonas Principales</h4>
+                <ul class="footer-links">
+                    <li><a href="explorar.html?keyword=Villa+Morra">Asunción - Villa Morra</a></li>
+                    <li><a href="explorar.html?keyword=Santa+Teresa">Asunción - Santa Teresa</a></li>
+                    <li><a href="explorar.html?keyword=Ycuá+Satí">Asunción - Ycuá Satí</a></li>
+                    <li><a href="explorar.html?keyword=Recoleta">Asunción - Recoleta</a></li>
+                    <li><a href="explorar.html?keyword=Surubi'i">M.R. Alonso - Surubi'i</a></li>
+                    <li><a href="explorar.html?keyword=San+Bernardino">San Bernardino (Lago)</a></li>
+                    <li><a href="explorar.html?keyword=Luque">Luque (Gran Asunción)</a></li>
+                    <li><a href="explorar.html?keyword=Costa+del+Lago">Alto Paraná - CDE</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna 2: Inmuebles & Inversión -->
+            <div class="footer-nav-col">
+                <h4 class="footer-heading"><i class="fas fa-building text-primary"></i> Inmuebles</h4>
+                <ul class="footer-links">
+                    <li><a href="explorar.html?operation=sale&propType=house">Casas y Residencias en Venta</a></li>
+                    <li><a href="explorar.html?operation=rent_monthly&propType=apartment">Departamentos en Alquiler</a></li>
+                    <li><a href="explorar.html?propType=duplex">Dúplex a Estrenar</a></li>
+                    <li><a href="explorar.html?propType=land">Terrenos y Lotes</a></li>
+                    <li><a href="explorar.html?operation=off_plan">Proyectos en Pozo</a></li>
+                    <li><a href="explorar.html?che_roga=true">Inmuebles Che Róga Porã (6.5%)</a></li>
+                    <li><a href="explorar.html?propType=commercial">Oficinas y Comercial</a></li>
+                </ul>
+            </div>
+
+            <!-- Columna 3: Herramientas & Finanzas -->
+            <div class="footer-nav-col">
+                <h4 class="footer-heading"><i class="fas fa-chart-line text-primary"></i> Servicios & Legal</h4>
+                <ul class="footer-links">
+                    <li><a href="publicar.html"><i class="fas fa-plus-circle text-primary"></i> Publicar Inmueble</a></li>
+                    <li><a href="explorar.html?che_roga=true">Simulador Crédito AFD / Che Róga Porã</a></li>
+                    <li><a href="explorar.html">Valuación de Inmuebles con IA</a></li>
+                    <li><a href="explorar.html">Guía de Inversión Inmobiliaria</a></li>
+                    <li><a href="#">Términos y Condiciones de Uso</a></li>
+                    <li><a href="#">Política de Privacidad y Cookies</a></li>
+                    <li><a href="#">Seguridad y Verificación de Agentes</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom-container">
+            <div class="footer-bottom-inner">
+                <p class="copyright-text">
+                    &copy; 2026 Zilla Paraguay S.A. Todos los derechos reservados. Plataforma Inmobiliaria PropTech.
+                </p>
+                <div class="footer-social-links">
+                    <a href="https://instagram.com" target="_blank" title="Instagram Zilla"><i class="fab fa-instagram"></i></a>
+                    <a href="https://facebook.com" target="_blank" title="Facebook Zilla"><i class="fab fa-facebook"></i></a>
+                    <a href="https://linkedin.com" target="_blank" title="LinkedIn Zilla"><i class="fab fa-linkedin"></i></a>
+                    <a href="https://wa.me/595981123456" target="_blank" title="WhatsApp Oficial Zilla"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+         MODAL GLASSMÓRFICO: INICIO DE SESIÓN / REGISTRO DE USUARIO
+         ============================================================ -->
+    <div class="auth-modal-overlay" id="auth-modal-overlay" aria-hidden="true">
+        <div class="auth-modal-backdrop" id="auth-modal-backdrop"></div>
+        
+        <div class="auth-glass-card" role="dialog" aria-modal="true" aria-labelledby="auth-modal-title">
+            <!-- Glowing Background Aura Orbs -->
+            <div class="auth-glow-orb auth-glow-1"></div>
+            <div class="auth-glow-orb auth-glow-2"></div>
+
+            <!-- Botón de Cerrar Modal -->
+            <button type="button" class="auth-close-btn" id="close-auth-modal-btn" aria-label="Cerrar modal">
+                <i class="fas fa-times"></i>
+            </button>
+
+            <!-- Encabezado Modal -->
+            <div class="auth-header">
+                <div class="auth-brand-badge">
+                    <span class="auth-badge-pill"><i class="fas fa-shield-halved text-emerald-500"></i> Cuenta de Usuario</span>
+                </div>
+                <h2 class="auth-title" id="auth-modal-title">Bienvenido a Zilla</h2>
+                <p class="auth-subtitle">
+                    Guarda tus inmuebles favoritos, recibe alertas de precio y contacta directamente a los propietarios.
+                </p>
+                
+                <!-- Pestañas Alternar Login / Registro -->
+                <div class="auth-tabs-segmented">
+                    <button type="button" class="auth-tab-btn active" id="tab-login-btn" onclick="switchAuthTab('login')">
+                        <i class="fas fa-arrow-right-to-bracket"></i> Iniciar Sesión
+                    </button>
+                    <button type="button" class="auth-tab-btn" id="tab-register-btn" onclick="switchAuthTab('register')">
+                        <i class="fas fa-user-plus"></i> Crear Cuenta
+                    </button>
+                </div>
+            </div>
+
+            <!-- Autenticación Social (Google & Facebook) -->
+            <div class="auth-social-group">
+                <!-- Botón Google -->
+                <button type="button" class="btn-social-auth btn-google" onclick="handleSocialAuth('Google')">
+                    <svg class="social-icon-svg" viewBox="0 0 24 24" width="18" height="18">
+                        <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                        <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                        <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+                        <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+                    </svg>
+                    <span>Continuar con Google</span>
+                </button>
+
+                <!-- Botón Facebook -->
+                <button type="button" class="btn-social-auth btn-facebook" onclick="handleSocialAuth('Facebook')">
+                    <i class="fab fa-facebook social-icon-fb"></i>
+                    <span>Continuar con Facebook</span>
+                </button>
+            </div>
+
+            <!-- Divisor elegante -->
+            <div class="auth-divider">
+                <span class="auth-divider-line"></span>
+                <span class="auth-divider-text">o con tu correo</span>
+                <span class="auth-divider-line"></span>
+            </div>
+
+            <!-- Formulario de Login Manual -->
+            <form id="auth-login-form" class="auth-form-body active" onsubmit="handleManualLogin(event)">
+                <div class="auth-input-group">
+                    <label for="auth-email-input" class="auth-label">Correo Electrónico o Usuario</label>
+                    <div class="auth-input-wrapper">
+                        <i class="far fa-envelope auth-input-icon"></i>
+                        <input type="text" id="auth-email-input" class="auth-input" placeholder="ejemplo@correo.com" required autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="auth-input-group">
+                    <div class="auth-label-row">
+                        <label for="auth-password-input" class="auth-label">Contraseña</label>
+                        <a href="javascript:void(0)" onclick="handleForgotPassword()" class="auth-forgot-link">¿Olvidaste tu contraseña?</a>
+                    </div>
+                    <div class="auth-input-wrapper">
+                        <i class="fas fa-lock auth-input-icon"></i>
+                        <input type="password" id="auth-password-input" class="auth-input" placeholder="••••••••••••" required autocomplete="current-password">
+                        <button type="button" class="auth-password-toggle" onclick="togglePasswordVisibility('auth-password-input', this)" aria-label="Mostrar contraseña">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="auth-options-row">
+                    <label class="auth-checkbox-label">
+                        <input type="checkbox" id="auth-remember-me" checked>
+                        <span class="auth-remember-text">Recordar mi sesión</span>
+                    </label>
+                </div>
+
+                <button type="submit" class="btn-auth-submit" id="auth-submit-btn">
+                    <span>Iniciar Sesión</span>
+                    <i class="fas fa-arrow-right"></i>
+                </button>
+            </form>
+
+            <!-- Formulario de Registro (Crear Cuenta) -->
+            <form id="auth-register-form" class="auth-form-body" onsubmit="handleManualRegister(event)">
+                <div class="auth-input-group">
+                    <label for="reg-name-input" class="auth-label">Nombre y Apellido</label>
+                    <div class="auth-input-wrapper">
+                        <i class="far fa-user auth-input-icon"></i>
+                        <input type="text" id="reg-name-input" class="auth-input" placeholder="Tu nombre completo" required autocomplete="name">
+                    </div>
+                </div>
+
+                <div class="auth-input-group">
+                    <label for="reg-email-input" class="auth-label">Correo Electrónico</label>
+                    <div class="auth-input-wrapper">
+                        <i class="far fa-envelope auth-input-icon"></i>
+                        <input type="email" id="reg-email-input" class="auth-input" placeholder="tu@correo.com" required autocomplete="email">
+                    </div>
+                </div>
+
+                <div class="auth-input-group">
+                    <label for="reg-password-input" class="auth-label">Contraseña</label>
+                    <div class="auth-input-wrapper">
+                        <i class="fas fa-lock auth-input-icon"></i>
+                        <input type="password" id="reg-password-input" class="auth-input" placeholder="Mínimo 6 caracteres" required minlength="6" autocomplete="new-password">
+                        <button type="button" class="auth-password-toggle" onclick="togglePasswordVisibility('reg-password-input', this)" aria-label="Mostrar contraseña">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <p class="auth-terms-note">
+                    Al registrarte, aceptas nuestros <a href="#">Términos de Servicio</a> y <a href="#">Política de Privacidad</a> de Zilla Paraguay.
+                </p>
+
+                <button type="submit" class="btn-auth-submit" id="reg-submit-btn">
+                    <span>Crear Cuenta Gratis</span>
+                    <i class="fas fa-user-check"></i>
+                </button>
+            </form>
+
+            <!-- Mensaje Informativo Comprador / Inquilino -->
+            <div class="auth-footer-notice">
+                <i class="fas fa-circle-info text-sky-500"></i>
+                <span>¿Eres propietario o agente? <a href="explorar.html?action=publish" class="auth-footer-link">Publica tu inmueble aquí</a>.</span>
             </div>
         </div>
     </div>
 
-    <!-- Leaflet Map JS -->
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-    
-    <!-- Scripts de la Aplicación -->
-    <script src="js/data.js"></script>
+    <!-- Módulo de Autenticación, Conversión de Monedas y Google Maps Places API -->
+    <script src="js/auth.js"></script>
     <script src="js/currency.js"></script>
-    <script src="js/pricing.js"></script>
-    <script src="js/auth-roles.js"></script>
-    <script src="js/map.js"></script>
-    <script src="js/filter.js"></script>
-    <script src="js/modal.js"></script>
-    <script src="js/checkout.js"></script>
-    <script src="js/ai-concierge.js"></script>
-    <script src="js/publish.js"></script>
-    <script src="js/app.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDGAOErwgmCedqHuZzlfUYOthwSoMv1998&libraries=places"></script>
+
+    <!-- Script principal Landing Page -->
+    <script>
+        // ============================================================
+        // 1. GESTIÓN DE MONEDA BIDIRECCIONAL (USD / PYG)
+        // ============================================================
+        function applyCurrencyToPage(currency) {
+            // Actualizar botones de conmutación en la cabecera
+            document.querySelectorAll('.currency-toggle-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-currency') === currency);
+            });
+
+            // Actualizar precios dinámicos con data-usd
+            document.querySelectorAll('.auto-price[data-usd]').forEach(el => {
+                const usd = parseFloat(el.getAttribute('data-usd'));
+                if (window.CurrencyManager) {
+                    el.textContent = window.CurrencyManager.formatPrice(usd);
+                }
+            });
+
+            // Actualizar símbolos del selector de precio en el Hero
+            document.querySelectorAll('#menu-hero-price .price-symbol').forEach(sym => {
+                sym.textContent = currency === 'USD' ? 'US$' : '₲';
+            });
+
+            // Actualizar chips de precio preconfigurados
+            const chips = document.querySelectorAll('#menu-hero-price .price-chip');
+            if (chips.length >= 4) {
+                if (currency === 'USD') {
+                    chips[0].textContent = '< $150K';
+                    chips[0].onclick = () => setHeroPricePreset(0, 150000);
+                    chips[1].textContent = '$150K - $300K';
+                    chips[1].onclick = () => setHeroPricePreset(150000, 300000);
+                    chips[2].textContent = '$300K - $600K';
+                    chips[2].onclick = () => setHeroPricePreset(300000, 600000);
+                    chips[3].textContent = '> $600K';
+                    chips[3].onclick = () => setHeroPricePreset(600000, 10000000);
+                } else {
+                    chips[0].textContent = '< ₲ 1.200M';
+                    chips[0].onclick = () => setHeroPricePreset(0, 150000);
+                    chips[1].textContent = '₲ 1.200M - 2.400M';
+                    chips[1].onclick = () => setHeroPricePreset(150000, 300000);
+                    chips[2].textContent = '₲ 2.400M - 4.800M';
+                    chips[2].onclick = () => setHeroPricePreset(300000, 600000);
+                    chips[3].textContent = '> ₲ 4.800M';
+                    chips[3].onclick = () => setHeroPricePreset(600000, 10000000);
+                }
+            }
+
+            // Actualizar etiqueta del botón de precio
+            updateHeroPriceSelection();
+        }
+
+        document.querySelectorAll('.currency-toggle-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                const targetCurr = btn.getAttribute('data-currency');
+                if (window.CurrencyManager) {
+                    window.CurrencyManager.setCurrency(targetCurr);
+                } else {
+                    applyCurrencyToPage(targetCurr);
+                }
+            });
+        });
+
+        window.addEventListener('currencyChanged', (e) => {
+            applyCurrencyToPage(e.detail.currency);
+        });
+
+        // ============================================================
+        // 2. MENÚS DESPLEGABLES DE SELECCIÓN MÚLTIPLE
+        // ============================================================
+        function toggleMultiSelectMenu(menuId) {
+            const menu = document.getElementById(menuId);
+            if (!menu) return;
+            const isVisible = menu.classList.contains("active");
+            document.querySelectorAll(".multi-select-menu").forEach(m => m.classList.remove("active"));
+            if (!isVisible) {
+                menu.classList.add("active");
+            }
+        }
+
+        // Cerrar menús al hacer clic fuera
+        document.addEventListener("click", (e) => {
+            if (!e.target.closest(".multi-select-wrap")) {
+                document.querySelectorAll(".multi-select-menu").forEach(m => m.classList.remove("active"));
+            }
+        });
+
+        // ============================================================
+        // 3. TIPO DE OPERACIÓN (CON OPCIÓN "TODAS")
+        // ============================================================
+        function selectAllHeroOps() {
+            const chks = document.querySelectorAll("input[name='hero_op_chk']");
+            chks.forEach(cb => cb.checked = true);
+            const allChk = document.getElementById("chk-hero-op-all");
+            if (allChk) allChk.checked = true;
+            updateHeroOpSelection();
+        }
+
+        function toggleHeroOpAll(allCheckbox) {
+            const isChecked = allCheckbox.checked;
+            const chks = document.querySelectorAll("input[name='hero_op_chk']");
+            chks.forEach(cb => cb.checked = isChecked);
+            updateHeroOpSelection();
+        }
+
+        function updateHeroOpSelection() {
+            const chks = document.querySelectorAll("input[name='hero_op_chk']:checked");
+            const allChks = document.querySelectorAll("input[name='hero_op_chk']");
+            const allMasterChk = document.getElementById("chk-hero-op-all");
+            const label = document.getElementById("text-hero-operation");
+            const hidden = document.getElementById("hero-operation-hidden");
+            const values = Array.from(chks).map(c => c.value);
+
+            if (allMasterChk) {
+                allMasterChk.checked = (chks.length === allChks.length);
+            }
+
+            const OP_LABELS = {
+                sale: "Comprar",
+                rent_monthly: "Alquiler Mensual",
+                rent_temporary: "Alquiler Temporal",
+                off_plan: "En Pozo"
+            };
+
+            if (values.length === 0 || values.length === allChks.length) {
+                hidden.value = "all";
+                if (label) label.textContent = "Todas las operaciones";
+            } else if (values.length === 1) {
+                hidden.value = values[0];
+                if (label) label.textContent = OP_LABELS[values[0]] || values[0];
+            } else {
+                hidden.value = values.join(",");
+                if (label) label.textContent = `${values.length} operaciones`;
+            }
+        }
+
+        // ============================================================
+        // 4. TIPO DE INMUEBLE (CON OPCIÓN "TODAS")
+        // ============================================================
+        function selectAllHeroTypes() {
+            const chks = document.querySelectorAll("input[name='hero_type_chk']");
+            chks.forEach(cb => cb.checked = true);
+            const allChk = document.getElementById("chk-hero-type-all");
+            if (allChk) allChk.checked = true;
+            updateHeroTypeSelection();
+        }
+
+        function toggleHeroTypeAll(allCheckbox) {
+            const isChecked = allCheckbox.checked;
+            const chks = document.querySelectorAll("input[name='hero_type_chk']");
+            chks.forEach(cb => cb.checked = isChecked);
+            updateHeroTypeSelection();
+        }
+
+        function updateHeroTypeSelection() {
+            const chks = document.querySelectorAll("input[name='hero_type_chk']:checked");
+            const allChks = document.querySelectorAll("input[name='hero_type_chk']");
+            const allMasterChk = document.getElementById("chk-hero-type-all");
+            const label = document.getElementById("text-hero-proptype");
+            const hidden = document.getElementById("hero-proptype-hidden");
+            const values = Array.from(chks).map(c => c.value);
+
+            if (allMasterChk) {
+                allMasterChk.checked = (chks.length === allChks.length);
+            }
+
+            const TYPE_LABELS = {
+                house: "Casas",
+                apartment: "Departamentos",
+                gated_community: "Barrios Cerrados",
+                duplex: "Dúplex",
+                land: "Terrenos",
+                commercial: "Comercial"
+            };
+
+            if (values.length === 0 || values.length === allChks.length) {
+                hidden.value = "all";
+                if (label) label.textContent = "Todos los inmuebles";
+            } else if (values.length === 1) {
+                hidden.value = values[0];
+                if (label) label.textContent = TYPE_LABELS[values[0]] || values[0];
+            } else {
+                hidden.value = values.join(",");
+                if (label) label.textContent = `${values.length} tipos`;
+            }
+        }
+
+        // Tags superiores en el Hero
+        function setHeroPropType(type, element) {
+            document.querySelectorAll('.hero-tag-pill').forEach(el => el.classList.remove('active'));
+            if (element) element.classList.add('active');
+
+            if (type === 'off_plan') {
+                const opChks = document.querySelectorAll("input[name='hero_op_chk']");
+                opChks.forEach(cb => cb.checked = (cb.value === 'off_plan'));
+                updateHeroOpSelection();
+            } else {
+                const typeChks = document.querySelectorAll("input[name='hero_type_chk']");
+                typeChks.forEach(cb => cb.checked = (cb.value === type));
+                updateHeroTypeSelection();
+            }
+        }
+
+        // ============================================================
+        // 5. CONTROL DE PRECIOS CON VISIBILIDAD AMPLIADA
+        // ============================================================
+        function setHeroPricePreset(min, max) {
+            const minInput = document.getElementById("hero-min-price-input");
+            const maxInput = document.getElementById("hero-max-price-input");
+            if (minInput) minInput.value = min > 0 ? min : "";
+            if (maxInput) maxInput.value = max < 10000000 ? max : "";
+            updateHeroPriceSelection();
+        }
+
+        function updateHeroPriceSelection() {
+            const minInput = document.getElementById("hero-min-price-input");
+            const maxInput = document.getElementById("hero-max-price-input");
+            const minHidden = document.getElementById("hero-min-price-hidden");
+            const maxHidden = document.getElementById("hero-max-price-hidden");
+            const label = document.getElementById("text-hero-price");
+
+            const minVal = minInput && minInput.value ? parseFloat(minInput.value) : 0;
+            const maxVal = maxInput && maxInput.value ? parseFloat(maxInput.value) : 0;
+
+            if (minHidden) minHidden.value = minVal > 0 ? minVal : "";
+            if (maxHidden) maxHidden.value = maxVal > 0 ? maxVal : "";
+
+            const curr = (window.CurrencyManager ? window.CurrencyManager.getCurrency() : 'USD');
+            const sym = curr === 'USD' ? '$' : '₲ ';
+
+            if (minVal > 0 && maxVal > 0) {
+                if (label) {
+                    label.textContent = curr === 'USD'
+                        ? `$${Math.round(minVal/1000)}k - $${Math.round(maxVal/1000)}k`
+                        : `₲ ${Math.round(minVal*7950/1000000)}M - ${Math.round(maxVal*7950/1000000)}M`;
+                }
+            } else if (minVal > 0) {
+                if (label) {
+                    label.textContent = curr === 'USD'
+                        ? `> $${Math.round(minVal/1000)}k`
+                        : `> ₲ ${Math.round(minVal*7950/1000000)}M`;
+                }
+            } else if (maxVal > 0) {
+                if (label) {
+                    label.textContent = curr === 'USD'
+                        ? `< $${Math.round(maxVal/1000)}k`
+                        : `< ₲ ${Math.round(maxVal*7950/1000000)}M`;
+                }
+            } else {
+                if (label) label.textContent = "Cualquier Precio";
+            }
+        }
+
+        function resetHeroPrice() {
+            const minInput = document.getElementById("hero-min-price-input");
+            const maxInput = document.getElementById("hero-max-price-input");
+            if (minInput) minInput.value = "";
+            if (maxInput) maxInput.value = "";
+            updateHeroPriceSelection();
+        }
+
+        // ============================================================
+        // 6. CONTROL DE HABITACIONES & BAÑOS
+        // ============================================================
+        let heroBedrooms = 0;
+        let heroBathrooms = 0;
+
+        function setHeroBedrooms(val, element) {
+            heroBedrooms = val;
+            const segs = document.querySelectorAll("#hero-control-bedrooms .seg-item");
+            segs.forEach(s => s.classList.remove("active"));
+            if (element) element.classList.add("active");
+            document.getElementById("hero-bedrooms-hidden").value = val;
+            updateHeroRoomsLabel();
+        }
+
+        function setHeroBathrooms(val, element) {
+            heroBathrooms = val;
+            const segs = document.querySelectorAll("#hero-control-bathrooms .seg-item");
+            segs.forEach(s => s.classList.remove("active"));
+            if (element) element.classList.add("active");
+            document.getElementById("hero-bathrooms-hidden").value = val;
+            updateHeroRoomsLabel();
+        }
+
+        function updateHeroRoomsLabel() {
+            const label = document.getElementById("text-hero-rooms");
+            if (!label) return;
+
+            if (heroBedrooms === 0 && heroBathrooms === 0) {
+                label.textContent = "Cualquiera";
+            } else if (heroBedrooms > 0 && heroBathrooms > 0) {
+                label.textContent = `${heroBedrooms}+ Dorms, ${heroBathrooms}+ Bñ`;
+            } else if (heroBedrooms > 0) {
+                label.textContent = `${heroBedrooms}+ Dormitorios`;
+            } else if (heroBathrooms > 0) {
+                label.textContent = `${heroBathrooms}+ Baños`;
+            }
+        }
+
+        function resetHeroRooms() {
+            heroBedrooms = 0;
+            heroBathrooms = 0;
+            document.querySelectorAll("#hero-control-bedrooms .seg-item").forEach((s, idx) => {
+                s.classList.toggle("active", idx === 0);
+            });
+            document.querySelectorAll("#hero-control-bathrooms .seg-item").forEach((s, idx) => {
+                s.classList.toggle("active", idx === 0);
+            });
+            document.getElementById("hero-bedrooms-hidden").value = 0;
+            document.getElementById("hero-bathrooms-hidden").value = 0;
+            updateHeroRoomsLabel();
+        }
+
+        // ============================================================
+        // 7. GOOGLE PLACES AUTOCOMPLETE
+        // ============================================================
+        function initHeroAutocomplete() {
+            const input = document.getElementById("hero-location-input");
+            const latInput = document.getElementById("hero-lat-input");
+            const lngInput = document.getElementById("hero-lng-input");
+
+            if (!input || !window.google || !window.google.maps || !window.google.maps.places) return;
+
+            try {
+                const autocomplete = new google.maps.places.Autocomplete(input, {
+                    componentRestrictions: { country: "py" },
+                    fields: ["geometry", "name", "formatted_address"]
+                });
+
+                autocomplete.addListener("place_changed", () => {
+                    const place = autocomplete.getPlace();
+                    if (place && place.geometry && place.geometry.location) {
+                        const lat = place.geometry.location.lat();
+                        const lng = place.geometry.location.lng();
+                        if (latInput) latInput.value = lat;
+                        if (lngInput) lngInput.value = lng;
+                        
+                        const cleanName = (place.name || place.formatted_address || "").replace(/, Paraguay$/i, "");
+                        if (input) input.value = cleanName;
+                    }
+                });
+            } catch (err) {
+                console.warn("Places autocomplete error on landing:", err);
+            }
+        }
+
+        // ============================================================
+        // 8. INICIALIZACIÓN
+        // ============================================================
+        window.addEventListener("DOMContentLoaded", () => {
+            initHeroAutocomplete();
+            const initialCurr = window.CurrencyManager ? window.CurrencyManager.getCurrency() : "USD";
+            applyCurrencyToPage(initialCurr);
+        });
+    </script>
+    <script src="js/mobile-nav.js"></script>
 </body>
 </html>
