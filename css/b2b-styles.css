@@ -74,8 +74,8 @@ body.b2b-light-theme {
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    background: #bef264;
-    box-shadow: 0 0 8px #bef264;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
     display: inline-block;
 }
 
@@ -84,9 +84,9 @@ body.b2b-light-theme {
     font-size: 0.65rem;
     font-weight: 800;
     padding: 3px 8px;
-    background: #f7fee7;
-    color: #3f6212;
-    border: 1px solid #bef264;
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #10b981;
     border-radius: 20px;
     letter-spacing: 0.04em;
     text-transform: uppercase;
@@ -118,22 +118,22 @@ body.b2b-light-theme {
     background: transparent;
     border: none;
     border-radius: 10px;
-    color: #475569;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.84rem;
+    color: #64748b;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.83rem;
     font-weight: 600;
-    text-align: left;
     text-decoration: none;
     cursor: pointer;
     transition: all 0.15s ease;
+    text-align: left;
 }
 
 .sidebar-nav-btn i, 
 .sidebar-nav-link i {
-    font-size: 0.95rem;
+    font-size: 1rem;
     width: 18px;
     text-align: center;
-    color: #64748b;
+    color: #94a3b8;
     transition: color 0.15s ease;
 }
 
@@ -145,7 +145,7 @@ body.b2b-light-theme {
 
 .sidebar-nav-btn:hover i, 
 .sidebar-nav-link:hover i {
-    color: #65a30d;
+    color: #059669;
 }
 
 .sidebar-nav-btn.active {
@@ -156,7 +156,7 @@ body.b2b-light-theme {
 }
 
 .sidebar-nav-btn.active i {
-    color: #bef264;
+    color: #10b981;
 }
 
 .nav-count-pill {
@@ -424,8 +424,8 @@ body.b2b-light-theme {
 
 .btn-primary {
     background: #0f172a;
-    color: #bef264;
-    border: 1px solid rgba(190, 242, 100, 0.4);
+    color: #10b981;
+    border: 1px solid rgba(16, 185, 129, 0.4);
     padding: 8px 16px;
     font-size: 0.84rem;
     font-weight: 800;
@@ -533,7 +533,7 @@ body.b2b-light-theme {
 
 .text-sky-600 { color: #0284c7; }
 .text-emerald-600 { color: #4d7c0f; }
-.text-emerald-700 { color: #3f6212; }
+.text-emerald-700 { color: #047857; }
 .text-emerald-500 { color: #65a30d; }
 .text-amber-600 { color: #d97706; }
 .text-purple-600 { color: #9333ea; }
@@ -577,9 +577,9 @@ body.b2b-light-theme {
 }
 
 .kpi-badge-pill.green {
-    background: #f7fee7;
-    color: #3f6212;
-    border: 1px solid #bef264;
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #10b981;
 }
 
 .kpi-badge-pill.blue {
@@ -788,7 +788,7 @@ body.b2b-light-theme {
 }
 
 .btn-b2b-metric.active i {
-    color: #bef264;
+    color: #10b981;
 }
 
 .btn-b2b-region.active {
@@ -983,7 +983,7 @@ body.b2b-light-theme {
     width: 140px;
     height: 8px;
     border-radius: var(--radius-full);
-    background: linear-gradient(90deg, #bef264, #84cc16, #0f766e, #0284c7, #8b5cf6);
+    background: linear-gradient(90deg, #10b981, #0f766e, #0284c7, #8b5cf6);
 }
 
 .legend-scale-labels {
@@ -1025,13 +1025,13 @@ body.b2b-light-theme {
     gap: 5px;
     padding: 5px 10px;
     background: #0f172a;
-    color: #bef264;
+    color: #10b981;
     font-family: 'Outfit', sans-serif;
     font-size: 0.8rem;
     font-weight: 800;
     border-radius: 20px;
     box-shadow: 0 4px 14px rgba(15, 23, 42, 0.35);
-    border: 1.5px solid rgba(190, 242, 100, 0.4);
+    border: 1.5px solid rgba(16, 185, 129, 0.4);
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -1041,8 +1041,8 @@ body.b2b-light-theme {
 .b2b-zone-price-pill:hover,
 .b2b-zone-price-pill.active {
     background: #0f172a;
-    border-color: #bef264;
-    color: #bef264;
+    border-color: #10b981;
+    color: #10b981;
     transform: scale(1.15) translateY(-2px);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
     z-index: 1000;
@@ -1050,7 +1050,7 @@ body.b2b-light-theme {
 
 .b2b-zone-price-pill.tier-high {
     background: #0f172a;
-    border-color: #84cc16;
+    border-color: #10b981;
 }
 
 .b2b-zone-price-pill.tier-premium {
@@ -1070,7 +1070,7 @@ body.b2b-light-theme {
     width: 6px;
     height: 6px;
     border-radius: 50%;
-    background: #bef264;
+    background: #10b981;
     display: inline-block;
 }
 
@@ -1111,7 +1111,7 @@ body.b2b-light-theme {
 .tooltip-zone-name {
     font-size: 0.82rem;
     font-weight: 800;
-    color: #bef264;
+    color: #10b981;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -1160,9 +1160,9 @@ body.b2b-light-theme {
 .zones-count-badge {
     font-size: 0.76rem;
     font-weight: 700;
-    color: #3f6212;
-    background: #f7fee7;
-    border: 1px solid #bef264;
+    color: #065f46;
+    background: #ecfdf5;
+    border: 1px solid #10b981;
     padding: 3px 10px;
     border-radius: var(--radius-full);
 }
@@ -1249,8 +1249,8 @@ body.b2b-light-theme {
 
 .btn-city-pill.active {
     background: #0f172a;
-    color: #bef264;
-    border-color: #bef264;
+    color: #10b981;
+    border-color: #10b981;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -1427,7 +1427,7 @@ body.b2b-light-theme {
 
 .yield-progress-fill.airbnb {
     height: 100%;
-    background: linear-gradient(90deg, #10b981, #bef264);
+    background: linear-gradient(90deg, #10b981, #34d399);
 }
 
 .zone-card-footer {
@@ -2778,7 +2778,7 @@ input:checked + .slider-toggle:before {
     flex-shrink: 0;
 }
 
-.bg-emerald-subtle { background: #f7fee7; border: 1px solid #bef264; }
+.bg-emerald-subtle { background: #ecfdf5; border: 1px solid #10b981; }
 .bg-sky-subtle { background: #f0f9ff; }
 .bg-amber-subtle { background: #fffbeb; }
 .bg-purple-subtle { background: #faf5ff; }
@@ -2858,8 +2858,8 @@ input:checked + .slider-toggle:before {
 }
 
 .excel-search-box:focus-within {
-    border-color: #84cc16;
-    box-shadow: 0 0 0 3px rgba(190, 242, 100, 0.3);
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
 }
 
 .excel-search-box i {
@@ -2890,8 +2890,8 @@ input:checked + .slider-toggle:before {
 }
 
 .excel-select:focus {
-    border-color: #84cc16;
-    box-shadow: 0 0 0 3px rgba(190, 242, 100, 0.3);
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.3);
 }
 
 .excel-toolbar-right {
@@ -2923,7 +2923,7 @@ input:checked + .slider-toggle:before {
 
 .excel-curr-btn.active {
     background: #0f172a;
-    color: #bef264;
+    color: #10b981;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
@@ -2952,7 +2952,7 @@ input:checked + .slider-toggle:before {
 .bulk-selected-count {
     font-size: 0.82rem;
     font-weight: 700;
-    color: #bef264;
+    color: #10b981;
 }
 
 .bulk-bar-actions {
@@ -3071,11 +3071,11 @@ input:checked + .slider-toggle:before {
     font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
     font-size: 0.74rem;
     font-weight: 800;
-    color: #3f6212;
-    background: #f7fee7;
+    color: #065f46;
+    background: #ecfdf5;
     padding: 3px 7px;
     border-radius: 6px;
-    border: 1px solid #bef264;
+    border: 1px solid #10b981;
     white-space: nowrap;
 }
 
@@ -3143,9 +3143,9 @@ input:checked + .slider-toggle:before {
 }
 
 .excel-badge-op.sale {
-    background: #f7fee7;
-    color: #3f6212;
-    border: 1px solid #bef264;
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #10b981;
 }
 
 .excel-badge-op.rent {
@@ -3175,9 +3175,9 @@ input:checked + .slider-toggle:before {
 }
 
 .excel-status-select.status-active {
-    background: #f7fee7;
-    color: #3f6212;
-    border-color: #bef264;
+    background: #ecfdf5;
+    color: #065f46;
+    border-color: #10b981;
 }
 
 .excel-status-select.status-featured {
@@ -3262,8 +3262,8 @@ input:checked + .slider-toggle:before {
 
 .btn-excel-action:hover {
     background: #0f172a;
-    color: #bef264;
-    border-color: #bef264;
+    color: #10b981;
+    border-color: #10b981;
 }
 
 .btn-excel-action.danger:hover {
@@ -3328,9 +3328,9 @@ input:checked + .slider-toggle:before {
 }
 
 .req-type-pill.req-contact {
-    background: #f7fee7;
-    color: #3f6212;
-    border: 1px solid #bef264;
+    background: #ecfdf5;
+    color: #065f46;
+    border: 1px solid #10b981;
 }
 
 .req-type-pill.req-visit {
@@ -3344,7 +3344,7 @@ input:checked + .slider-toggle:before {
     height: 32px;
     border-radius: 50%;
     background: #0f172a;
-    color: #bef264;
+    color: #10b981;
     font-family: 'Outfit', sans-serif;
     font-size: 0.82rem;
     font-weight: 800;
@@ -3425,7 +3425,7 @@ input:checked + .slider-toggle:before {
 
 .crm-view-btn.active {
     background: #0f172a;
-    color: #bef264;
+    color: #10b981;
     box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
 }
 
