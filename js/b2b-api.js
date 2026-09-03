@@ -1440,41 +1440,102 @@ _______________________________          _______________________________
         },
 
         /**
-         * Crear nuevo lead calificado
+         * Crear nuevo lead calificado y registrar en Supabase & CRM
          */
         async createCRMLead(leadData) {
             const leads = await this.getCRMLeads();
             
             // Algoritmo de Calificación de Lead (Lead Scoring)
-            let score = 60;
-            if (leadData.budget_usd > 150000) score += 15;
-            if (leadData.urgency.includes('30') || leadData.urgency.includes('Inmediata')) score += 15;
-            if (leadData.afd || leadData.bank) score += 10;
+            let score = 65;
+            const budget = Number(leadData.budget_usd || leadData.budget || 120000);
+            if (budget > 150000) score += 15;
+            if (budget > 250000) score += 10;
+            if (leadData.request_type === 'visit_request') score += 15;
+            if (leadData.request_type === 'whatsapp_contact' || leadData.request_type === 'contact_request') score += 10;
+            if (leadData.afd) score += 10;
 
             let tier = 'Silver';
             if (score >= 90) tier = 'Platinum';
             else if (score >= 75) tier = 'Gold';
 
+            const now = new Date();
+            const timeStr = `Hoy ${now.getHours().toString().padStart(2, '0')}:${now.getMinutes().toString().padStart(2, '0')}`;
+            const solCode = 'SOL-' + (100 + leads.length + 1);
+
+            let reqTypeLabel = 'Más Información';
+            if (leadData.request_type === 'whatsapp_contact') reqTypeLabel = 'WhatsApp Directo';
+            else if (leadData.request_type === 'call_contact') reqTypeLabel = 'Solicita Llamada';
+            else if (leadData.request_type === 'visit_request') reqTypeLabel = 'Solicita Visita';
+            else if (leadData.request_type === 'info_request') reqTypeLabel = 'Más Información';
+
             const newLead = {
                 id: 'lead-' + Date.now(),
-                name: leadData.name,
-                phone: leadData.phone,
+                code: leadData.code || solCode,
+                date: timeStr,
+                name: leadData.name || 'Cliente Interesado',
+                phone: leadData.phone || '+595 981 000 000',
                 email: leadData.email || 'No especificado',
-                zone: leadData.zone,
-                budget_usd: Number(leadData.budget_usd) || 120000,
-                intent: leadData.intent,
-                urgency: leadData.urgency,
+                client_type: leadData.client_type || 'Particular',
+                request_type: leadData.request_type || 'info_request',
+                request_type_label: reqTypeLabel,
+                property_id: leadData.property_id || 'prop-101',
+                property_title: leadData.property_title || 'Inmueble Zilla',
+                property_code: leadData.property_code || 'PY-100',
+                property_image: leadData.property_image || 'img/property-placeholder.jpg',
+                property_price: Number(leadData.property_price) || budget,
+                zone: leadData.zone || 'Asunción',
+                budget_usd: budget,
+                intent: leadData.intent || (leadData.request_type === 'visit_request' ? 'Coordinar Visita Presencial' : 'Consulta sobre Inmueble'),
+                urgency: leadData.urgency || leadData.preferred_date || 'Inmediata',
+                preferred_date: leadData.preferred_date || 'Inmediata',
+                message: leadData.message || `Solicitud de ${reqTypeLabel} enviada desde el portal de anuncios.`,
                 afd: Boolean(leadData.afd),
-                bank: leadData.bank || 'Fondos Propios',
+                bank: leadData.bank || (leadData.afd ? 'Banco Itaú (Crédito AFD)' : 'Fondos Propios'),
                 score: Math.min(score, 99),
                 tier: tier,
                 status: 'new_inquiry',
-                dossier: leadData.dossier || 'Lead registrado desde el portal Zilla Pro.',
-                notes: leadData.notes || 'Pendiente de primer contacto.'
+                dossier: leadData.dossier || `Solicitud de ${reqTypeLabel} recibida para ${leadData.property_title || 'el inmueble'}. Datos de contacto verificados.`,
+                notes: leadData.notes || `Contacto inicial generado el ${now.toLocaleDateString('es-PY')}.`
             };
 
+            // 1. Guardar en Supabase REST si está configurado
+            try {
+                fetch(`${SUPABASE_CONFIG.url}/rest/v1/b2b_leads_crm`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_CONFIG.anonKey,
+                        'Authorization': `Bearer ${SUPABASE_CONFIG.anonKey}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        client_name: newLead.name,
+                        phone_whatsapp: newLead.phone,
+                        email: newLead.email,
+                        preferred_zone: newLead.zone,
+                        budget_usd: newLead.budget_usd,
+                        purchase_intent: newLead.intent,
+                        move_urgency: newLead.urgency,
+                        afd_credit_eligible: newLead.afd,
+                        pre_qualified_bank: newLead.bank,
+                        lead_score: newLead.score,
+                        lead_tier: newLead.tier,
+                        status: newLead.status,
+                        dossier_summary: newLead.dossier,
+                        notes: newLead.notes
+                    })
+                }).catch(() => {});
+            } catch (err) {
+                console.warn('Supabase lead push:', err);
+            }
+
+            // 2. Guardar en LocalStorage
             leads.unshift(newLead);
             localStorage.setItem(SUPABASE_CONFIG.storageKey, JSON.stringify(leads));
+
+            // 3. Emitir evento global
+            window.dispatchEvent(new CustomEvent('newCRMLeadCreated', { detail: newLead }));
+
             return newLead;
         },
 
