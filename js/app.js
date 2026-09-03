@@ -349,6 +349,9 @@
                     e.stopPropagation();
                     const isOpen = pillsWrap.classList.toggle("mobile-expanded");
                     btnMobileToggle.classList.toggle("active", isOpen);
+                    if (!isOpen) {
+                        document.querySelectorAll(".apple-dropdown-container.open").forEach(c => c.classList.remove("open"));
+                    }
                 });
 
                 // Cerrar al hacer clic fuera
@@ -356,6 +359,7 @@
                     if (!e.target.closest("#apple-filter-bar")) {
                         pillsWrap.classList.remove("mobile-expanded");
                         btnMobileToggle.classList.remove("active");
+                        document.querySelectorAll(".apple-dropdown-container.open").forEach(c => c.classList.remove("open"));
                     }
                 });
             }
@@ -396,8 +400,12 @@
                     return;
                 }
 
-                // Si el menú desplegable está abierto, no ocultarlo
-                if (pillsWrap && pillsWrap.classList.contains("mobile-expanded")) return;
+                // Si el menú desplegable o algún popover está abierto, no ocultarlo
+                const hasOpenPopover = document.querySelector(".apple-dropdown-container.open");
+                if ((pillsWrap && pillsWrap.classList.contains("mobile-expanded")) || hasOpenPopover) {
+                    filterBar.classList.remove("filter-bar-hidden");
+                    return;
+                }
 
                 const delta = currentY - lastScrollY;
 
@@ -433,7 +441,8 @@
                     const isMobile = window.innerWidth <= 768;
 
                     if (isMobile && filterBar) {
-                        if (!pillsWrap || !pillsWrap.classList.contains("mobile-expanded")) {
+                        const hasOpenPopover = document.querySelector(".apple-dropdown-container.open");
+                        if ((!pillsWrap || !pillsWrap.classList.contains("mobile-expanded")) && !hasOpenPopover) {
                             if (currentY <= 15) {
                                 filterBar.classList.remove("filter-bar-hidden");
                             } else if (delta > 8 && currentY > 50) {

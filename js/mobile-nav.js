@@ -175,7 +175,6 @@
         const drawer = document.getElementById('zilla-mobile-drawer');
         const overlay = document.getElementById('zilla-mobile-overlay');
         const closeBtn = document.getElementById('btn-close-mobile-drawer');
-        const hamburgerBtn = document.getElementById('topbar-mobile-hamburger-btn');
         const drawerPublishBtn = document.getElementById('btn-drawer-publish-action');
         const drawerAuthBtn = document.getElementById('btn-drawer-open-auth');
 
@@ -183,7 +182,9 @@
             if (!drawer || !overlay) return;
             drawer.classList.add('active');
             overlay.classList.add('active');
-            if (hamburgerBtn) hamburgerBtn.classList.add('active');
+            document.querySelectorAll('.btn-zilla-mobile-hamburger, .evergreen-mobile-menu-btn, .b2b-mobile-toggle').forEach(btn => {
+                btn.classList.add('active');
+            });
             document.body.style.overflow = 'hidden';
             syncCurrencyState();
         }
@@ -192,18 +193,50 @@
             if (!drawer || !overlay) return;
             drawer.classList.remove('active');
             overlay.classList.remove('active');
-            if (hamburgerBtn) hamburgerBtn.classList.remove('active');
+            document.querySelectorAll('.btn-zilla-mobile-hamburger, .evergreen-mobile-menu-btn, .b2b-mobile-toggle').forEach(btn => {
+                btn.classList.remove('active');
+            });
             document.body.style.overflow = '';
         }
 
-        if (hamburgerBtn) hamburgerBtn.addEventListener('click', () => {
-            if (drawer && drawer.classList.contains('active')) closeDrawer();
-            else openDrawer();
+        function toggleDrawer() {
+            if (drawer && drawer.classList.contains('active')) {
+                closeDrawer();
+            } else {
+                openDrawer();
+            }
+        }
+
+        // Conectar todos los botones de hamburguesa existentes o futuros
+        const hamburgerButtons = document.querySelectorAll('.btn-zilla-mobile-hamburger, .evergreen-mobile-menu-btn, #topbar-mobile-hamburger-btn, #b2b-mobile-toggle, .b2b-mobile-toggle');
+        hamburgerButtons.forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleDrawer();
+            });
         });
 
-        if (dockMenuBtn) dockMenuBtn.addEventListener('click', openDrawer);
+        // Event delegation para cualquier botón hamburguesa adicional
+        document.addEventListener('click', (e) => {
+            const hBtn = e.target.closest('.btn-zilla-mobile-hamburger, .evergreen-mobile-menu-btn, #topbar-mobile-hamburger-btn, #b2b-mobile-toggle, .b2b-mobile-toggle');
+            if (hBtn && !Array.from(hamburgerButtons).includes(hBtn)) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleDrawer();
+            }
+        });
+
         if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
         if (overlay) overlay.addEventListener('click', closeDrawer);
+
+        // Cerrar al hacer clic en un enlace de navegación del drawer
+        const drawerLinks = document.querySelectorAll('.drawer-nav-link');
+        drawerLinks.forEach(link => {
+            link.addEventListener('click', () => {
+                closeDrawer();
+            });
+        });
 
         // Cerrar con Escape
         document.addEventListener('keydown', (e) => {
@@ -218,7 +251,6 @@
             window.location.href = 'publicar.html';
         };
 
-        if (dockPublishBtn) dockPublishBtn.addEventListener('click', handlePublish);
         if (drawerPublishBtn) drawerPublishBtn.addEventListener('click', handlePublish);
 
         // 6. Conectar Auth Modal
