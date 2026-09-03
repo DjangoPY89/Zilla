@@ -761,33 +761,51 @@ function loadZoneIntoCapRate(price, rent) {
 /**
  * 5. CRM, Pipeline Kanban & Centro de Automatizaciones
  */
-let currentCrmView = 'kanban'; // 'kanban' | 'list'
-let currentLeadFilter = { text: '', tier: 'all', zone: 'all', afdOnly: false };
+/**
+ * 5. CRM, Panel Planilla Excel de Solicitudes & Pipeline
+ */
+let currentCrmView = 'excel'; // 'excel' | 'kanban'
+let currentCrmCurrency = 'USD'; // 'USD' | 'PYG'
+const PYG_RATE = 7850;
+let selectedCrmIds = new Set();
+let currentLeadFilter = { text: '', reqType: 'all', status: 'all', tier: 'all', afdOnly: false };
 
 async function renderCRMLeads() {
     await renderAutomationsPanel();
     await renderAutomationLogs();
-    await renderKanbanAndList();
+    await renderCRMTablesAndKanban();
 }
 
 /**
- * Renderizar Tablero Kanban y Lista de Leads
+ * Renderizar Planilla Excel de Solicitudes y Tablero Kanban
  */
-async function renderKanbanAndList() {
+async function renderCRMTablesAndKanban() {
+    const tbody = document.getElementById('crm-excel-tbody');
     const kanbanContainer = document.getElementById('crm-kanban-board');
-    const listContainer = document.getElementById('crm-leads-list');
     
     const allLeads = await window.ZillaB2B.getCRMLeads();
     
-    // Aplicar filtros
+    // 1. Filtrar solicitudes
     const filteredLeads = allLeads.filter(l => {
-        if (currentLeadFilter.text && !l.name.toLowerCase().includes(currentLeadFilter.text.toLowerCase()) && !l.zone.toLowerCase().includes(currentLeadFilter.text.toLowerCase())) {
+        if (currentLeadFilter.text) {
+            const query = currentLeadFilter.text.toLowerCase().trim();
+            const matchName = (l.name || '').toLowerCase().includes(query);
+            const matchPhone = (l.phone || '').toLowerCase().includes(query);
+            const matchEmail = (l.email || '').toLowerCase().includes(query);
+            const matchProp = (l.property_title || '').toLowerCase().includes(query);
+            const matchCode = (l.code || '').toLowerCase().includes(query) || (l.property_code || '').toLowerCase().includes(query);
+            const matchZone = (l.zone || '').toLowerCase().includes(query);
+            if (!matchName && !matchPhone && !matchEmail && !matchProp && !matchCode && !matchZone) {
+                return false;
+            }
+        }
+        if (currentLeadFilter.reqType !== 'all' && l.request_type !== currentLeadFilter.reqType) {
             return false;
         }
-        if (currentLeadFilter.tier !== 'all' && l.tier.toLowerCase() !== currentLeadFilter.tier.toLowerCase()) {
+        if (currentLeadFilter.status !== 'all' && (l.status || 'new_inquiry') !== currentLeadFilter.status) {
             return false;
         }
-        if (currentLeadFilter.zone !== 'all' && !l.zone.includes(currentLeadFilter.zone)) {
+        if (currentLeadFilter.tier !== 'all' && (l.tier || '').toLowerCase() !== currentLeadFilter.tier.toLowerCase()) {
             return false;
         }
         if (currentLeadFilter.afdOnly && !l.afd) {
@@ -796,20 +814,165 @@ async function renderKanbanAndList() {
         return true;
     });
 
-    // Actualizar contadores globales de CRM
-    const countTotal = document.getElementById('crm-total-count');
-    const totalVolume = document.getElementById('crm-total-volume');
-    if (countTotal) countTotal.textContent = filteredLeads.length;
-    if (totalVolume) {
-        const sum = filteredLeads.reduce((acc, curr) => acc + Number(curr.budget_usd || 0), 0);
-        totalVolume.textContent = '$' + sum.toLocaleString() + ' USD';
+    // 2. Calcular KPIs de Solicitudes
+    const infoCount = allLeads.filter(l => l.request_type === 'info_request').length;
+    const contactCount = allLeads.filter(l => l.request_type === 'contact_request').length;
+    const visitsCount = allLeads.filter(l => l.request_type === 'visit_request').length;
+    const totalVolumeUSD = allLeads.reduce((acc, curr) => acc + Number(curr.budget_usd || 0), 0);
+
+    const kpiInfoEl = document.getElementById('crm-kpi-info');
+    const kpiContactEl = document.getElementById('crm-kpi-contact');
+    const kpiVisitsEl = document.getElementById('crm-kpi-visits');
+    const kpiVolumeEl = document.getElementById('crm-kpi-volume');
+
+    if (kpiInfoEl) kpiInfoEl.textContent = infoCount;
+    if (kpiContactEl) kpiContactEl.textContent = contactCount;
+    if (kpiVisitsEl) kpiVisitsEl.textContent = visitsCount;
+    if (kpiVolumeEl) {
+        if (currentCrmCurrency === 'PYG') {
+            kpiVolumeEl.textContent = '₲ ' + (totalVolumeUSD * PYG_RATE).toLocaleString('es-PY');
+        } else {
+            kpiVolumeEl.textContent = '$' + (totalVolumeUSD / 1000000).toFixed(2) + 'M USD';
+        }
     }
 
-    // 1. Renderizar Vista Kanban
+    // 3. Renderizar Tabla Planilla Excel
+    if (tbody) {
+        if (filteredLeads.length === 0) {
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="12" class="text-center" style="padding: 42px 16px; color: #94a3b8;">
+                        <i class="fas fa-folder-open" style="font-size: 2rem; margin-bottom: 8px; display: block; color: #cbd5e1;"></i>
+                        <strong>No se encontraron solicitudes con los filtros aplicados.</strong>
+                        <p style="font-size: 0.78rem; margin-top: 4px;">Prueba ajustando el buscador o restableciendo los filtros.</p>
+                    </td>
+                </tr>
+            `;
+        } else {
+            tbody.innerHTML = filteredLeads.map(l => {
+                const isSelected = selectedCrmIds.has(l.id);
+                const phoneClean = (l.phone || '').replace(/[^0-9]/g, '');
+                
+                // Formateo de precio según moneda
+                let priceFormatted = '';
+                let subPriceFormatted = '';
+                const budgetUSD = Number(l.budget_usd || 0);
+
+                if (currentCrmCurrency === 'PYG') {
+                    priceFormatted = '₲ ' + (budgetUSD * PYG_RATE).toLocaleString('es-PY');
+                    subPriceFormatted = '$' + budgetUSD.toLocaleString('en-US') + ' USD';
+                } else {
+                    priceFormatted = '$' + budgetUSD.toLocaleString('en-US') + ' USD';
+                    subPriceFormatted = '₲ ' + (budgetUSD * PYG_RATE).toLocaleString('es-PY');
+                }
+
+                // Badge de tipo de solicitud
+                let reqPill = '';
+                if (l.request_type === 'info_request') {
+                    reqPill = `<span class="req-type-pill req-info" title="${l.message || 'Solicitud de Información'}"><i class="fas fa-circle-info"></i> Más Información</span>`;
+                } else if (l.request_type === 'contact_request') {
+                    reqPill = `<span class="req-type-pill req-contact" title="${l.message || 'Solicitud de Contacto'}"><i class="fas fa-phone-volume"></i> Solicita Contacto</span>`;
+                } else if (l.request_type === 'visit_request') {
+                    reqPill = `<span class="req-type-pill req-visit" title="Fecha preferida: ${l.preferred_date || 'A coordinar'}"><i class="fas fa-calendar-check"></i> Solicita Visita</span>`;
+                } else {
+                    reqPill = `<span class="req-type-pill req-info"><i class="fas fa-envelope"></i> Consulta Web</span>`;
+                }
+
+                // WhatsApp pre-filled text
+                const waText = encodeURIComponent(`Hola ${l.name}, te contacto desde Zilla en relación a tu solicitud sobre "${l.property_title || 'el inmueble'}". ¿En qué horario te queda cómodo conversar?`);
+
+                return `
+                    <tr class="${isSelected ? 'row-selected' : ''}" id="crm-row-${l.id}">
+                        <td class="col-chk text-center">
+                            <input type="checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelectCRM('${l.id}', this)">
+                        </td>
+                        <td>
+                            <span class="excel-date">${l.date || 'Hoy 14:00'}</span>
+                        </td>
+                        <td>
+                            <span class="excel-code-badge">${l.code || 'SOL-100'}</span>
+                        </td>
+                        <td>
+                            <div class="excel-prop-cell">
+                                <div class="lead-mini-avatar">${(l.name || 'C').charAt(0).toUpperCase()}</div>
+                                <div class="excel-prop-info">
+                                    <a href="javascript:void(0)" onclick="openLeadDetailModal('${l.id}')" class="excel-prop-title" title="Ver ficha completa">${l.name}</a>
+                                    <span class="excel-prop-sub">${l.client_type || 'Particular'} · <strong style="color: #0f766e;">${l.zone || 'Asunción'}</strong></span>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="excel-contact-col">
+                                <a href="https://wa.me/${phoneClean}?text=${waText}" target="_blank" class="excel-wa-link" title="Abrir WhatsApp directo">
+                                    <i class="fab fa-whatsapp" style="color: #22c55e;"></i> ${l.phone}
+                                </a>
+                                <a href="mailto:${l.email}" class="excel-email-link" title="${l.email}">
+                                    <i class="far fa-envelope"></i> ${l.email}
+                                </a>
+                            </div>
+                        </td>
+                        <td>
+                            ${reqPill}
+                            ${l.preferred_date && l.request_type === 'visit_request' ? `<div style="font-size: 0.68rem; color: #7e22ce; font-weight: 600; margin-top: 2px;"><i class="far fa-clock"></i> ${l.preferred_date}</div>` : ''}
+                        </td>
+                        <td>
+                            <div class="excel-prop-cell">
+                                <img src="${l.property_image || 'img/property-placeholder.jpg'}" class="excel-thumb" alt="${l.property_title || 'Propiedad'}">
+                                <div class="excel-prop-info">
+                                    <span class="excel-prop-title" title="${l.property_title || 'Inmueble'}">${l.property_title || 'Inmueble Consultante'}</span>
+                                    <span class="excel-prop-sub"><span class="excel-badge-type">${l.property_code || 'PY-100'}</span></span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="text-right">
+                            <div class="excel-price-val">${priceFormatted}</div>
+                            <div class="excel-sub-price">${subPriceFormatted}</div>
+                        </td>
+                        <td>
+                            ${l.afd 
+                                ? '<span class="excel-badge-op sale" title="Califica para Préstamo Hipotecario AFD"><i class="fas fa-shield-halved"></i> Apto AFD</span>' 
+                                : `<span class="excel-badge-type" title="${l.bank || 'Fondos Propios'}">${(l.bank || 'Contado').split(' ')[0]}</span>`
+                            }
+                        </td>
+                        <td class="text-center">
+                            <span class="lead-score-pill ${(l.tier || 'silver').toLowerCase()}" style="font-size: 0.72rem; padding: 3px 7px;">
+                                ${l.score || 85} pts
+                            </span>
+                        </td>
+                        <td>
+                            <select class="excel-status-select status-${l.status || 'new_inquiry'}" onchange="changeLeadStatusFromTable('${l.id}', this.value)">
+                                <option value="new_inquiry" ${(l.status || 'new_inquiry') === 'new_inquiry' ? 'selected' : ''}>📥 Nuevo</option>
+                                <option value="contacted" ${l.status === 'contacted' ? 'selected' : ''}>💬 Contactado</option>
+                                <option value="visit_scheduled" ${l.status === 'visit_scheduled' ? 'selected' : ''}>📅 Visita Agendada</option>
+                                <option value="offer_negotiation" ${l.status === 'offer_negotiation' ? 'selected' : ''}>🤝 En Negociación</option>
+                                <option value="closed_won" ${l.status === 'closed_won' ? 'selected' : ''}>🏆 Ganado / Cerrado</option>
+                                <option value="lost" ${l.status === 'lost' ? 'selected' : ''}>⛔ Descartado</option>
+                            </select>
+                        </td>
+                        <td class="text-center">
+                            <div class="excel-actions-group">
+                                <a href="https://wa.me/${phoneClean}?text=${waText}" target="_blank" class="btn-excel-action" title="Chatear por WhatsApp">
+                                    <i class="fab fa-whatsapp" style="color: #22c55e;"></i>
+                                </a>
+                                <button type="button" class="btn-excel-action" onclick="openLeadDetailModal('${l.id}')" title="Ver Ficha 360°">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                                <button type="button" class="btn-excel-action danger" onclick="deleteCRMLead('${l.id}')" title="Eliminar Solicitud">
+                                    <i class="fas fa-trash-can"></i>
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+    }
+
+    // 4. Renderizar Vista Kanban
     if (kanbanContainer) {
         const stages = [
-            { key: 'new_inquiry', label: '📥 Nuevos (Auto-IA)', badgeClass: 'stage-new' },
-            { key: 'financially_qualified', label: '🎯 Calificados AFD / Banco', badgeClass: 'stage-qual' },
+            { key: 'new_inquiry', label: '📥 Nuevos (Sin contactar)', badgeClass: 'stage-new' },
+            { key: 'contacted', label: '💬 Contactados', badgeClass: 'stage-qual' },
             { key: 'visit_scheduled', label: '📅 Visitas Agendadas', badgeClass: 'stage-visit' },
             { key: 'offer_negotiation', label: '🤝 En Negociación', badgeClass: 'stage-nego' },
             { key: 'closed_won', label: '🏆 Ganados / Cerrados', badgeClass: 'stage-won' }
@@ -830,21 +993,22 @@ async function renderKanbanAndList() {
                     </div>
 
                     <div class="kanban-cards-stack">
-                        ${stageLeads.length === 0 ? '<div class="kanban-empty-slot">Sin leads en esta etapa</div>' : ''}
+                        ${stageLeads.length === 0 ? '<div class="kanban-empty-slot">Sin solicitudes en esta etapa</div>' : ''}
                         ${stageLeads.map(l => `
                             <div class="kanban-card" draggable="true" ondragstart="handleDragStart(event, '${l.id}')" onclick="openLeadDetailModal('${l.id}')">
                                 <div class="kcard-header">
                                     <span class="kcard-name">${l.name}</span>
-                                    <span class="lead-score-pill ${l.tier.toLowerCase()}">${l.score} pts</span>
+                                    <span class="lead-score-pill ${(l.tier || 'silver').toLowerCase()}">${l.score || 85} pts</span>
                                 </div>
                                 <div class="kcard-budget">$${Number(l.budget_usd).toLocaleString()} USD</div>
                                 <div class="kcard-tags">
-                                    <span class="ktag-zone"><i class="fas fa-location-dot"></i> ${l.zone.split('&')[0]}</span>
-                                    ${l.afd ? '<span class="ktag-afd"><i class="fas fa-check-shield"></i> AFD</span>' : ''}
+                                    <span class="ktag-zone"><i class="fas fa-location-dot"></i> ${(l.zone || '').split('&')[0]}</span>
+                                    ${l.request_type === 'visit_request' ? '<span class="req-type-pill req-visit" style="font-size: 0.62rem;"><i class="fas fa-calendar-check"></i> Visita</span>' : ''}
+                                    ${l.request_type === 'info_request' ? '<span class="req-type-pill req-info" style="font-size: 0.62rem;"><i class="fas fa-circle-info"></i> Info</span>' : ''}
                                 </div>
                                 <div class="kcard-footer">
-                                    <span class="kcard-urgency"><i class="far fa-clock"></i> ${l.urgency.split('(')[0]}</span>
-                                    <a href="https://wa.me/${l.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Hola ' + l.name + ', te contacto desde Zilla en relación a tu consulta de inmuebles.')}" target="_blank" class="kcard-wa-btn" onclick="event.stopPropagation()">
+                                    <span class="kcard-urgency"><i class="far fa-clock"></i> ${(l.urgency || '').split('(')[0]}</span>
+                                    <a href="https://wa.me/${(l.phone || '').replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Hola ' + l.name + ', te contacto desde Zilla.')}" target="_blank" class="kcard-wa-btn" onclick="event.stopPropagation()">
                                         <i class="fab fa-whatsapp"></i>
                                     </a>
                                 </div>
@@ -856,71 +1020,258 @@ async function renderKanbanAndList() {
         }).join('');
     }
 
-    // 2. Renderizar Vista Lista
-    if (listContainer) {
-        listContainer.innerHTML = filteredLeads.map(l => `
-            <div class="lead-dossier-card" id="card-${l.id}">
-                <div class="lead-card-top">
-                    <div class="lead-avatar-col" onclick="openLeadDetailModal('${l.id}')" style="cursor: pointer;">
-                        <div class="lead-avatar-initial">${l.name.charAt(0)}</div>
-                        <div>
-                            <h4 class="lead-name">${l.name} <i class="fas fa-arrow-up-right-from-square text-sky-400" style="font-size: 0.8rem;"></i></h4>
-                            <span class="lead-zone-pref"><i class="fas fa-location-dot text-emerald-500"></i> ${l.zone}</span>
-                        </div>
-                    </div>
-                    <div class="lead-score-box ${l.tier.toLowerCase()}">
-                        <span class="score-num">${l.score}/100</span>
-                        <span class="score-tier">${l.tier}</span>
-                    </div>
-                </div>
+    // 5. Actualizar Contadores del Footer
+    const countTotal = document.getElementById('crm-footer-total-count');
+    const newCount = document.getElementById('crm-footer-new-count');
+    const totalVolume = document.getElementById('crm-footer-total-val');
+    const countPill = document.getElementById('crm-count-pill');
+    const navBadge = document.getElementById('nav-leads-badge');
 
-                <div class="lead-details-grid">
-                    <div class="detail-item">
-                        <span class="detail-lbl">Presupuesto</span>
-                        <strong class="detail-val">$${Number(l.budget_usd).toLocaleString()} USD</strong>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-lbl">Finalidad</span>
-                        <strong class="detail-val">${l.intent}</strong>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-lbl">Urgencia</span>
-                        <strong class="detail-val">${l.urgency}</strong>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-lbl">Financiación</span>
-                        <strong class="detail-val ${l.afd ? 'text-emerald-400' : ''}">
-                            ${l.afd ? '<i class="fas fa-check-circle"></i> Apto Crédito AFD' : l.bank}
-                        </strong>
-                    </div>
-                </div>
+    const newInquiriesCount = filteredLeads.filter(l => (l.status || 'new_inquiry') === 'new_inquiry').length;
+    const sumFiltered = filteredLeads.reduce((acc, curr) => acc + Number(curr.budget_usd || 0), 0);
 
-                <div class="lead-dossier-box">
-                    <p><strong>Dossier del Lead:</strong> ${l.dossier}</p>
-                    <small class="text-muted">Nota de seguimiento: ${l.notes}</small>
-                </div>
-
-                <div class="lead-actions-bar">
-                    <select class="lead-status-select" onchange="handleLeadStatusChange('${l.id}', this.value)">
-                        <option value="new_inquiry" ${l.status === 'new_inquiry' ? 'selected' : ''}>📥 Nuevo Contacto (Auto-IA)</option>
-                        <option value="financially_qualified" ${l.status === 'financially_qualified' ? 'selected' : ''}>🎯 Calificado AFD / Banco</option>
-                        <option value="visit_scheduled" ${l.status === 'visit_scheduled' ? 'selected' : ''}>📅 Visita Agendada</option>
-                        <option value="offer_negotiation" ${l.status === 'offer_negotiation' ? 'selected' : ''}>🤝 En Negociación</option>
-                        <option value="closed_won" ${l.status === 'closed_won' ? 'selected' : ''}>🏆 Venta Cerrada</option>
-                    </select>
-
-                    <div style="display: flex; gap: 8px;">
-                        <button type="button" class="btn btn-secondary btn-sm" onclick="openLeadDetailModal('${l.id}')">
-                            <i class="fas fa-eye"></i> Ficha 360°
-                        </button>
-                        <a href="https://wa.me/${l.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Hola ' + l.name + ', te contacto desde Zilla en relación a tu búsqueda de inmuebles en ' + l.zone + '.')}" target="_blank" class="btn-lead-whatsapp">
-                            <i class="fab fa-whatsapp"></i> WhatsApp Directo
-                        </a>
-                    </div>
-                </div>
-            </div>
-        `).join('');
+    if (countTotal) countTotal.textContent = filteredLeads.length;
+    if (newCount) newCount.textContent = newInquiriesCount;
+    if (countPill) countPill.textContent = `${filteredLeads.length} solicitudes`;
+    if (navBadge) navBadge.textContent = allLeads.length;
+    
+    if (totalVolume) {
+        if (currentCrmCurrency === 'PYG') {
+            totalVolume.textContent = '₲ ' + (sumFiltered * PYG_RATE).toLocaleString('es-PY');
+        } else {
+            totalVolume.textContent = '$' + sumFiltered.toLocaleString('en-US') + ' USD';
+        }
     }
+
+    updateCrmBulkBar();
+}
+
+/**
+ * Conmutador de Moneda en CRM
+ */
+window.setCRMCurrency = function (curr) {
+    currentCrmCurrency = curr;
+    const btnUSD = document.getElementById('btn-crm-curr-usd');
+    const btnPYG = document.getElementById('btn-crm-curr-pyg');
+
+    if (curr === 'USD') {
+        if (btnUSD) btnUSD.classList.add('active');
+        if (btnPYG) btnPYG.classList.remove('active');
+    } else {
+        if (btnUSD) btnUSD.classList.remove('active');
+        if (btnPYG) btnPYG.classList.add('active');
+    }
+
+    renderCRMTablesAndKanban();
+};
+
+/**
+ * Alternar entre Vista Planilla Excel y Tablero Kanban
+ */
+window.switchCrmView = function (view) {
+    currentCrmView = view;
+    const tableWrap = document.getElementById('crm-excel-table-wrap');
+    const kanbanWrap = document.getElementById('crm-kanban-board');
+    const btnExcel = document.getElementById('btn-view-excel');
+    const btnKanban = document.getElementById('btn-view-kanban');
+
+    if (view === 'excel') {
+        if (tableWrap) tableWrap.style.display = 'block';
+        if (kanbanWrap) kanbanWrap.style.display = 'none';
+        if (btnExcel) btnExcel.classList.add('active');
+        if (btnKanban) btnKanban.classList.remove('active');
+    } else {
+        if (tableWrap) tableWrap.style.display = 'none';
+        if (kanbanWrap) kanbanWrap.style.display = 'grid';
+        if (btnExcel) btnExcel.classList.remove('active');
+        if (btnKanban) btnKanban.classList.add('active');
+    }
+};
+
+/**
+ * Manejo de Filtros en Tiempo Real
+ */
+window.handleCrmFilterChange = function () {
+    const textInput = document.getElementById('crm-search-input');
+    const reqTypeSelect = document.getElementById('crm-reqtype-filter');
+    const statusSelect = document.getElementById('crm-status-filter');
+    const tierSelect = document.getElementById('crm-tier-filter');
+    const afdCheck = document.getElementById('crm-afd-filter');
+
+    currentLeadFilter = {
+        text: textInput ? textInput.value : '',
+        reqType: reqTypeSelect ? reqTypeSelect.value : 'all',
+        status: statusSelect ? statusSelect.value : 'all',
+        tier: tierSelect ? tierSelect.value : 'all',
+        afdOnly: afdCheck ? afdCheck.checked : false
+    };
+
+    renderCRMTablesAndKanban();
+};
+
+/**
+ * Selección individual y masiva en la Planilla
+ */
+window.toggleSelectCRM = function (leadId, checkbox) {
+    if (checkbox.checked) {
+        selectedCrmIds.add(leadId);
+    } else {
+        selectedCrmIds.delete(leadId);
+    }
+    const row = document.getElementById(`crm-row-${leadId}`);
+    if (row) {
+        if (checkbox.checked) row.classList.add('row-selected');
+        else row.classList.remove('row-selected');
+    }
+    updateCrmBulkBar();
+};
+
+window.toggleSelectAllCRM = async function (masterCheckbox) {
+    const leads = await window.ZillaB2B.getCRMLeads();
+    if (masterCheckbox.checked) {
+        leads.forEach(l => selectedCrmIds.add(l.id));
+    } else {
+        selectedCrmIds.clear();
+    }
+    renderCRMTablesAndKanban();
+};
+
+window.clearCRMSelection = function () {
+    selectedCrmIds.clear();
+    const master = document.getElementById('crm-chk-all');
+    if (master) master.checked = false;
+    renderCRMTablesAndKanban();
+};
+
+function updateCrmBulkBar() {
+    const bulkBar = document.getElementById('crm-bulk-bar');
+    const bulkCount = document.getElementById('crm-bulk-count');
+    if (selectedCrmIds.size > 0) {
+        if (bulkBar) bulkBar.style.display = 'flex';
+        if (bulkCount) bulkCount.textContent = selectedCrmIds.size;
+    } else {
+        if (bulkBar) bulkBar.style.display = 'none';
+    }
+}
+
+/**
+ * Acciones Masivas
+ */
+window.bulkSetCrmStatus = async function (newStatus) {
+    if (selectedCrmIds.size === 0) return;
+    for (const id of selectedCrmIds) {
+        await window.ZillaB2B.updateLeadStatus(id, newStatus);
+    }
+    selectedCrmIds.clear();
+    await renderCRMTablesAndKanban();
+    if (window.AuthManager && window.AuthManager.showAuthToast) {
+        window.AuthManager.showAuthToast('Solicitudes actualizadas con éxito.', 'success');
+    }
+};
+
+window.bulkDeleteCRM = async function () {
+    if (selectedCrmIds.size === 0) return;
+    if (!confirm(`¿Estás seguro de eliminar las ${selectedCrmIds.size} solicitudes seleccionadas?`)) return;
+
+    const leads = await window.ZillaB2B.getCRMLeads();
+    const updated = leads.filter(l => !selectedCrmIds.has(l.id));
+    localStorage.setItem('zilla_b2b_crm_leads', JSON.stringify(updated));
+    selectedCrmIds.clear();
+    await renderCRMTablesAndKanban();
+};
+
+/**
+ * Cambio de Estado desde el Selector en Línea
+ */
+window.changeLeadStatusFromTable = async function (leadId, newStatus) {
+    await window.ZillaB2B.updateLeadStatus(leadId, newStatus);
+    await renderCRMTablesAndKanban();
+    if (window.AuthManager && window.AuthManager.showAuthToast) {
+        window.AuthManager.showAuthToast('Estado de la solicitud actualizado.', 'success');
+    }
+};
+
+/**
+ * Eliminar solicitud individual
+ */
+window.deleteCRMLead = async function (leadId) {
+    if (!confirm('¿Deseas eliminar este registro de solicitud del CRM?')) return;
+    const leads = await window.ZillaB2B.getCRMLeads();
+    const updated = leads.filter(l => l.id !== leadId);
+    localStorage.setItem('zilla_b2b_crm_leads', JSON.stringify(updated));
+    selectedCrmIds.delete(leadId);
+    await renderCRMTablesAndKanban();
+};
+
+/**
+ * Exportar Solicitudes a Archivo Excel / CSV
+ */
+window.exportCRMToCSV = async function () {
+    const leads = await window.ZillaB2B.getCRMLeads();
+    generateAndDownloadCSV(leads, 'Zilla_CRM_Solicitudes_Clientes.csv');
+};
+
+window.exportSelectedCRM = async function () {
+    if (selectedCrmIds.size === 0) return;
+    const leads = await window.ZillaB2B.getCRMLeads();
+    const selected = leads.filter(l => selectedCrmIds.has(l.id));
+    generateAndDownloadCSV(selected, 'Zilla_CRM_Solicitudes_Seleccionadas.csv');
+};
+
+function generateAndDownloadCSV(dataList, fileName) {
+    const headers = [
+        'ID Solicitud',
+        'Fecha y Hora',
+        'Nombre Cliente',
+        'Tipo de Cliente',
+        'Telefono',
+        'Email',
+        'Tipo de Solicitud',
+        'Inmueble Consultante',
+        'Codigo Inmueble',
+        'Zona / Barrio',
+        'Presupuesto USD',
+        'Apto AFD',
+        'Entidad Bancaria',
+        'Score IA',
+        'Estado',
+        'Fecha Preferida Visita',
+        'Mensaje Cliente',
+        'Dossier IA',
+        'Notas Internas'
+    ];
+
+    const rows = dataList.map(l => [
+        l.code || l.id,
+        l.date || 'N/A',
+        `"${(l.name || '').replace(/"/g, '""')}"`,
+        `"${(l.client_type || 'Particular').replace(/"/g, '""')}"`,
+        `"${l.phone || ''}"`,
+        `"${l.email || ''}"`,
+        `"${(l.request_type_label || l.request_type || '').replace(/"/g, '""')}"`,
+        `"${(l.property_title || '').replace(/"/g, '""')}"`,
+        l.property_code || '',
+        `"${(l.zone || '').replace(/"/g, '""')}"`,
+        l.budget_usd || 0,
+        l.afd ? 'SI' : 'NO',
+        `"${(l.bank || '').replace(/"/g, '""')}"`,
+        l.score || 0,
+        l.status || 'new_inquiry',
+        `"${(l.preferred_date || '').replace(/"/g, '""')}"`,
+        `"${(l.message || '').replace(/"/g, '""')}"`,
+        `"${(l.dossier || '').replace(/"/g, '""')}"`,
+        `"${(l.notes || '').replace(/"/g, '""')}"`
+    ]);
+
+    const csvContent = '\uFEFF' + [headers.join(','), ...rows.map(r => r.join(','))].join('\r\n');
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.setAttribute('href', url);
+    link.setAttribute('download', fileName);
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
 }
 
 /**
@@ -946,140 +1297,6 @@ window.handleDrop = async function (e, newStatus) {
 };
 
 /**
- * Renderizar Panel de Automatizaciones
- */
-async function renderAutomationsPanel() {
-    const container = document.getElementById('automations-cards-grid');
-    if (!container) return;
-
-    const automations = await window.ZillaB2B.getAutomations();
-
-    container.innerHTML = automations.map(a => `
-        <div class="automation-rule-card ${a.is_active ? 'active' : 'inactive'}">
-            <div class="auto-card-top">
-                <div class="auto-icon-box"><i class="${a.icon}"></i></div>
-                <div class="auto-toggle-wrap">
-                    <label class="switch-toggle">
-                        <input type="checkbox" ${a.is_active ? 'checked' : ''} onchange="handleToggleAutomation('${a.id}')">
-                        <span class="slider-toggle"></span>
-                    </label>
-                </div>
-            </div>
-            <h4 class="auto-title">${a.title}</h4>
-            <div class="auto-trigger-box">
-                <span class="auto-lbl">Disparador (Trigger):</span>
-                <p class="auto-txt">${a.trigger}</p>
-            </div>
-            <div class="auto-action-box">
-                <span class="auto-lbl">Acción Automatizada:</span>
-                <p class="auto-txt">${a.action}</p>
-            </div>
-            <div class="auto-footer">
-                <span class="auto-exec-badge"><i class="fas fa-bolt text-amber-400"></i> ${a.executions} ejecuciones</span>
-                <span class="auto-status-tag ${a.is_active ? 'text-emerald-400' : 'text-muted'}">
-                    ${a.is_active ? '● Activa' : '○ En pausa'}
-                </span>
-            </div>
-        </div>
-    `).join('');
-}
-
-window.handleToggleAutomation = async function (id) {
-    await window.ZillaB2B.toggleAutomation(id);
-    await renderAutomationsPanel();
-    if (window.AuthManager && window.AuthManager.showAuthToast) {
-        window.AuthManager.showAuthToast('Regla de automatización actualizada.', 'info');
-    }
-};
-
-/**
- * Renderizar Logs de Automatizaciones en Tiempo Real
- */
-async function renderAutomationLogs() {
-    const container = document.getElementById('automation-logs-stream');
-    if (!container) return;
-
-    const logs = await window.ZillaB2B.getAutomationLogs();
-
-    container.innerHTML = logs.map(l => `
-        <div class="log-stream-item">
-            <span class="log-time">${l.time}</span>
-            <div class="log-content">
-                <strong>${l.event}</strong>
-                <span class="log-lead">${l.lead}</span>
-                <p class="log-action">${l.action}</p>
-            </div>
-            <span class="log-badge-success"><i class="fas fa-check"></i></span>
-        </div>
-    `).join('');
-}
-
-/**
- * Disparar Simulación de Lead con IA
- */
-window.triggerLeadSimulation = async function () {
-    const btn = document.getElementById('btn-simulate-lead');
-    if (btn) {
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Simulando Lead IA...';
-        btn.disabled = true;
-    }
-
-    setTimeout(async () => {
-        const lead = await window.ZillaB2B.simulateIncomingLeadAI();
-        await renderCRMLeads();
-
-        if (btn) {
-            btn.innerHTML = '<i class="fas fa-bolt"></i> Simular Lead Entrante con IA';
-            btn.disabled = false;
-        }
-
-        alert(`⚡ ¡Automatización Ejecutada!\n\nNuevo lead auto-calificado:\n- Cliente: ${lead.name}\n- Presupuesto: $${lead.budget_usd.toLocaleString()} USD\n- Lead Score: ${lead.score}/100 (${lead.tier})\n- Acción: Dossier y WhatsApp disparados automáticamente.`);
-    }, 800);
-};
-
-/**
- * Alternar entre Vista Kanban y Vista Lista
- */
-window.switchCrmView = function (view) {
-    currentCrmView = view;
-    const kanbanEl = document.getElementById('crm-kanban-board');
-    const listEl = document.getElementById('crm-leads-list');
-    const btnKanban = document.getElementById('btn-view-kanban');
-    const btnList = document.getElementById('btn-view-list');
-
-    if (view === 'kanban') {
-        if (kanbanEl) kanbanEl.style.display = 'grid';
-        if (listEl) listEl.style.display = 'none';
-        if (btnKanban) btnKanban.classList.add('active');
-        if (btnList) btnList.classList.remove('active');
-    } else {
-        if (kanbanEl) kanbanEl.style.display = 'none';
-        if (listEl) listEl.style.display = 'flex';
-        if (btnKanban) btnKanban.classList.remove('active');
-        if (btnList) btnList.classList.add('active');
-    }
-};
-
-/**
- * Filtros de CRM en tiempo real
- */
-window.handleCrmFilterChange = function () {
-    const textInput = document.getElementById('crm-search-input');
-    const tierSelect = document.getElementById('crm-tier-filter');
-    const zoneSelect = document.getElementById('crm-zone-filter');
-    const afdCheck = document.getElementById('crm-afd-filter');
-
-    currentLeadFilter = {
-        text: textInput ? textInput.value : '',
-        tier: tierSelect ? tierSelect.value : 'all',
-        zone: zoneSelect ? zoneSelect.value : 'all',
-        afdOnly: afdCheck ? afdCheck.checked : false
-    };
-
-    renderKanbanAndList();
-};
-
-/**
  * Modal Ficha 360° del Lead
  */
 window.openLeadDetailModal = async function (leadId) {
@@ -1091,22 +1308,52 @@ window.openLeadDetailModal = async function (leadId) {
     if (!modal) return;
 
     document.getElementById('m360-name').textContent = lead.name;
-    document.getElementById('m360-tier-badge').textContent = `${lead.tier} · ${lead.score} pts`;
-    document.getElementById('m360-tier-badge').className = `lead-score-pill ${lead.tier.toLowerCase()}`;
+    document.getElementById('m360-tier-badge').textContent = `${lead.tier || 'Platino'} · ${lead.score || 95} pts`;
+    document.getElementById('m360-tier-badge').className = `lead-score-pill ${(lead.tier || 'platinum').toLowerCase()}`;
     document.getElementById('m360-phone').textContent = lead.phone;
     document.getElementById('m360-email').textContent = lead.email;
-    document.getElementById('m360-zone').textContent = lead.zone;
     document.getElementById('m360-budget').textContent = `$${Number(lead.budget_usd).toLocaleString()} USD`;
-    document.getElementById('m360-intent').textContent = lead.intent;
-    document.getElementById('m360-urgency').textContent = lead.urgency;
-    document.getElementById('m360-bank').textContent = lead.bank;
-    document.getElementById('m360-dossier-text').textContent = lead.dossier;
+    document.getElementById('m360-urgency').textContent = lead.urgency || lead.preferred_date || 'Inmediata';
+    document.getElementById('m360-bank').textContent = lead.bank || 'Fondos Propios';
+    
+    // Tipo de Solicitud & Inmueble
+    const propEl = document.getElementById('m360-property');
+    if (propEl) propEl.textContent = `${lead.property_title || 'Inmueble Zilla'} (${lead.property_code || 'PY-100'})`;
+
+    const reqTypeEl = document.getElementById('m360-request-type');
+    if (reqTypeEl) {
+        if (lead.request_type === 'info_request') {
+            reqTypeEl.className = 'req-type-pill req-info';
+            reqTypeEl.innerHTML = '<i class="fas fa-circle-info"></i> Más Información';
+        } else if (lead.request_type === 'contact_request') {
+            reqTypeEl.className = 'req-type-pill req-contact';
+            reqTypeEl.innerHTML = '<i class="fas fa-phone-volume"></i> Solicita Contacto';
+        } else if (lead.request_type === 'visit_request') {
+            reqTypeEl.className = 'req-type-pill req-visit';
+            reqTypeEl.innerHTML = `<i class="fas fa-calendar-check"></i> Solicita Visita (${lead.preferred_date || 'A coordinar'})`;
+        }
+    }
+
+    const afdStatus = document.getElementById('m360-afd-status');
+    if (afdStatus) {
+        afdStatus.innerHTML = lead.afd 
+            ? '<i class="fas fa-check-circle text-emerald-600"></i> Elegible Crédito AFD'
+            : '<span class="text-muted">No Aplica AFD (Fondos Propios)</span>';
+    }
+
+    const msgEl = document.getElementById('m360-message');
+    if (msgEl) {
+        msgEl.textContent = lead.message || 'El cliente solicitó asesoramiento personalizado a través del portal Zilla.';
+    }
+
+    document.getElementById('m360-dossier-text').textContent = lead.dossier || 'Cliente calificado automáticamente por IA Zilla.';
     document.getElementById('m360-notes').value = lead.notes || '';
 
     // Enlace de WhatsApp directo
     const waBtn = document.getElementById('m360-wa-btn');
     if (waBtn) {
-        waBtn.href = `https://wa.me/${lead.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent('Hola ' + lead.name + ', te contacto desde Zilla en relación a tu búsqueda de inmuebles.')}`;
+        const phoneClean = (lead.phone || '').replace(/[^0-9]/g, '');
+        waBtn.href = `https://wa.me/${phoneClean}?text=${encodeURIComponent('Hola ' + lead.name + ', te contacto desde Zilla en relación a tu consulta sobre "' + (lead.property_title || 'tu búsqueda de inmuebles') + '".')}`;
     }
 
     modal.classList.add('active');
@@ -1121,7 +1368,7 @@ window.closeLeadDetailModal = function () {
 
 async function handleLeadStatusChange(leadId, newStatus) {
     await window.ZillaB2B.updateLeadStatus(leadId, newStatus);
-    await renderKanbanAndList();
+    await renderCRMTablesAndKanban();
     if (window.AuthManager && window.AuthManager.showAuthToast) {
         window.AuthManager.showAuthToast('Estado del Lead actualizado en CRM.', 'success');
     }

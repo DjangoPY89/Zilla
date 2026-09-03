@@ -425,22 +425,181 @@
                 <section id="crm-leads-tab" class="b2b-module-section">
                     <div class="section-top-header">
                         <div>
-                            <span class="section-tag-light"><i class="fas fa-bolt text-amber-500"></i> Pipeline & Automatizaciones</span>
-                            <h2 class="section-title-dark">Gestión de Leads & CRM Inmobiliario B2B</h2>
-                            <p class="section-desc-light">Calificación automática con IA, flujo Kanban por etapas, elegibilidad de crédito AFD y disparadores de WhatsApp.</p>
+                            <span class="section-tag-light"><i class="fas fa-users-gear text-emerald-600"></i> CRM & Solicitudes de Clientes</span>
+                            <h2 class="section-title-dark">Panel de Solicitudes & Leads Inmobiliarios</h2>
+                            <p class="section-desc-light">Registro centralizado estilo planilla de todas las solicitudes de información, pedidos de contacto y coordinación de visitas a tus propiedades en Zilla.</p>
                         </div>
-                        <div class="crm-header-actions">
+                        <div class="excel-header-actions">
+                            <button type="button" class="btn btn-outline" id="btn-export-crm-excel" onclick="exportCRMToCSV()">
+                                <i class="fas fa-file-excel text-emerald-600"></i> Exportar (.CSV)
+                            </button>
                             <button type="button" class="btn btn-outline" id="btn-simulate-lead" onclick="triggerLeadSimulation()">
-                                <i class="fas fa-bolt text-amber-500"></i> Simular Lead IA
+                                <i class="fas fa-bolt text-amber-500"></i> Simular Solicitud IA
                             </button>
                             <button type="button" class="btn btn-primary" onclick="openNewLeadModal()">
-                                <i class="fas fa-user-plus"></i> + Registrar Lead
+                                <i class="fas fa-user-plus"></i> + Registrar Solicitud
                             </button>
                         </div>
                     </div>
 
-                    <!-- Centro de Automatizaciones Activas -->
-                    <div class="crm-automations-section" id="automations-center-box">
+                    <!-- 1. Grid de Métricas KPI de Solicitudes -->
+                    <div class="excel-kpi-grid">
+                        <div class="excel-kpi-card">
+                            <div class="kpi-icon-box bg-sky-subtle"><i class="fas fa-circle-info text-sky-600"></i></div>
+                            <div class="kpi-info">
+                                <span class="kpi-lbl">Solicitudes de Info</span>
+                                <strong class="kpi-val" id="crm-kpi-info">0</strong>
+                                <span class="kpi-sub text-sky-700">Brochures & Planos</span>
+                            </div>
+                        </div>
+                        <div class="excel-kpi-card">
+                            <div class="kpi-icon-box bg-emerald-subtle"><i class="fas fa-phone-volume text-emerald-600"></i></div>
+                            <div class="kpi-info">
+                                <span class="kpi-lbl">Pedidos de Contacto</span>
+                                <strong class="kpi-val" id="crm-kpi-contact">0</strong>
+                                <span class="kpi-sub text-emerald-700">Llamada / WhatsApp</span>
+                            </div>
+                        </div>
+                        <div class="excel-kpi-card">
+                            <div class="kpi-icon-box bg-purple-subtle"><i class="fas fa-calendar-check text-purple-600"></i></div>
+                            <div class="kpi-info">
+                                <span class="kpi-lbl">Visitas Solicitadas</span>
+                                <strong class="kpi-val" id="crm-kpi-visits">0</strong>
+                                <span class="kpi-sub text-purple-700">Tours Agendados</span>
+                            </div>
+                        </div>
+                        <div class="excel-kpi-card">
+                            <div class="kpi-icon-box bg-amber-subtle"><i class="fas fa-sack-dollar text-amber-600"></i></div>
+                            <div class="kpi-info">
+                                <span class="kpi-lbl">Volumen en Cartera</span>
+                                <strong class="kpi-val" id="crm-kpi-volume">$0 USD</strong>
+                                <span class="kpi-sub text-amber-700">Presupuesto Acumulado</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 2. Panel Principal Planilla Excel de Solicitudes -->
+                    <div class="excel-panel-card" id="crm-excel-main-card">
+                        <!-- Toolbar de la Planilla -->
+                        <div class="excel-toolbar">
+                            <div class="excel-toolbar-left">
+                                <div class="excel-search-box">
+                                    <i class="fas fa-search"></i>
+                                    <input type="text" id="crm-search-input" placeholder="Buscar por cliente, teléfono, email, propiedad o código..." oninput="handleCrmFilterChange()">
+                                </div>
+
+                                <select id="crm-reqtype-filter" class="excel-select" onchange="handleCrmFilterChange()">
+                                    <option value="all">Todas las Solicitudes</option>
+                                    <option value="info_request">ℹ️ Más Información</option>
+                                    <option value="contact_request">📞 Solicita Contacto</option>
+                                    <option value="visit_request">📅 Solicita Visita</option>
+                                </select>
+
+                                <select id="crm-status-filter" class="excel-select" onchange="handleCrmFilterChange()">
+                                    <option value="all">Todos los Estados</option>
+                                    <option value="new_inquiry">📥 Nuevos</option>
+                                    <option value="contacted">💬 Contactados</option>
+                                    <option value="visit_scheduled">📅 Visita Agendada</option>
+                                    <option value="offer_negotiation">🤝 En Negociación</option>
+                                    <option value="closed_won">🏆 Ganado / Cerrado</option>
+                                    <option value="lost">⛔ Descartado</option>
+                                </select>
+
+                                <select id="crm-tier-filter" class="excel-select" onchange="handleCrmFilterChange()">
+                                    <option value="all">Calificación IA</option>
+                                    <option value="platinum">⭐ Platino (Score ≥ 90)</option>
+                                    <option value="gold">🥇 Oro (Score 75-89)</option>
+                                    <option value="silver">🥈 Plata</option>
+                                </select>
+
+                                <label class="crm-toolbar-check" style="display: inline-flex; align-items: center; gap: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer; color: #334155;">
+                                    <input type="checkbox" id="crm-afd-filter" onchange="handleCrmFilterChange()">
+                                    <span><i class="fas fa-shield-halved text-emerald-600"></i> Solo Apto AFD</span>
+                                </label>
+                            </div>
+
+                            <div class="excel-toolbar-right">
+                                <!-- Conmutador de Moneda -->
+                                <div class="excel-currency-toggle">
+                                    <button type="button" class="excel-curr-btn active" id="btn-crm-curr-usd" onclick="setCRMCurrency('USD')">USD</button>
+                                    <button type="button" class="excel-curr-btn" id="btn-crm-curr-pyg" onclick="setCRMCurrency('PYG')">PYG</button>
+                                </div>
+
+                                <!-- Conmutador de Vista (Planilla vs Kanban) -->
+                                <div class="crm-view-switcher">
+                                    <button type="button" id="btn-view-excel" class="crm-view-btn active" onclick="switchCrmView('excel')" title="Vista Planilla Excel">
+                                        <i class="fas fa-table-cells"></i> Planilla
+                                    </button>
+                                    <button type="button" id="btn-view-kanban" class="crm-view-btn" onclick="switchCrmView('kanban')" title="Vista Tablero Kanban">
+                                        <i class="fas fa-table-columns"></i> Kanban
+                                    </button>
+                                </div>
+
+                                <span class="excel-count-pill" id="crm-count-pill">0 solicitudes</span>
+                            </div>
+                        </div>
+
+                        <!-- Barra de Acciones Masivas Flotante -->
+                        <div class="excel-bulk-bar" id="crm-bulk-bar" style="display: none;">
+                            <div class="bulk-selected-count">
+                                <i class="fas fa-circle-check"></i> <span id="crm-bulk-count">0</span> seleccionadas
+                            </div>
+                            <div class="bulk-bar-actions">
+                                <button type="button" class="btn-bulk-action" onclick="bulkSetCrmStatus('contacted')"><i class="fas fa-comments"></i> Marcar Contactado</button>
+                                <button type="button" class="btn-bulk-action" onclick="bulkSetCrmStatus('visit_scheduled')"><i class="fas fa-calendar-check"></i> Marcar Visita Agendada</button>
+                                <button type="button" class="btn-bulk-action" onclick="exportSelectedCRM()"><i class="fas fa-download"></i> Exportar Selección</button>
+                                <button type="button" class="btn-bulk-action danger" onclick="bulkDeleteCRM()"><i class="fas fa-trash"></i> Eliminar</button>
+                                <button type="button" class="btn-bulk-action cancel" onclick="clearCRMSelection()"><i class="fas fa-xmark"></i> Deseleccionar</button>
+                            </div>
+                        </div>
+
+                        <!-- Vista 1: Tabla Planilla Excel -->
+                        <div class="excel-table-scroll-wrap" id="crm-excel-table-wrap">
+                            <table class="excel-table">
+                                <thead>
+                                    <tr>
+                                        <th class="col-chk text-center">
+                                            <input type="checkbox" id="crm-chk-all" onchange="toggleSelectAllCRM(this)">
+                                        </th>
+                                        <th style="min-width: 90px;">Fecha / Hora</th>
+                                        <th style="min-width: 80px;">Código</th>
+                                        <th style="min-width: 200px;">Cliente & Perfil</th>
+                                        <th style="min-width: 180px;">Contacto</th>
+                                        <th style="min-width: 150px;">Tipo de Solicitud</th>
+                                        <th style="min-width: 220px;">Inmueble de Interés</th>
+                                        <th class="text-right" style="min-width: 110px;">Presupuesto</th>
+                                        <th style="min-width: 120px;">Financiación</th>
+                                        <th class="text-center" style="min-width: 90px;">Score IA</th>
+                                        <th style="min-width: 140px;">Estado / Etapa</th>
+                                        <th class="text-center" style="min-width: 95px;">Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="crm-excel-tbody">
+                                    <!-- Inyectado dinámicamente vía b2b-portal.js -->
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Vista 2: Tablero Kanban -->
+                        <div class="crm-kanban-board" id="crm-kanban-board" style="display: none; padding: 16px;">
+                            <!-- Inyectado dinámicamente vía b2b-portal.js -->
+                        </div>
+
+                        <!-- Footer de la Planilla -->
+                        <div class="excel-table-footer">
+                            <div class="footer-left-stats">
+                                <span class="footer-stat-item">Total Solicitudes: <strong id="crm-footer-total-count">0</strong></span>
+                                <span class="footer-stat-item">Nuevas sin contactar: <strong id="crm-footer-new-count" class="text-amber-600">0</strong></span>
+                                <span class="footer-stat-item">Volumen Total: <strong id="crm-footer-total-val" class="text-emerald-700">$0 USD</strong></span>
+                            </div>
+                            <div class="footer-right-pagination">
+                                <span class="footer-hint"><i class="fas fa-bolt text-amber-500"></i> Calificación automática en tiempo real con IA Zilla</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Centro de Automatizaciones Activas (Debajo de la Planilla) -->
+                    <div class="crm-automations-section" id="automations-center-box" style="margin-top: 24px;">
                         <div class="auto-section-header">
                             <div class="auto-header-title">
                                 <div class="auto-badge-icon"><i class="fas fa-wand-magic-sparkles text-emerald-600"></i></div>
@@ -466,74 +625,6 @@
                                 <!-- Inyectado vía b2b-portal.js -->
                             </div>
                         </div>
-                    </div>
-
-                    <!-- Toolbar de Búsqueda y Filtros de CRM -->
-                    <div class="crm-toolbar-panel">
-                        <div class="crm-search-box">
-                            <i class="fas fa-search"></i>
-                            <input type="text" id="crm-search-input" placeholder="Buscar cliente por nombre o zona..." oninput="handleCrmFilterChange()">
-                        </div>
-
-                        <div class="crm-filters-group">
-                            <select id="crm-tier-filter" class="crm-toolbar-select" onchange="handleCrmFilterChange()">
-                                <option value="all">Todos los Niveles</option>
-                                <option value="platinum">⭐ Platino (Score ≥ 90)</option>
-                                <option value="gold">🥇 Oro (Score 75-89)</option>
-                                <option value="silver">🥈 Plata</option>
-                            </select>
-
-                            <select id="crm-zone-filter" class="crm-toolbar-select" onchange="handleCrmFilterChange()">
-                                <option value="all">Todas las Zonas</option>
-                                <option value="Santa Teresa">Santa Teresa / Eje</option>
-                                <option value="Villa Morra">Villa Morra</option>
-                                <option value="Barrio Herrera">Barrio Herrera</option>
-                                <option value="Mburucuyá">Mburucuyá</option>
-                                <option value="San Bernardino">San Bernardino</option>
-                                <option value="Luque">Luque</option>
-                            </select>
-
-                            <label class="crm-toolbar-check">
-                                <input type="checkbox" id="crm-afd-filter" onchange="handleCrmFilterChange()">
-                                <span><i class="fas fa-shield-halved text-emerald-600"></i> Solo Apto AFD</span>
-                            </label>
-                        </div>
-
-                        <!-- Conmutador de Vista (Kanban vs Lista) -->
-                        <div class="crm-view-switcher">
-                            <button type="button" id="btn-view-kanban" class="crm-view-btn active" onclick="switchCrmView('kanban')" title="Vista Tablero Kanban">
-                                <i class="fas fa-table-columns"></i> Kanban
-                            </button>
-                            <button type="button" id="btn-view-list" class="crm-view-btn" onclick="switchCrmView('list')" title="Vista Lista Detallada">
-                                <i class="fas fa-list-ul"></i> Lista
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Estadísticas de Pipeline -->
-                    <div class="crm-stats-summary-bar">
-                        <div class="crm-stat-chip">
-                            <span>Leads Activos:</span>
-                            <strong id="crm-total-count">0</strong>
-                        </div>
-                        <div class="crm-stat-chip">
-                            <span>Volumen Total en Pipeline:</span>
-                            <strong id="crm-total-volume" class="text-emerald-700">$0 USD</strong>
-                        </div>
-                        <div class="crm-stat-chip">
-                            <span>Tiempo de Respuesta IA:</span>
-                            <strong class="text-sky-700">&lt; 45 seg</strong>
-                        </div>
-                    </div>
-
-                    <!-- 1. Tablero Kanban -->
-                    <div class="crm-kanban-board" id="crm-kanban-board">
-                        <!-- Inyectado vía b2b-portal.js -->
-                    </div>
-
-                    <!-- 2. Lista Detallada -->
-                    <div class="crm-leads-list" id="crm-leads-list" style="display: none;">
-                        <!-- Inyectado vía b2b-portal.js -->
                     </div>
                 </section>
 
@@ -1136,7 +1227,17 @@
                 <!-- Info Grid -->
                 <div class="lead-details-grid" style="margin-bottom: 20px;">
                     <div class="detail-item">
-                        <span class="detail-lbl">WhatsApp</span>
+                        <span class="detail-lbl">Tipo de Solicitud</span>
+                        <div id="m360-request-type-box" style="margin-top: 2px;">
+                            <span id="m360-request-type" class="req-type-pill req-info"><i class="fas fa-circle-info"></i> Más Información</span>
+                        </div>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-lbl">Inmueble de Interés</span>
+                        <strong class="detail-val text-emerald-700" id="m360-property" style="font-size: 0.85rem;">Penthouse Dúplex (PY-101)</strong>
+                    </div>
+                    <div class="detail-item">
+                        <span class="detail-lbl">WhatsApp / Teléfono</span>
                         <strong class="detail-val" id="m360-phone">+595 981 xxx xxx</strong>
                     </div>
                     <div class="detail-item">
@@ -1144,29 +1245,27 @@
                         <strong class="detail-val" id="m360-email">correo@dominio.com</strong>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-lbl">Zona Solicitada</span>
-                        <strong class="detail-val text-sky-700" id="m360-zone">Santa Teresa</strong>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-lbl">Presupuesto</span>
+                        <span class="detail-lbl">Presupuesto Estimado</span>
                         <strong class="detail-val text-emerald-700" id="m360-budget">$220,000 USD</strong>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-lbl">Finalidad</span>
-                        <strong class="detail-val" id="m360-intent">Inversión Temporal</strong>
-                    </div>
-                    <div class="detail-item">
-                        <span class="detail-lbl">Urgencia</span>
+                        <span class="detail-lbl">Fecha / Urgencia</span>
                         <strong class="detail-val" id="m360-urgency">Inmediata (< 30 días)</strong>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-lbl">Entidad Bancaria</span>
+                        <span class="detail-lbl">Entidad / Financiamiento</span>
                         <strong class="detail-val" id="m360-bank">Banco Continental</strong>
                     </div>
                     <div class="detail-item">
-                        <span class="detail-lbl">Estado Crédito</span>
-                        <strong class="detail-val text-emerald-700"><i class="fas fa-check-circle"></i> Elegible AFD</strong>
+                        <span class="detail-lbl">Calificación AFD</span>
+                        <strong class="detail-val text-emerald-700" id="m360-afd-status"><i class="fas fa-check-circle"></i> Elegible AFD</strong>
                     </div>
+                </div>
+
+                <!-- Mensaje del Cliente -->
+                <div class="lead-dossier-box" style="margin-bottom: 16px; background: #f0fdf4; border-left: 3px solid #84cc16;">
+                    <div style="font-weight: 800; margin-bottom: 4px; color: #3f6212;"><i class="fas fa-comment-dots"></i> Consulta / Mensaje del Cliente:</div>
+                    <p id="m360-message" style="margin: 0; font-size: 0.82rem; color: #1e293b; line-height: 1.4;"></p>
                 </div>
 
                 <!-- Dossier de Calificación IA -->
