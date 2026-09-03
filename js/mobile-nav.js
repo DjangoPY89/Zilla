@@ -25,8 +25,8 @@
                 <div class="zilla-mobile-drawer" id="zilla-mobile-drawer">
                     <!-- Header -->
                     <div class="drawer-header">
-                        <a href="index.html" class="drawer-brand" title="Zilla">
-                            <img src="assets/logo-dark.svg" alt="Zilla" class="zilla-brand-vector">
+                        <a href="index.html" class="drawer-brand" title="Zilla PropTech Paraguay">
+                            <img src="assets/logo-dark.svg" alt="Zilla" class="zilla-logo-img" style="height: 32px;">
                         </a>
                         <div class="drawer-header-actions">
                             <button type="button" class="drawer-close-btn" id="btn-close-mobile-drawer" aria-label="Cerrar Menú">

@@ -3524,42 +3524,21 @@ button, input, select, textarea {
     font-size: 1.45rem;
     font-weight: 800;
     color: #0f172a;
-    transition: opacity 0.2s ease;
 }
 
-.evergreen-brand-logo:hover {
-    opacity: 0.9;
-}
-
-.zilla-brand-vector {
+.zilla-logo-img,
+.zilla-logo-img-white {
     height: 34px;
     width: auto;
-    max-width: 140px;
+    max-height: 100%;
     display: block;
     object-fit: contain;
-    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: transform 0.2s ease;
 }
 
-.evergreen-brand-logo:hover .zilla-brand-vector {
+.evergreen-brand-logo:hover .zilla-logo-img,
+.evergreen-brand-logo:hover .zilla-logo-img-white {
     transform: scale(1.03);
-}
-
-.footer-logo .zilla-brand-vector {
-    height: 38px;
-    max-width: 155px;
-}
-
-.evergreen-brand-logo i {
-    color: #0f766e;
-    font-size: 1.35rem;
-}
-
-.brand-badge-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: #10b981;
-    display: inline-block;
 }
 
 /* Cápsula de Navegación Flotante Central */

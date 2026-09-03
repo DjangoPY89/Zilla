@@ -139,14 +139,6 @@
     letter-spacing: -0.03em;
 }
 
-.drawer-brand .zilla-brand-vector {
-    height: 32px;
-    width: auto;
-    max-width: 130px;
-    display: block;
-    object-fit: contain;
-}
-
 .drawer-brand .brand-dot {
     width: 8px;
     height: 8px;
