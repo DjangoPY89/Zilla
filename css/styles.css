@@ -3623,8 +3623,8 @@ button, input, select, textarea {
     flex-direction: column;
     justify-content: space-between;
     padding: 56px 64px 44px 64px;
-    background: #090d16;
-    border-bottom: 2px solid #0f172a;
+    background: transparent;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
 }
 
 .evergreen-hero-bg-media {
@@ -3642,9 +3642,9 @@ button, input, select, textarea {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 38%;
+    object-position: center 35%;
     image-rendering: -webkit-optimize-contrast;
-    filter: contrast(1.06) saturate(1.08) brightness(1.02);
+    filter: none;
     transform: scale(1.0);
     transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
@@ -3655,21 +3655,8 @@ button, input, select, textarea {
     left: 0;
     width: 100%;
     height: 100%;
-    background: 
-        linear-gradient(
-            90deg,
-            rgba(9, 13, 22, 0.82) 0%,
-            rgba(9, 13, 22, 0.52) 42%,
-            rgba(9, 13, 22, 0.25) 70%,
-            rgba(9, 13, 22, 0.45) 100%
-        ),
-        linear-gradient(
-            180deg,
-            rgba(9, 13, 22, 0.45) 0%,
-            transparent 35%,
-            rgba(9, 13, 22, 0.55) 70%,
-            rgba(9, 13, 22, 0.92) 100%
-        );
+    background: transparent;
+    pointer-events: none;
 }
 
 .evergreen-hero-content-wrap {
@@ -3695,18 +3682,19 @@ button, input, select, textarea {
 }
 
 .hero-tag-pill {
-    background: rgba(15, 23, 42, 0.65);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    color: #f8fafc;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(15, 23, 42, 0.12);
+    color: #0f172a;
     font-size: 0.8rem;
-    font-weight: 700;
+    font-weight: 800;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     padding: 7px 18px;
     border-radius: 0 !important;
     cursor: pointer;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
@@ -3747,7 +3735,7 @@ button, input, select, textarea {
     letter-spacing: -0.04em;
     line-height: 1.04;
     color: #ffffff;
-    text-shadow: 0 4px 28px rgba(0, 0, 0, 0.6);
+    text-shadow: 0 3px 18px rgba(0, 0, 0, 0.85), 0 1px 4px rgba(0, 0, 0, 0.95);
     margin: 0;
 }
 
@@ -3755,9 +3743,9 @@ button, input, select, textarea {
     font-size: 1.05rem;
     font-weight: 600;
     line-height: 1.6;
-    color: #f1f5f9;
+    color: #ffffff;
     margin: 0;
-    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.8);
+    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.9), 0 1px 4px rgba(0, 0, 0, 0.95);
 }
 
 /* ============================================================
