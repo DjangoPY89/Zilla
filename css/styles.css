@@ -3726,11 +3726,11 @@ button, input, select, textarea {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: rgba(15, 23, 42, 0.68);
+    background: rgba(15, 23, 42, 0.75);
     backdrop-filter: blur(14px);
     -webkit-backdrop-filter: blur(14px);
-    border: 1px solid rgba(16, 185, 129, 0.4);
-    color: #34d399;
+    border: 1px solid rgba(115, 227, 59, 0.45);
+    color: #73e33b;
     font-size: 0.72rem;
     font-weight: 900;
     letter-spacing: 0.08em;
@@ -3742,7 +3742,7 @@ button, input, select, textarea {
 }
 
 .hero-highlight-badge .pulse-sparkle {
-    color: #10b981;
+    color: #73e33b;
 }
 
 .evergreen-hero-heading {
@@ -3756,11 +3756,10 @@ button, input, select, textarea {
     margin: 0;
 }
 
-.hero-heading-gradient {
-    background: linear-gradient(135deg, #ffffff 30%, #a7f3d0 100%);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    filter: drop-shadow(0 3px 12px rgba(0, 0, 0, 0.9));
+.hero-heading-accent {
+    color: #73e33b;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.9), 0 0 25px rgba(115, 227, 59, 0.35);
+    display: inline-block;
 }
 
 .hero-titles-right {
@@ -3792,12 +3791,12 @@ button, input, select, textarea {
 }
 
 .evergreen-hero-subtext strong {
-    color: #10b981;
+    color: #73e33b;
     font-weight: 900;
 }
 
 /* ============================================================
-   BOTÓN ANIMADO "EXPLORAR INMUEBLES" EN EL HERO (VERDE LIMA ZILLA)
+   BOTÓN ANIMADO "EXPLORAR INMUEBLES" EN EL HERO (#73e33b ZILLA)
    ============================================================ */
 .hero-explore-cta-wrap {
     position: relative;
@@ -3809,14 +3808,14 @@ button, input, select, textarea {
     display: inline-flex;
     align-items: center;
     padding: 14px 32px;
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-    color: #ffffff;
+    background: linear-gradient(135deg, #73e33b 0%, #5ac623 100%);
+    color: #0f172a;
     font-family: 'Outfit', sans-serif;
     font-size: 1.02rem;
     font-weight: 900;
     text-decoration: none;
     border-radius: var(--radius-full);
-    box-shadow: 0 8px 30px rgba(16, 185, 129, 0.5), 0 0 0 1.5px rgba(255, 255, 255, 0.4);
+    box-shadow: 0 8px 30px rgba(115, 227, 59, 0.45), 0 0 0 1.5px rgba(255, 255, 255, 0.5);
     overflow: hidden;
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 2;
@@ -3849,7 +3848,7 @@ button, input, select, textarea {
     position: absolute;
     inset: -3px;
     border-radius: var(--radius-full);
-    background: linear-gradient(135deg, #10b981, #34d399, #059669);
+    background: linear-gradient(135deg, #73e33b, #93ec68, #5ac623);
     opacity: 0.85;
     filter: blur(8px);
     z-index: 1;
@@ -3870,27 +3869,27 @@ button, input, select, textarea {
 }
 
 .explore-icon-spin {
-    color: #ffffff;
+    color: #0f172a;
     font-size: 1.1rem;
     transition: transform 0.4s ease;
 }
 
 .explore-arrow-slide {
     font-size: 0.92rem;
-    color: #ffffff;
+    color: #0f172a;
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-hero-explore-animated:hover {
     background: #0f172a;
-    color: #10b981;
+    color: #73e33b;
     transform: translateY(-3px) scale(1.03);
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(16, 185, 129, 0.7);
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(115, 227, 59, 0.7);
 }
 
 .btn-hero-explore-animated:hover .explore-icon-spin,
 .btn-hero-explore-animated:hover .explore-arrow-slide {
-    color: #10b981;
+    color: #73e33b;
     transform: translateX(3px);
 }
 
