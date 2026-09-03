@@ -3507,24 +3507,24 @@ button, input, select, textarea {
     .modal-fullscreen-topbar {
         height: 58px;
         padding: 0 14px;
+        justify-content: space-between;
+    }
+
+    .modal-fullscreen-topbar .topbar-nav-center {
+        display: none !important;
+    }
+
+    /* Ocultar botón flotante de Mapa Pantalla Completa cuando el anuncio está abierto */
+    body.modal-open .mobile-view-btn,
+    .modal-container.active ~ .mobile-view-btn,
+    #property-modal-container.active ~ #mobile-view-toggle {
+        display: none !important;
     }
 
     .btn-fullscreen-back {
         padding: 7px 14px;
         font-size: 0.82rem;
         gap: 6px;
-    }
-
-    .topbar-nav-center {
-        max-width: 48%;
-    }
-
-    .topbar-prop-title {
-        font-size: 0.85rem;
-    }
-
-    .topbar-prop-meta {
-        font-size: 0.72rem;
     }
 
     .btn-fullscreen-action {

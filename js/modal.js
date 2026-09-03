@@ -56,7 +56,11 @@
 
             // Mostrar modal en pantalla completa
             modalContainer.classList.add("active");
+            document.body.classList.add("modal-open");
             document.body.style.overflow = "hidden"; // Evitar scroll de fondo
+
+            const mobileMapToggle = document.getElementById("mobile-view-toggle");
+            if (mobileMapToggle) mobileMapToggle.style.display = "none";
 
             // Inicializar mapa estático embebido de la propiedad
             setTimeout(() => {
@@ -68,8 +72,11 @@
             const modalContainer = document.getElementById("property-modal-container");
             if (modalContainer) {
                 modalContainer.classList.remove("active");
+                document.body.classList.remove("modal-open");
                 document.body.style.overflow = "";
             }
+            const mobileMapToggle = document.getElementById("mobile-view-toggle");
+            if (mobileMapToggle) mobileMapToggle.style.display = "";
             currentModalProperty = null;
         },
 
