@@ -3602,26 +3602,29 @@ button, input, select, textarea {
     box-shadow: 0 6px 20px rgba(163, 230, 53, 0.5);
 }
 
-/* 2. Hero Section Principal Estilo EverGreen */
+/* ============================================================
+   2. HERO SECTION PRINCIPAL - REDISEÑO ARQUITECTÓNICO SIN BORDES REDONDEADOS
+   ============================================================ */
 .evergreen-hero-section {
-    padding: 16px 24px 48px 24px;
-    max-width: 1440px;
-    margin: 0 auto;
+    padding: 0;
+    max-width: 100%;
+    width: 100%;
+    margin: 0;
     position: relative;
     z-index: 10;
 }
 
 .evergreen-hero-frame {
     position: relative;
-    border-radius: 36px;
+    border-radius: 0 !important;
     overflow: visible;
-    min-height: 720px;
+    min-height: 740px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 44px 48px;
-    background: #0f172a;
-    box-shadow: 0 20px 60px rgba(15, 23, 42, 0.15);
+    padding: 56px 64px 44px 64px;
+    background: #090d16;
+    border-bottom: 2px solid #0f172a;
 }
 
 .evergreen-hero-bg-media {
@@ -3630,7 +3633,7 @@ button, input, select, textarea {
     left: 0;
     width: 100%;
     height: 100%;
-    border-radius: 36px;
+    border-radius: 0 !important;
     overflow: hidden;
     z-index: 1;
 }
@@ -3639,11 +3642,11 @@ button, input, select, textarea {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center 36%;
+    object-position: center 38%;
     image-rendering: -webkit-optimize-contrast;
-    filter: contrast(1.08) saturate(1.06) brightness(1.02);
-    transform: scale(1.01);
-    transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    filter: contrast(1.06) saturate(1.08) brightness(1.02);
+    transform: scale(1.0);
+    transition: transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .evergreen-hero-overlay {
@@ -3652,13 +3655,21 @@ button, input, select, textarea {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(
-        180deg,
-        rgba(15, 23, 42, 0.38) 0%,
-        rgba(15, 23, 42, 0.04) 28%,
-        rgba(15, 23, 42, 0.14) 62%,
-        rgba(15, 23, 42, 0.72) 100%
-    );
+    background: 
+        linear-gradient(
+            90deg,
+            rgba(9, 13, 22, 0.82) 0%,
+            rgba(9, 13, 22, 0.52) 42%,
+            rgba(9, 13, 22, 0.25) 70%,
+            rgba(9, 13, 22, 0.45) 100%
+        ),
+        linear-gradient(
+            180deg,
+            rgba(9, 13, 22, 0.45) 0%,
+            transparent 35%,
+            rgba(9, 13, 22, 0.55) 70%,
+            rgba(9, 13, 22, 0.92) 100%
+        );
 }
 
 .evergreen-hero-content-wrap {
@@ -3668,51 +3679,56 @@ button, input, select, textarea {
     flex-direction: column;
     justify-content: space-between;
     height: 100%;
-    min-height: 640px;
-    gap: 32px;
+    min-height: 650px;
+    gap: 36px;
+    max-width: 1360px;
+    margin: 0 auto;
+    width: 100%;
 }
 
-/* Tags superiores flotantes */
+/* Tags superiores flotantes (Sharp Architectural Look) */
 .hero-top-tags {
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
     flex-wrap: wrap;
 }
 
 .hero-tag-pill {
-    background: rgba(255, 255, 255, 0.22);
+    background: rgba(15, 23, 42, 0.65);
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    color: #ffffff;
-    font-size: 0.82rem;
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    color: #f8fafc;
+    font-size: 0.8rem;
     font-weight: 700;
-    padding: 6px 18px;
-    border-radius: var(--radius-full);
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    padding: 7px 18px;
+    border-radius: 0 !important;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .hero-tag-pill:hover,
 .hero-tag-pill.active {
-    background: #ffffff;
-    color: #0f172a;
-    border-color: #ffffff;
-    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
+    background: #10b981;
+    color: #ffffff;
+    border-color: #10b981;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.4);
 }
 
 .evergreen-hero-titles-row {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    gap: 32px;
+    gap: 36px;
     margin-top: auto;
-    margin-bottom: 24px;
+    margin-bottom: 28px;
 }
 
 .hero-titles-left {
-    flex: 1.2;
+    flex: 1.3;
 }
 
 .hero-titles-right {
@@ -3720,18 +3736,18 @@ button, input, select, textarea {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    gap: 16px;
-    max-width: 480px;
+    gap: 18px;
+    max-width: 500px;
 }
 
 .evergreen-hero-heading {
     font-family: 'Outfit', sans-serif;
-    font-size: clamp(2.6rem, 5.2vw, 4.4rem);
-    font-weight: 800;
-    letter-spacing: -0.035em;
-    line-height: 1.05;
+    font-size: clamp(2.8rem, 5.6vw, 4.6rem);
+    font-weight: 900;
+    letter-spacing: -0.04em;
+    line-height: 1.04;
     color: #ffffff;
-    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+    text-shadow: 0 4px 28px rgba(0, 0, 0, 0.6);
     margin: 0;
 }
 
@@ -3739,13 +3755,13 @@ button, input, select, textarea {
     font-size: 1.05rem;
     font-weight: 600;
     line-height: 1.6;
-    color: #ffffff;
+    color: #f1f5f9;
     margin: 0;
-    text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7), 0 1px 4px rgba(0, 0, 0, 0.9);
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.8);
 }
 
 /* ============================================================
-   BOTÓN ANIMADO "EXPLORAR INMUEBLES" EN EL HERO (VERDE LIMA ZILLA)
+   BOTÓN "EXPLORAR INMUEBLES" RECTANGULAR GEOMÉTRICO
    ============================================================ */
 .hero-explore-cta-wrap {
     position: relative;
@@ -3756,17 +3772,18 @@ button, input, select, textarea {
     position: relative;
     display: inline-flex;
     align-items: center;
-    padding: 12px 28px;
-    background: linear-gradient(135deg, #bef264 0%, #a3e635 50%, #84cc16 100%);
-    color: #0f172a;
+    padding: 13px 30px;
+    background: #10b981;
+    color: #ffffff;
     font-family: 'Outfit', sans-serif;
     font-size: 0.95rem;
     font-weight: 800;
     text-decoration: none;
-    border-radius: var(--radius-full);
-    box-shadow: 0 8px 30px rgba(132, 204, 22, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.4);
+    border-radius: 0 !important;
+    border: none;
+    box-shadow: 0 6px 24px rgba(16, 185, 129, 0.35);
     overflow: hidden;
-    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 2;
 }
 
@@ -3780,32 +3797,21 @@ button, input, select, textarea {
     background: linear-gradient(
         115deg,
         transparent 20%,
-        rgba(255, 255, 255, 0.7) 50%,
+        rgba(255, 255, 255, 0.6) 50%,
         transparent 80%
     );
     transform: skewX(-20deg);
     animation: buttonShimmer 3.5s infinite;
 }
 
-@keyframes buttonShimmer {
-    0% { transform: translateX(-100%) skewX(-20deg); }
-    30%, 100% { transform: translateX(100%) skewX(-20deg); }
-}
-
 .explore-glow-pulse {
     position: absolute;
-    inset: -3px;
-    border-radius: var(--radius-full);
-    background: linear-gradient(135deg, #bef264, #a3e635, #84cc16);
-    opacity: 0.8;
-    filter: blur(8px);
+    inset: -2px;
+    border-radius: 0 !important;
+    background: #10b981;
+    opacity: 0.4;
+    filter: blur(6px);
     z-index: 1;
-    animation: explorePulse 2.5s infinite;
-}
-
-@keyframes explorePulse {
-    0%, 100% { transform: scale(1); opacity: 0.6; }
-    50% { transform: scale(1.05); opacity: 0.95; }
 }
 
 .explore-btn-content {
@@ -3817,40 +3823,41 @@ button, input, select, textarea {
 }
 
 .explore-icon-spin {
-    color: #0f172a;
+    color: #ffffff;
     font-size: 1.05rem;
     transition: transform 0.4s ease;
 }
 
 .explore-arrow-slide {
     font-size: 0.85rem;
-    color: #0f172a;
+    color: #ffffff;
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-hero-explore-animated:hover {
-    background: #0f172a;
-    color: #bef264;
-    transform: translateY(-3px) scale(1.02);
-    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.4), 0 0 25px rgba(163, 230, 53, 0.6);
+    background: #059669;
+    color: #ffffff;
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(16, 185, 129, 0.5);
 }
 
 .btn-hero-explore-animated:hover .explore-icon-spin {
-    color: #bef264;
     transform: rotate(45deg);
 }
 
 .btn-hero-explore-animated:hover .explore-arrow-slide {
-    color: #bef264;
     transform: translateX(4px);
 }
 
-/* Tarjeta Blanca de Búsqueda Flotante ("Find the best place") */
+/* ============================================================
+   TARJETA DE BÚSQUEDA FLOTANTE (SIN BORDES REDONDEADOS)
+   ============================================================ */
 .evergreen-search-card {
     background: #ffffff;
-    border-radius: 26px;
-    padding: 24px 28px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+    border-radius: 0 !important;
+    padding: 26px 30px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(255, 255, 255, 0.15);
     position: relative;
     z-index: 50;
     overflow: visible;
@@ -3858,10 +3865,22 @@ button, input, select, textarea {
 
 .search-card-title {
     font-family: 'Outfit', sans-serif;
-    font-size: 1.15rem;
+    font-size: 1.18rem;
     font-weight: 800;
     color: #0f172a;
-    margin-bottom: 16px;
+    margin-bottom: 18px;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.search-card-title::before {
+    content: '';
+    display: inline-block;
+    width: 4px;
+    height: 18px;
+    background: #10b981;
 }
 
 .search-fields-grid {
@@ -3881,18 +3900,19 @@ button, input, select, textarea {
 
 .search-col-lbl {
     font-size: 0.74rem;
-    font-weight: 700;
-    color: #64748b;
-    text-transform: capitalize;
+    font-weight: 800;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
 }
 
 .search-select,
 .search-text-input {
     width: 100%;
-    padding: 10px 14px;
-    border-radius: var(--radius-md);
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
+    padding: 11px 14px;
+    border-radius: 0 !important;
+    background: #f8fafc;
+    border: 1.5px solid #cbd5e1;
     font-size: 0.88rem;
     font-weight: 600;
     color: #0f172a;
@@ -3903,12 +3923,12 @@ button, input, select, textarea {
 .search-select:focus,
 .search-text-input:focus {
     background: #ffffff;
-    border-color: #0f766e;
-    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
+    border-color: #10b981;
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
 }
 
 /* ============================================================
-   DROPDOWNS DE SELECCIÓN MÚLTIPLE EN EL HERO
+   DROPDOWNS DE SELECCIÓN MÚLTIPLE (SIN BORDES REDONDEADOS)
    ============================================================ */
 .multi-select-wrap {
     position: relative;
@@ -3917,10 +3937,10 @@ button, input, select, textarea {
 
 .multi-select-btn {
     width: 100%;
-    padding: 10px 14px;
-    border-radius: var(--radius-md);
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
+    padding: 11px 14px;
+    border-radius: 0 !important;
+    background: #f8fafc;
+    border: 1.5px solid #cbd5e1;
     font-size: 0.86rem;
     font-weight: 600;
     color: #0f172a;
@@ -3934,8 +3954,8 @@ button, input, select, textarea {
 }
 
 .multi-select-btn:hover {
-    background: #e2e8f0;
-    border-color: #cbd5e1;
+    background: #f1f5f9;
+    border-color: #94a3b8;
 }
 
 .multi-select-btn .btn-text {
@@ -3958,14 +3978,14 @@ button, input, select, textarea {
 
 .multi-select-menu {
     position: absolute;
-    top: calc(100% + 8px);
+    top: calc(100% + 4px);
     left: 0;
     width: 100%;
-    min-width: 250px;
+    min-width: 260px;
     background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 18px;
-    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25), 0 4px 14px rgba(0, 0, 0, 0.08);
+    border: 1.5px solid #0f172a;
+    border-radius: 0 !important;
+    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.3), 0 4px 14px rgba(0, 0, 0, 0.1);
     padding: 8px;
     z-index: 1000;
     display: none;
@@ -3980,6 +4000,7 @@ button, input, select, textarea {
     right: 0 !important;
     left: auto !important;
     padding: 16px 18px !important;
+    border-radius: 0 !important;
 }
 
 .rooms-popover-wide {
@@ -3987,11 +4008,12 @@ button, input, select, textarea {
     right: 0 !important;
     left: auto !important;
     padding: 16px 18px !important;
+    border-radius: 0 !important;
 }
 
 @keyframes multiSelectSlide {
-    from { opacity: 0; transform: translateY(-8px) scale(0.97); }
-    to { opacity: 1; transform: translateY(0) scale(1); }
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
 }
 
 .multi-select-menu.active {
@@ -4018,18 +4040,18 @@ button, input, select, textarea {
 .btn-select-all {
     background: none;
     border: none;
-    color: #0f766e;
+    color: #10b981;
     font-size: 0.78rem;
     font-weight: 700;
     cursor: pointer;
     padding: 2px 6px;
-    border-radius: 6px;
+    border-radius: 0 !important;
     transition: all 0.15s ease;
 }
 
 .btn-select-all:hover {
-    background: #f0fdf4;
-    color: #15803d;
+    background: #ecfdf5;
+    color: #047857;
 }
 
 .multi-select-item.item-all {
@@ -4038,6 +4060,7 @@ button, input, select, textarea {
     margin-bottom: 4px;
     font-weight: 800;
     color: #0f172a;
+    border-radius: 0 !important;
 }
 
 .multi-select-item.item-all:hover {
@@ -4050,7 +4073,7 @@ button, input, select, textarea {
     align-items: center;
     gap: 10px;
     padding: 8px 12px;
-    border-radius: 10px;
+    border-radius: 0 !important;
     cursor: pointer;
     font-size: 0.84rem;
     font-weight: 600;
@@ -4067,8 +4090,17 @@ button, input, select, textarea {
 .multi-select-item input[type="checkbox"] {
     width: 17px;
     height: 17px;
-    accent-color: #0f766e;
+    accent-color: #10b981;
     cursor: pointer;
+}
+
+.price-inputs-container .price-box,
+.price-inputs-container .price-field,
+.price-presets-chips .price-chip,
+.apple-dropdown-footer .btn,
+.apple-segmented-control,
+.apple-segmented-control .seg-item {
+    border-radius: 0 !important;
 }
 
 .search-card-bottom-row {
@@ -4077,8 +4109,8 @@ button, input, select, textarea {
     justify-content: space-between;
     gap: 16px;
     flex-wrap: wrap;
-    padding-top: 14px;
-    border-top: 1px solid #f1f5f9;
+    padding-top: 16px;
+    border-top: 1px solid #e2e8f0;
 }
 
 .quick-filter-pills {
@@ -4090,20 +4122,21 @@ button, input, select, textarea {
 
 .quick-filter-lbl {
     font-size: 0.78rem;
-    font-weight: 700;
+    font-weight: 800;
     color: #64748b;
+    text-transform: uppercase;
     margin-right: 4px;
 }
 
 .q-pill {
     text-decoration: none;
     font-size: 0.78rem;
-    font-weight: 600;
-    color: #475569;
+    font-weight: 700;
+    color: #334155;
     background: #f8fafc;
-    border: 1px solid #e2e8f0;
-    padding: 4px 12px;
-    border-radius: var(--radius-full);
+    border: 1px solid #cbd5e1;
+    padding: 5px 14px;
+    border-radius: 0 !important;
     transition: all 0.15s ease;
 }
 
@@ -4114,9 +4147,9 @@ button, input, select, textarea {
 }
 
 .pill-che-roga {
-    background: #dcfce7;
-    color: #166534;
-    border-color: #bbf7d0;
+    background: #ecfdf5;
+    color: #065f46;
+    border-color: #a7f3d0;
 }
 
 .btn-evergreen-search {
@@ -4126,20 +4159,21 @@ button, input, select, textarea {
     background: #0f172a;
     color: #ffffff;
     border: none;
-    padding: 11px 26px;
-    border-radius: var(--radius-full);
+    padding: 12px 30px;
+    border-radius: 0 !important;
     font-family: 'Outfit', sans-serif;
-    font-size: 0.88rem;
+    font-size: 0.92rem;
     font-weight: 800;
     cursor: pointer;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.2);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.3);
 }
 
 .btn-evergreen-search:hover {
-    background: #0f766e;
+    background: #10b981;
+    color: #ffffff;
     transform: translateY(-2px);
-    box-shadow: 0 8px 22px rgba(15, 118, 110, 0.35);
+    box-shadow: 0 8px 22px rgba(16, 185, 129, 0.4);
 }
 
 /* 3. Segunda Sección: Triplete de Tarjetas Bento ("Tu próximo hogar te está esperando") */
