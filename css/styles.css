@@ -3768,6 +3768,12 @@ button, input, select, textarea {
     margin: 0;
 }
 
+.hero-dot-green {
+    color: #7bc133;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.9), 0 0 25px rgba(123, 193, 51, 0.5);
+    display: inline-block;
+}
+
 .hero-heading-accent {
     color: #7bc133;
     text-shadow: 0 4px 24px rgba(0, 0, 0, 0.9), 0 0 25px rgba(123, 193, 51, 0.35);
@@ -3821,7 +3827,7 @@ button, input, select, textarea {
     align-items: center;
     padding: 14px 32px;
     background: linear-gradient(135deg, #7bc133 0%, #66a329 100%);
-    color: #0f172a;
+    color: #ffffff;
     font-family: 'Outfit', sans-serif;
     font-size: 1.02rem;
     font-weight: 900;
@@ -3832,6 +3838,7 @@ button, input, select, textarea {
     transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 2;
     letter-spacing: 0.01em;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 }
 
 .btn-hero-explore-animated::before {
@@ -3880,21 +3887,25 @@ button, input, select, textarea {
     z-index: 3;
 }
 
+.explore-btn-content span {
+    color: #ffffff;
+}
+
 .explore-icon-spin {
-    color: #0f172a;
+    color: #ffffff;
     font-size: 1.1rem;
     transition: transform 0.4s ease;
 }
 
 .explore-arrow-slide {
     font-size: 0.92rem;
-    color: #0f172a;
+    color: #ffffff;
     transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-hero-explore-animated:hover {
     background: #0f172a;
-    color: #7bc133;
+    color: #ffffff;
     transform: translateY(-3px) scale(1.03);
     box-shadow: 0 14px 40px rgba(0, 0, 0, 0.5), 0 0 25px rgba(123, 193, 51, 0.7);
 }
