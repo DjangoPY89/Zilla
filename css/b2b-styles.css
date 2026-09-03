@@ -979,19 +979,34 @@ body.b2b-light-theme {
     color: #0f172a;
 }
 
+.legend-scale-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
 .legend-gradient-track {
-    width: 140px;
+    width: 220px;
     height: 8px;
     border-radius: var(--radius-full);
-    background: linear-gradient(90deg, #10b981, #0f766e, #0284c7, #8b5cf6);
+    background: linear-gradient(90deg, #d97706 0%, #0284c7 33%, #10b981 66%, #f43f5e 100%);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
 .legend-scale-labels {
     display: flex;
-    gap: 10px;
+    justify-content: space-between;
+    gap: 8px;
     font-size: 0.68rem;
-    color: #64748b;
-    font-weight: 600;
+    color: #475569;
+    font-weight: 700;
+}
+
+.legend-scale-labels span {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    white-space: nowrap;
 }
 
 .legend-summary-stats {
@@ -1022,56 +1037,106 @@ body.b2b-light-theme {
     position: relative;
     display: inline-flex;
     align-items: center;
-    gap: 5px;
-    padding: 5px 10px;
-    background: #0f172a;
-    color: #10b981;
+    gap: 6px;
+    padding: 4px 10px;
+    background: #090d16;
+    color: #ffffff;
     font-family: 'Outfit', sans-serif;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 800;
     border-radius: 20px;
-    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.35);
-    border: 1.5px solid rgba(16, 185, 129, 0.4);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    border: 1.5px solid #334155;
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 50;
+    user-select: none;
+}
+
+.b2b-zone-price-pill .pill-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.b2b-zone-price-pill .pill-text {
+    line-height: 1;
+    letter-spacing: 0.01em;
+}
+
+/* Tier 1: Top / Ultra Premium / Hot Yield (Rojo Carmesí / Magenta) */
+.b2b-zone-price-pill.tier-top {
+    background: linear-gradient(135deg, #2a0b18 0%, #0f172a 100%);
+    border-color: #f43f5e;
+    box-shadow: 0 4px 16px rgba(244, 63, 94, 0.35);
+}
+.b2b-zone-price-pill.tier-top .pill-dot {
+    background: #f43f5e;
+    box-shadow: 0 0 8px #f43f5e;
+}
+.b2b-zone-price-pill.tier-top .pill-text {
+    color: #fecdd3;
+    font-weight: 900;
+}
+
+/* Tier 2: Alto Valor / Alto Rendimiento (Verde Esmeralda) */
+.b2b-zone-price-pill.tier-high {
+    background: linear-gradient(135deg, #05261d 0%, #0f172a 100%);
+    border-color: #10b981;
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+}
+.b2b-zone-price-pill.tier-high .pill-dot {
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
+}
+.b2b-zone-price-pill.tier-high .pill-text {
+    color: #a7f3d0;
+    font-weight: 800;
+}
+
+/* Tier 3: Valor Medio / Residencial Consolidado (Azul Cielo / Azure) */
+.b2b-zone-price-pill.tier-mid {
+    background: linear-gradient(135deg, #08243c 0%, #0f172a 100%);
+    border-color: #0284c7;
+    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+}
+.b2b-zone-price-pill.tier-mid .pill-dot {
+    background: #38bdf8;
+    box-shadow: 0 0 8px #38bdf8;
+}
+.b2b-zone-price-pill.tier-mid .pill-text {
+    color: #bae6fd;
+    font-weight: 800;
+}
+
+/* Tier 4: Accesible / Entrada (Ámbar Dorado) */
+.b2b-zone-price-pill.tier-accessible {
+    background: linear-gradient(135deg, #271a06 0%, #0f172a 100%);
+    border-color: #d97706;
+    box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
+}
+.b2b-zone-price-pill.tier-accessible .pill-dot {
+    background: #f59e0b;
+    box-shadow: 0 0 8px #f59e0b;
+}
+.b2b-zone-price-pill.tier-accessible .pill-text {
+    color: #fde68a;
+    font-weight: 800;
 }
 
 .b2b-zone-price-pill:hover,
 .b2b-zone-price-pill.active {
-    background: #0f172a;
-    border-color: #10b981;
-    color: #10b981;
-    transform: scale(1.15) translateY(-2px);
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
-    z-index: 1000;
+    transform: scale(1.18) translateY(-3px);
+    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6);
+    z-index: 1000 !important;
 }
 
-.b2b-zone-price-pill.tier-high {
-    background: #0f172a;
-    border-color: #10b981;
-}
-
-.b2b-zone-price-pill.tier-premium {
-    background: #0f172a;
-    border-color: #38bdf8;
-}
-
-.b2b-zone-price-pill.tier-vacational {
-    background: #059669;
-}
-
-.b2b-zone-price-pill.tier-accessible {
-    background: #0284c7;
-}
-
-.b2b-zone-price-pill .pill-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #10b981;
-    display: inline-block;
+.b2b-zone-price-pill.active {
+    outline: 2px solid #ffffff;
+    outline-offset: 1px;
 }
 
 /* Tooltip Flotante con el Nombre del Lugar al Pasar el Mouse */
