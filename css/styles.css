@@ -222,15 +222,15 @@ button, input, select, textarea {
    BARRA DE FILTROS FLOTANTE ESTILO APPLE (GLASSMORPHISM)
    ============================================================ */
 .apple-filter-bar {
-    background: rgba(255, 255, 255, 0.78);
+    background: rgba(255, 255, 255, 0.88);
     backdrop-filter: blur(24px) saturate(180%);
     -webkit-backdrop-filter: blur(24px) saturate(180%);
-    border-bottom: 1px solid rgba(226, 232, 240, 0.8);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
     padding: 10px 28px;
     position: sticky;
     top: 76px;
     z-index: 900;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    box-shadow: 0 4px 25px rgba(15, 23, 42, 0.05);
 }
 
 .filter-pill-group {
@@ -273,19 +273,20 @@ button, input, select, textarea {
     width: 100%;
     padding: 9px 16px 9px 38px;
     border-radius: var(--radius-full);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    background: rgba(241, 245, 249, 0.7);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(248, 250, 252, 0.9);
     font-size: 0.86rem;
     font-weight: 500;
     color: var(--text-primary);
     outline: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .apple-search-wrapper input:focus {
     background: #ffffff;
     border-color: var(--primary);
-    box-shadow: 0 0 0 3.5px var(--primary-glow);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
 }
 
 /* 2. Contenedor de Menús Desplegables Apple */
@@ -299,29 +300,32 @@ button, input, select, textarea {
     gap: 7px;
     padding: 8px 14px;
     border-radius: var(--radius-full);
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    background: rgba(255, 255, 255, 0.94);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
     font-size: 0.84rem;
     font-weight: 600;
-    color: var(--text-secondary);
+    color: #0f172a;
     cursor: pointer;
     white-space: nowrap;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
 }
 
 .apple-filter-btn:hover {
     background: #ffffff;
-    border-color: rgba(0, 0, 0, 0.22);
-    color: var(--text-primary);
+    border-color: rgba(16, 185, 129, 0.35);
+    color: #0f172a;
     transform: translateY(-1px);
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.08);
 }
 
 .apple-filter-btn.active-filter {
-    background: #0f172a;
+    background: #10b981;
     color: #ffffff;
-    border-color: #0f172a;
+    border-color: #10b981;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
 }
 
 .apple-filter-btn.active-filter i {
@@ -1047,31 +1051,32 @@ button, input, select, textarea {
 
 /* Tarjeta Inmobiliaria */
 .property-card {
-    background: var(--bg-card);
-    border-radius: var(--radius-lg);
-    border: 1px solid var(--border-color);
+    background: #ffffff;
+    border-radius: var(--radius-xl);
+    border: 1px solid rgba(0, 0, 0, 0.06);
     overflow: hidden;
     cursor: pointer;
-    transition: var(--transition-normal);
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     position: relative;
     display: flex;
     flex-direction: column;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(0, 0, 0, 0.02);
 }
 
 .property-card:hover {
     transform: translateY(-4px);
-    box-shadow: var(--shadow-xl);
-    border-color: #cbd5e1;
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.1);
+    border-color: rgba(16, 185, 129, 0.3);
 }
 
 .property-card.active-card {
     border-color: var(--primary);
-    box-shadow: 0 0 0 2px var(--primary), var(--shadow-xl);
+    box-shadow: 0 0 0 2.5px var(--primary), 0 12px 30px rgba(16, 185, 129, 0.15);
 }
 
 .property-card.card-platinum {
-    border-color: #0f172a;
-    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.12);
+    border-color: rgba(16, 185, 129, 0.25);
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.06);
 }
 
 /* Carrusel de Medios de la Tarjeta */
@@ -1186,9 +1191,9 @@ button, input, select, textarea {
 }
 
 .badge-gold {
-    background: #0f172a;
+    background: linear-gradient(135deg, #0f766e 0%, #047857 100%);
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(15, 118, 110, 0.35);
 }
 
 .badge-cheroga {
@@ -1314,15 +1319,15 @@ button, input, select, textarea {
     border-radius: 20px !important;
     overflow: hidden !important;
     background: #ffffff !important;
-    border: 1px solid var(--border-color) !important;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04) !important;
+    border: 1px solid rgba(0, 0, 0, 0.06) !important;
+    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.05) !important;
     transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1) !important;
 }
 
 .properties-grid.layout-detailed-rows .property-card:hover {
     transform: translateY(-2px) !important;
-    box-shadow: 0 10px 28px rgba(0, 0, 0, 0.08) !important;
-    border-color: #0f766e !important;
+    box-shadow: 0 14px 34px rgba(15, 23, 42, 0.09) !important;
+    border-color: rgba(16, 185, 129, 0.35) !important;
 }
 
 .properties-grid.layout-detailed-rows .property-card .card-media-wrapper {
@@ -3233,12 +3238,12 @@ button, input, select, textarea {
         top: 0;
         z-index: 850;
         padding: 8px 12px;
-        background: rgba(15, 23, 42, 0.95);
-        backdrop-filter: blur(24px);
-        -webkit-backdrop-filter: blur(24px);
-        border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(24px) saturate(180%);
+        -webkit-backdrop-filter: blur(24px) saturate(180%);
+        border-bottom: 1px solid rgba(0, 0, 0, 0.07);
         transition: transform 0.32s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.25s ease;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+        box-shadow: 0 4px 20px rgba(15, 23, 42, 0.06);
     }
 
     /* Estado Repliegue / Oculto al scrollear hacia abajo en móvil */
@@ -3266,16 +3271,17 @@ button, input, select, textarea {
         height: 38px;
         font-size: 0.78rem;
         padding: 0 12px 0 32px;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.15);
-        color: #ffffff;
+        background: rgba(241, 245, 249, 0.85);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        color: #0f172a;
         border-radius: 9999px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.02);
     }
 
     .apple-search-wrapper i {
         left: 12px;
         font-size: 0.78rem;
-        color: #94a3b8;
+        color: #64748b;
     }
 
     /* Botón Desplegable de Filtros en Móvil */
@@ -3285,24 +3291,25 @@ button, input, select, textarea {
         gap: 6px;
         padding: 0 12px;
         height: 38px;
-        background: #0f766e;
-        color: #ffffff;
-        border: 1px solid rgba(255, 255, 255, 0.18);
+        background: rgba(255, 255, 255, 0.95);
+        color: #0f172a;
+        border: 1px solid rgba(0, 0, 0, 0.1);
         border-radius: 9999px;
         font-size: 0.76rem;
         font-weight: 700;
         cursor: pointer;
         white-space: nowrap;
         flex-shrink: 0;
-        box-shadow: 0 2px 10px rgba(15, 118, 110, 0.4);
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
         transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .btn-mobile-filters-toggle:hover,
     .btn-mobile-filters-toggle.active {
-        background: #115e59;
-        border-color: #bef264;
-        color: #bef264;
+        background: #10b981;
+        border-color: #10b981;
+        color: #ffffff;
+        box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
     }
 
     .btn-mobile-filters-toggle .toggle-chevron {
@@ -3315,12 +3322,17 @@ button, input, select, textarea {
     }
 
     .mobile-filter-badge {
-        background: #bef264;
-        color: #0f172a;
+        background: #10b981;
+        color: #ffffff;
         font-size: 0.62rem;
         font-weight: 800;
         padding: 1px 5px;
         border-radius: 9999px;
+    }
+
+    .btn-mobile-filters-toggle.active .mobile-filter-badge {
+        background: #ffffff;
+        color: #0f172a;
     }
 
     /* Menú Desplegable de Filtros en Móvil */
@@ -3330,12 +3342,12 @@ button, input, select, textarea {
         top: calc(100% + 8px);
         left: -12px;
         right: -12px;
-        background: rgba(15, 23, 42, 0.98);
-        backdrop-filter: blur(28px);
-        -webkit-backdrop-filter: blur(28px);
-        border-bottom: 1.5px solid rgba(255, 255, 255, 0.12);
-        border-top: 1px solid rgba(255, 255, 255, 0.08);
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.65);
+        background: rgba(255, 255, 255, 0.96);
+        backdrop-filter: blur(28px) saturate(190%);
+        -webkit-backdrop-filter: blur(28px) saturate(190%);
+        border-bottom: 1.5px solid rgba(0, 0, 0, 0.08);
+        border-top: 1px solid rgba(0, 0, 0, 0.05);
+        box-shadow: 0 16px 40px rgba(15, 23, 42, 0.12);
         padding: 12px 14px 16px;
         flex-direction: column;
         gap: 8px;
@@ -3372,11 +3384,27 @@ button, input, select, textarea {
         padding: 0 14px;
         font-size: 0.8rem;
         font-weight: 700;
-        background: rgba(255, 255, 255, 0.08);
-        border: 1px solid rgba(255, 255, 255, 0.16);
-        color: #ffffff;
+        background: rgba(248, 250, 252, 0.9);
+        border: 1px solid rgba(0, 0, 0, 0.07);
+        color: #0f172a;
         cursor: pointer;
         border-radius: 12px;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+    }
+
+    .filter-dropdown-pills-wrap .apple-filter-btn:hover {
+        background: #ffffff;
+        border-color: rgba(16, 185, 129, 0.35);
+    }
+
+    .filter-dropdown-pills-wrap .apple-filter-btn.active-filter {
+        background: #10b981 !important;
+        color: #ffffff !important;
+        border-color: #10b981 !important;
+    }
+
+    .filter-dropdown-pills-wrap .apple-filter-btn.active-filter i {
+        color: #ffffff !important;
     }
 
     .filter-dropdown-pills-wrap .apple-dropdown-container:not(.open) .apple-glass-dropdown {
@@ -3387,8 +3415,8 @@ button, input, select, textarea {
         display: block !important;
         position: static !important;
         width: 100% !important;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
-        border: 1px solid rgba(255, 255, 255, 0.25) !important;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08) !important;
+        border: 1px solid rgba(0, 0, 0, 0.08) !important;
         margin-top: 6px !important;
         border-radius: 14px !important;
         background: #ffffff !important;
@@ -3411,9 +3439,9 @@ button, input, select, textarea {
         height: 40px;
         border-radius: 12px;
         justify-content: center;
-        background: rgba(239, 68, 68, 0.18);
-        border: 1px solid rgba(239, 68, 68, 0.4);
-        color: #fca5a5;
+        background: rgba(239, 68, 68, 0.08);
+        border: 1px solid rgba(239, 68, 68, 0.25);
+        color: #ef4444;
         font-size: 0.8rem;
         font-weight: 800;
         display: inline-flex;
