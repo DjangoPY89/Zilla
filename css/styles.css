@@ -3937,8 +3937,8 @@ button, input, select, textarea {
 
 .search-fields-grid {
     display: grid;
-    grid-template-columns: 1.25fr 1.15fr 1.15fr 1fr 0.9fr;
-    gap: 12px;
+    grid-template-columns: 1.35fr 1.15fr 1.15fr;
+    gap: 16px;
     margin-bottom: 18px;
     position: relative;
 }
