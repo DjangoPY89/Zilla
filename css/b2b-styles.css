@@ -989,7 +989,7 @@ body.b2b-light-theme {
     width: 220px;
     height: 8px;
     border-radius: var(--radius-full);
-    background: linear-gradient(90deg, #d97706 0%, #0284c7 33%, #10b981 66%, #f43f5e 100%);
+    background: linear-gradient(90deg, #10b981 0%, #0f766e 33%, #0284c7 66%, #8b5cf6 100%);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
 }
 
@@ -1067,63 +1067,63 @@ body.b2b-light-theme {
     letter-spacing: 0.01em;
 }
 
-/* Tier 1: Top / Ultra Premium / Hot Yield (Rojo Carmesí / Magenta) */
+/* Tier 1: Top / Ultra Premium / Hot Yield (Púrpura / Violeta) */
 .b2b-zone-price-pill.tier-top {
-    background: linear-gradient(135deg, #2a0b18 0%, #0f172a 100%);
-    border-color: #f43f5e;
-    box-shadow: 0 4px 16px rgba(244, 63, 94, 0.35);
+    background: linear-gradient(135deg, #1e1138 0%, #0f172a 100%);
+    border-color: #8b5cf6;
+    box-shadow: 0 4px 16px rgba(139, 92, 246, 0.35);
 }
 .b2b-zone-price-pill.tier-top .pill-dot {
-    background: #f43f5e;
-    box-shadow: 0 0 8px #f43f5e;
+    background: #a855f7;
+    box-shadow: 0 0 8px #a855f7;
 }
 .b2b-zone-price-pill.tier-top .pill-text {
-    color: #fecdd3;
+    color: #ddd6fe;
     font-weight: 900;
 }
 
-/* Tier 2: Alto Valor / Alto Rendimiento (Verde Esmeralda) */
+/* Tier 2: Alto Valor / Alto Rendimiento (Azul Cielo / Azure) */
 .b2b-zone-price-pill.tier-high {
-    background: linear-gradient(135deg, #05261d 0%, #0f172a 100%);
-    border-color: #10b981;
-    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
-}
-.b2b-zone-price-pill.tier-high .pill-dot {
-    background: #10b981;
-    box-shadow: 0 0 8px #10b981;
-}
-.b2b-zone-price-pill.tier-high .pill-text {
-    color: #a7f3d0;
-    font-weight: 800;
-}
-
-/* Tier 3: Valor Medio / Residencial Consolidado (Azul Cielo / Azure) */
-.b2b-zone-price-pill.tier-mid {
     background: linear-gradient(135deg, #08243c 0%, #0f172a 100%);
     border-color: #0284c7;
-    box-shadow: 0 4px 14px rgba(2, 132, 199, 0.35);
+    box-shadow: 0 4px 16px rgba(2, 132, 199, 0.35);
 }
-.b2b-zone-price-pill.tier-mid .pill-dot {
+.b2b-zone-price-pill.tier-high .pill-dot {
     background: #38bdf8;
     box-shadow: 0 0 8px #38bdf8;
 }
-.b2b-zone-price-pill.tier-mid .pill-text {
+.b2b-zone-price-pill.tier-high .pill-text {
     color: #bae6fd;
     font-weight: 800;
 }
 
-/* Tier 4: Accesible / Entrada (Ámbar Dorado) */
+/* Tier 3: Valor Medio / Residencial Consolidado (Teal / Verde Petróleo) */
+.b2b-zone-price-pill.tier-mid {
+    background: linear-gradient(135deg, #042523 0%, #0f172a 100%);
+    border-color: #0f766e;
+    box-shadow: 0 4px 14px rgba(15, 118, 110, 0.35);
+}
+.b2b-zone-price-pill.tier-mid .pill-dot {
+    background: #14b8a6;
+    box-shadow: 0 0 8px #14b8a6;
+}
+.b2b-zone-price-pill.tier-mid .pill-text {
+    color: #99f6e4;
+    font-weight: 800;
+}
+
+/* Tier 4: Accesible / Entrada (Verde Esmeralda) */
 .b2b-zone-price-pill.tier-accessible {
-    background: linear-gradient(135deg, #271a06 0%, #0f172a 100%);
-    border-color: #d97706;
-    box-shadow: 0 4px 14px rgba(217, 119, 6, 0.3);
+    background: linear-gradient(135deg, #05261d 0%, #0f172a 100%);
+    border-color: #10b981;
+    box-shadow: 0 4px 14px rgba(16, 185, 129, 0.3);
 }
 .b2b-zone-price-pill.tier-accessible .pill-dot {
-    background: #f59e0b;
-    box-shadow: 0 0 8px #f59e0b;
+    background: #10b981;
+    box-shadow: 0 0 8px #10b981;
 }
 .b2b-zone-price-pill.tier-accessible .pill-text {
-    color: #fde68a;
+    color: #a7f3d0;
     font-weight: 800;
 }
 

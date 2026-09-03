@@ -314,47 +314,47 @@ async function initB2BPriceHeatmap() {
             case 'cap_rate_airbnb':
                 if (titleEl) titleEl.textContent = 'Escala Cap Rate Airbnb (Neto):';
                 labelsEl.innerHTML = `
-                    <span><strong style="color:#d97706;">●</strong> &lt; 10% (Mod)</span>
-                    <span><strong style="color:#0284c7;">●</strong> 10% - 11.4%</span>
-                    <span><strong style="color:#10b981;">●</strong> 11.5% - 12.9%</span>
-                    <span><strong style="color:#f43f5e;">●</strong> 13%+ (Top)</span>
+                    <span><strong style="color:#10b981;">●</strong> &lt; 10% (Mod)</span>
+                    <span><strong style="color:#0f766e;">●</strong> 10% - 11.4%</span>
+                    <span><strong style="color:#0284c7;">●</strong> 11.5% - 12.9%</span>
+                    <span><strong style="color:#8b5cf6;">●</strong> 13%+ (Top)</span>
                 `;
                 break;
             case 'cap_rate_trad':
                 if (titleEl) titleEl.textContent = 'Escala Cap Rate Tradicional:';
                 labelsEl.innerHTML = `
-                    <span><strong style="color:#d97706;">●</strong> &lt; 7.8%</span>
-                    <span><strong style="color:#0284c7;">●</strong> 7.8% - 8.3%</span>
-                    <span><strong style="color:#10b981;">●</strong> 8.4% - 8.9%</span>
-                    <span><strong style="color:#f43f5e;">●</strong> 9%+ (Top)</span>
+                    <span><strong style="color:#10b981;">●</strong> &lt; 7.8%</span>
+                    <span><strong style="color:#0f766e;">●</strong> 7.8% - 8.3%</span>
+                    <span><strong style="color:#0284c7;">●</strong> 8.4% - 8.9%</span>
+                    <span><strong style="color:#8b5cf6;">●</strong> 9%+ (Top)</span>
                 `;
                 break;
             case 'price_off_plan':
                 if (titleEl) titleEl.textContent = 'Escala En Pozo (USD/m²):';
                 labelsEl.innerHTML = `
-                    <span><strong style="color:#d97706;">●</strong> &lt; $850</span>
-                    <span><strong style="color:#0284c7;">●</strong> $850 - $1,150</span>
-                    <span><strong style="color:#10b981;">●</strong> $1,150 - $1,450</span>
-                    <span><strong style="color:#f43f5e;">●</strong> $1,450+ (Premium)</span>
+                    <span><strong style="color:#10b981;">●</strong> &lt; $850</span>
+                    <span><strong style="color:#0f766e;">●</strong> $850 - $1,150</span>
+                    <span><strong style="color:#0284c7;">●</strong> $1,150 - $1,450</span>
+                    <span><strong style="color:#8b5cf6;">●</strong> $1,450+ (Premium)</span>
                 `;
                 break;
             case 'appreciation':
                 if (titleEl) titleEl.textContent = 'Escala Plusvalía Anual YoY:';
                 labelsEl.innerHTML = `
-                    <span><strong style="color:#d97706;">●</strong> &lt; 7.5%</span>
-                    <span><strong style="color:#0284c7;">●</strong> 7.5% - 8.4%</span>
-                    <span><strong style="color:#10b981;">●</strong> 8.5% - 9.9%</span>
-                    <span><strong style="color:#f43f5e;">●</strong> 10%+</span>
+                    <span><strong style="color:#10b981;">●</strong> &lt; 7.5%</span>
+                    <span><strong style="color:#0f766e;">●</strong> 7.5% - 8.4%</span>
+                    <span><strong style="color:#0284c7;">●</strong> 8.5% - 9.9%</span>
+                    <span><strong style="color:#8b5cf6;">●</strong> 10%+</span>
                 `;
                 break;
             case 'price_sale':
             default:
                 if (titleEl) titleEl.textContent = 'Escala de Valor Venta / m²:';
                 labelsEl.innerHTML = `
-                    <span><strong style="color:#d97706;">●</strong> &lt; $1,050 (Accesible)</span>
-                    <span><strong style="color:#0284c7;">●</strong> $1,050 - $1,400</span>
-                    <span><strong style="color:#10b981;">●</strong> $1,400 - $1,800</span>
-                    <span><strong style="color:#f43f5e;">●</strong> $1,800+ (Premium)</span>
+                    <span><strong style="color:#10b981;">●</strong> &lt; $1,050 (Accesible)</span>
+                    <span><strong style="color:#0f766e;">●</strong> $1,050 - $1,400</span>
+                    <span><strong style="color:#0284c7;">●</strong> $1,400 - $1,800</span>
+                    <span><strong style="color:#8b5cf6;">●</strong> $1,800+ (Premium)</span>
                 `;
                 break;
         }
