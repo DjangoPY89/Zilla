@@ -3351,29 +3351,39 @@ button, input, select, textarea {
 
     .filter-dropdown-pills-wrap .apple-dropdown-container {
         width: 100%;
+        position: relative;
     }
 
     .filter-dropdown-pills-wrap .apple-filter-btn {
         width: 100%;
         justify-content: space-between;
-        height: 38px;
+        height: 40px;
         padding: 0 14px;
-        font-size: 0.78rem;
-        background: rgba(255, 255, 255, 0.06);
-        border-color: rgba(255, 255, 255, 0.12);
+        font-size: 0.8rem;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.08);
+        border: 1px solid rgba(255, 255, 255, 0.16);
         color: #ffffff;
+        cursor: pointer;
+        border-radius: 12px;
     }
 
-    .filter-dropdown-pills-wrap .apple-glass-dropdown {
-        position: static;
-        width: 100%;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
-        border: 1px solid rgba(255, 255, 255, 0.25);
-        margin-top: 6px;
-        border-radius: 14px;
+    .filter-dropdown-pills-wrap .apple-dropdown-container:not(.open) .apple-glass-dropdown {
+        display: none !important;
+    }
+
+    .filter-dropdown-pills-wrap .apple-dropdown-container.open .apple-glass-dropdown {
+        display: block !important;
+        position: static !important;
+        width: 100% !important;
+        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+        border: 1px solid rgba(255, 255, 255, 0.25) !important;
+        margin-top: 6px !important;
+        border-radius: 14px !important;
         background: #ffffff !important;
         color: #0f172a !important;
         padding: 14px !important;
+        animation: none !important;
     }
 
     .filter-dropdown-pills-wrap .apple-glass-dropdown * {
@@ -3387,18 +3397,26 @@ button, input, select, textarea {
 
     .filter-dropdown-pills-wrap .apple-reset-btn {
         width: 100%;
-        height: 36px;
-        border-radius: 10px;
+        height: 40px;
+        border-radius: 12px;
         justify-content: center;
-        background: rgba(239, 68, 68, 0.15);
-        border: 1px solid rgba(239, 68, 68, 0.3);
-        color: #f87171;
-        font-size: 0.76rem;
-        font-weight: 700;
+        background: rgba(239, 68, 68, 0.18);
+        border: 1px solid rgba(239, 68, 68, 0.4);
+        color: #fca5a5;
+        font-size: 0.8rem;
+        font-weight: 800;
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
     }
+
+    .filter-dropdown-pills-wrap .apple-reset-btn:active {
+        background: #ef4444;
+        color: #ffffff;
+    }
+
     .filter-dropdown-pills-wrap .apple-reset-btn::after {
         content: "Restablecer Filtros";
     }

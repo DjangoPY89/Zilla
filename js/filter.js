@@ -83,7 +83,13 @@
         },
 
         resetFilters: function () {
-            currentFilters = { ...defaultFilters };
+            Object.keys(currentFilters).forEach(k => delete currentFilters[k]);
+            Object.assign(currentFilters, defaultFilters, {
+                propTypes: [],
+                operations: [],
+                amenities: []
+            });
+            this.filters = currentFilters;
             
             // Reset UI inputs
             const searchInput = document.getElementById("search-input");

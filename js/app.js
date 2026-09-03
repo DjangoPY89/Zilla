@@ -932,25 +932,37 @@
             // 7. Botón Reset Global
             const globalResetBtn = document.getElementById("btn-global-reset");
             if (globalResetBtn) {
-                globalResetBtn.addEventListener("click", () => {
+                globalResetBtn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
                     window.FilterManager.resetFilters();
+                    dropdownContainers.forEach(c => c.classList.remove("open"));
+                    const pillsWrap = document.getElementById("filter-dropdown-pills-wrap");
+                    const btnMobileToggle = document.getElementById("btn-mobile-filters-toggle");
+                    if (pillsWrap) pillsWrap.classList.remove("mobile-expanded");
+                    if (btnMobileToggle) btnMobileToggle.classList.remove("active");
                 });
             }
 
             // Escuchar evento filtersReset
             window.addEventListener("filtersReset", () => {
                 // Reset Operation
+                if (opMasterChk) opMasterChk.checked = true;
+                opCheckboxes.forEach(cb => cb.checked = true);
                 if (opLabel) opLabel.textContent = "Operación: Todas";
+                if (opBadge) opBadge.style.display = "none";
                 if (opBtn) opBtn.classList.remove("active-filter");
-                opContainer?.querySelectorAll(".apple-option-item").forEach(i => i.classList.toggle("active", i.dataset.op === "all"));
 
                 // Reset Prop Type
+                if (typeMasterChk) typeMasterChk.checked = true;
                 proptypeCheckboxes.forEach(cb => cb.checked = true);
-                if (proptypeLabel) proptypeLabel.textContent = "Tipo: Todo Inmueble";
+                if (proptypeLabel) proptypeLabel.textContent = "Tipo: Todos";
                 if (proptypeBadge) proptypeBadge.style.display = "none";
                 if (proptypeBtn) proptypeBtn.classList.remove("active-filter");
 
                 // Reset Rooms
+                selectedBedrooms = 0;
+                selectedBathrooms = 0;
                 bedSegs.forEach(b => b.classList.toggle("active", b.dataset.val === "0"));
                 bathSegs.forEach(b => b.classList.toggle("active", b.dataset.val === "0"));
                 if (roomsLabel) roomsLabel.textContent = "Dorms & Baños";
