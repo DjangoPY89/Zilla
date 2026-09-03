@@ -122,6 +122,29 @@ html, body {
     border-color: rgba(255, 255, 255, 0.25);
 }
 
+.publish-topbar-actions .btn-zilla-mobile-hamburger {
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    color: #ffffff;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    padding: 0;
+}
+
+.publish-topbar-actions .btn-zilla-mobile-hamburger:hover,
+.publish-topbar-actions .btn-zilla-mobile-hamburger:active {
+    background: #10b981;
+    color: #ffffff;
+    border-color: #10b981;
+}
+
 /* Barra de Progreso Superior */
 .publish-stepper-progress-bar {
     height: 3px;
