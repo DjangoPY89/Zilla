@@ -816,7 +816,7 @@ async function renderCRMTablesAndKanban() {
 
     // 2. Calcular KPIs de Solicitudes
     const infoCount = allLeads.filter(l => l.request_type === 'info_request').length;
-    const contactCount = allLeads.filter(l => l.request_type === 'whatsapp_contact' || l.request_type === 'call_contact' || l.request_type === 'contact_request').length;
+    const contactCount = allLeads.filter(l => l.request_type === 'contact_request').length;
     const visitsCount = allLeads.filter(l => l.request_type === 'visit_request').length;
     const totalVolumeUSD = allLeads.reduce((acc, curr) => acc + Number(curr.budget_usd || 0), 0);
 
@@ -870,14 +870,12 @@ async function renderCRMTablesAndKanban() {
                 let reqPill = '';
                 if (l.request_type === 'info_request') {
                     reqPill = `<span class="req-type-pill req-info" title="${l.message || 'Solicitud de Información'}"><i class="fas fa-circle-info"></i> Más Información</span>`;
-                } else if (l.request_type === 'whatsapp_contact') {
-                    reqPill = `<span class="req-type-pill req-contact" title="${l.message || 'Contacto vía WhatsApp'}"><i class="fab fa-whatsapp"></i> WhatsApp</span>`;
-                } else if (l.request_type === 'call_contact') {
-                    reqPill = `<span class="req-type-pill req-call" title="${l.message || 'Solicitud de Llamada'}"><i class="fas fa-phone-volume"></i> Solicita Llamada</span>`;
+                } else if (l.request_type === 'contact_request') {
+                    reqPill = `<span class="req-type-pill req-contact" title="${l.message || 'Solicitud de Contacto'}"><i class="fas fa-phone-volume"></i> Solicita Contacto</span>`;
                 } else if (l.request_type === 'visit_request') {
                     reqPill = `<span class="req-type-pill req-visit" title="Fecha preferida: ${l.preferred_date || 'A coordinar'}"><i class="fas fa-calendar-check"></i> Solicita Visita</span>`;
                 } else {
-                    reqPill = `<span class="req-type-pill req-contact"><i class="fas fa-phone-volume"></i> Solicita Contacto</span>`;
+                    reqPill = `<span class="req-type-pill req-info"><i class="fas fa-envelope"></i> Consulta Web</span>`;
                 }
 
                 // WhatsApp pre-filled text
@@ -2056,18 +2054,16 @@ window.exportListingsToCSV = function () {
     document.body.removeChild(link);
 };
 
-// Sincronización en tiempo real de leads entrantes desde Supabase / Portal Público
-window.addEventListener('newCRMLeadCreated', (e) => {
-    if (typeof renderCRMTablesAndKanban === 'function') {
-        renderCRMTablesAndKanban();
-    }
-    if (window.AuthManager && window.AuthManager.showAuthToast && e.detail) {
-        window.AuthManager.showAuthToast(`⚡ Nueva Solicitud (${e.detail.request_type_label || 'Cliente'}) recibida para ${e.detail.property_title || 'un inmueble'}`, 'info');
+// Sincronización en tiempo real de leads entrantes en CRM
+window.addEventListener('crmLeadCreated', () => {
+    if (typeof renderCRMLeads === 'function') {
+        renderCRMLeads();
     }
 });
 
 window.addEventListener('storage', (e) => {
-    if (e.key === 'zilla_b2b_crm_leads' && typeof renderCRMTablesAndKanban === 'function') {
-        renderCRMTablesAndKanban();
+    if (e.key === 'zilla_b2b_crm_leads' && typeof renderCRMLeads === 'function') {
+        renderCRMLeads();
     }
 });
+

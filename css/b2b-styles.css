@@ -3333,12 +3333,6 @@ input:checked + .slider-toggle:before {
     border: 1px solid #bef264;
 }
 
-.req-type-pill.req-call {
-    background: #f0f9ff;
-    color: #0369a1;
-    border: 1px solid #bae6fd;
-}
-
 .req-type-pill.req-visit {
     background: #faf5ff;
     color: #7e22ce;

@@ -497,74 +497,20 @@
                                     </div>
                                 </div>
 
-                                <!-- Widget Interactivo de Solicitud (Más Info / WhatsApp / Llamada / Visita) -->
-                                <div class="inquiry-widget-wrap" id="inquiry-widget-box">
-                                    <!-- Selector de Pestañas / Opciones -->
-                                    <div class="inquiry-options-selector">
-                                        <button type="button" class="inquiry-tab-btn active" id="tab-opt-info" onclick="window.ModalManager.selectInquiryType('info_request')" title="Recibir brochure, planos y expensas">
-                                            <i class="fas fa-circle-info"></i> Más Info
-                                        </button>
-                                        <button type="button" class="inquiry-tab-btn" id="tab-opt-wa" onclick="window.ModalManager.selectInquiryType('whatsapp_contact')" title="Chatear por WhatsApp">
-                                            <i class="fab fa-whatsapp"></i> WhatsApp
-                                        </button>
-                                        <button type="button" class="inquiry-tab-btn" id="tab-opt-call" onclick="window.ModalManager.selectInquiryType('call_contact')" title="Solicitar llamada de un asesor">
-                                            <i class="fas fa-phone-volume"></i> Llamada
-                                        </button>
-                                        <button type="button" class="inquiry-tab-btn" id="tab-opt-visit" onclick="window.ModalManager.selectInquiryType('visit_request')" title="Agendar una visita presencial o virtual">
-                                            <i class="fas fa-calendar-check"></i> Visita
-                                        </button>
-                                    </div>
-
-                                    <!-- Formulario Dinámico de Contacto -->
-                                    <form class="inquiry-form-card" id="inquiry-form" onsubmit="window.ModalManager.handleInquirySubmit(event, '${prop.id}')">
-                                        <input type="hidden" id="inquiry-selected-type" value="info_request">
-
-                                        <div class="inquiry-input-group">
-                                            <label>Tu Nombre Completo</label>
-                                            <input type="text" id="inquiry-name" class="inquiry-input-field" placeholder="Ej. Carlos Martínez" required>
-                                        </div>
-
-                                        <div class="inquiry-input-group">
-                                            <label>Teléfono / WhatsApp</label>
-                                            <input type="tel" id="inquiry-phone" class="inquiry-input-field" placeholder="+595 981 123 456" required>
-                                        </div>
-
-                                        <div class="inquiry-input-group">
-                                            <label>Correo Electrónico</label>
-                                            <input type="email" id="inquiry-email" class="inquiry-input-field" placeholder="tu-correo@ejemplo.com">
-                                        </div>
-
-                                        <!-- Sección de Opciones Dinámicas según Tipo de Solicitud -->
-                                        <div class="inquiry-dynamic-box" id="inquiry-dynamic-section">
-                                            <div class="inquiry-dynamic-title">
-                                                <i class="fas fa-circle-info text-sky-600"></i> ¿Qué información deseas recibir?
-                                            </div>
-                                            <div class="inquiry-check-grid">
-                                                <label><input type="checkbox" id="chk-info-dossier" checked> Dossier de inversión y planos</label>
-                                                <label><input type="checkbox" id="chk-info-expenses" checked> Detalle de expensas e impuestos</label>
-                                                <label><input type="checkbox" id="chk-info-yield"> Proyección de retorno / alquiler</label>
-                                            </div>
-                                        </div>
-
-                                        <div class="inquiry-input-group">
-                                            <label>Mensaje o Consulta (Opcional)</label>
-                                            <textarea id="inquiry-notes" class="inquiry-input-field" rows="2" placeholder="Escribe aquí si tienes alguna consulta específica..."></textarea>
-                                        </div>
-
-                                        <div style="display: flex; align-items: center; gap: 6px; font-size: 0.74rem; color: #475569; margin-top: -2px;">
-                                            <input type="checkbox" id="inquiry-afd-check" style="accent-color: #84cc16;">
-                                            <label for="inquiry-afd-check" style="cursor: pointer;">Me interesa evaluar financiación con Crédito AFD</label>
-                                        </div>
-
-                                        <!-- Botón de Envío -->
-                                        <button type="submit" class="inquiry-btn-submit" id="inquiry-submit-btn">
-                                            <i class="fas fa-paper-plane"></i> Enviar Solicitud de Información
-                                        </button>
-                                    </form>
-
-                                    <div class="secure-guarantee-note">
-                                        <i class="fas fa-shield-check text-emerald-600"></i> Tus datos son confidenciales y se conectan encriptados vía Supabase.
-                                    </div>
+                                <!-- Botones de Acción Inmediata -->
+                                <div class="contact-actions-stack">
+                                    <button type="button" class="btn btn-primary btn-block" onclick="window.ModalManager.openInfoRequestModal('${prop.id}')" style="background: linear-gradient(135deg, #0f172a 0%, #0f766e 100%); color: #bef264; border: 1.5px solid rgba(190, 242, 100, 0.5); font-weight: 800; padding: 12px; margin-bottom: 8px; font-size: 0.88rem; box-shadow: 0 4px 14px rgba(15, 23, 42, 0.25); cursor: pointer;">
+                                        <i class="fas fa-file-invoice"></i> Recibir más Información
+                                    </button>
+                                    <button type="button" class="btn btn-outline btn-block" onclick="window.ModalManager.openScheduleModal('${prop.id}')" style="border: 1.5px solid #0f172a; color: #0f172a; font-weight: 800; padding: 12px; margin-bottom: 8px; font-size: 0.88rem; background: #ffffff; cursor: pointer;">
+                                        <i class="fas fa-calendar-check text-emerald-600"></i> Agendar una Visita
+                                    </button>
+                                    <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn btn-whatsapp btn-block" style="padding: 12px; margin-bottom: 8px;">
+                                        <i class="fab fa-whatsapp"></i> Contactar por WhatsApp
+                                    </a>
+                                    <a href="tel:${prop.advertiser.phone}" class="btn btn-secondary btn-block" style="padding: 10px;">
+                                        <i class="fas fa-phone-alt"></i> Llamar al Anunciante
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -700,202 +646,430 @@
         },
 
         /**
-         * Conmutar entre los tipos de solicitud (Más Info / WhatsApp / Llamada / Visita)
+         * Abrir Modal para Recibir más Información
          */
-        selectInquiryType: function (type) {
-            const hiddenType = document.getElementById("inquiry-selected-type");
-            if (hiddenType) hiddenType.value = type;
+        openInfoRequestModal: function (propId) {
+            const prop = currentModalProperty || (window.PropertiesData ? window.PropertiesData.find(p => p.id === propId) : null);
+            if (!prop) return;
 
-            // Actualizar botones activos
-            const tabInfo = document.getElementById("tab-opt-info");
-            const tabWa = document.getElementById("tab-opt-wa");
-            const tabCall = document.getElementById("tab-opt-call");
-            const tabVisit = document.getElementById("tab-opt-visit");
+            const existingModal = document.getElementById("zilla-inquiry-modal");
+            if (existingModal) existingModal.remove();
 
-            if (tabInfo) tabInfo.classList.toggle("active", type === "info_request");
-            if (tabWa) tabWa.classList.toggle("active", type === "whatsapp_contact");
-            if (tabCall) tabCall.classList.toggle("active", type === "call_contact");
-            if (tabVisit) tabVisit.classList.toggle("active", type === "visit_request");
+            const modalOverlay = document.createElement("div");
+            modalOverlay.className = "inquiry-dialog-overlay active";
+            modalOverlay.id = "zilla-inquiry-modal";
 
-            // Actualizar sección dinámica y botón
-            const dynamicSec = document.getElementById("inquiry-dynamic-section");
-            const submitBtn = document.getElementById("inquiry-submit-btn");
+            const formattedPrice = window.CurrencyManager 
+                ? window.CurrencyManager.formatPrice(prop.priceUSD, prop.pricePYG)
+                : `$${prop.priceUSD.toLocaleString()} USD`;
 
-            if (!dynamicSec || !submitBtn) return;
+            modalOverlay.innerHTML = `
+                <div class="inquiry-dialog-card">
+                    <div class="inquiry-header-row">
+                        <div class="inquiry-title-wrap">
+                            <h3><i class="fas fa-file-invoice text-emerald-600"></i> Recibir más Información</h3>
+                            <p>Te enviaremos los planos, brochure PDF y costos detallados.</p>
+                        </div>
+                        <button type="button" class="inquiry-close-btn" onclick="document.getElementById('zilla-inquiry-modal').remove()">&times;</button>
+                    </div>
 
-            if (type === "info_request") {
-                dynamicSec.innerHTML = `
-                    <div class="inquiry-dynamic-title">
-                        <i class="fas fa-circle-info text-sky-600"></i> ¿Qué información deseas recibir?
+                    <!-- Resumen del Inmueble -->
+                    <div class="inquiry-prop-snippet">
+                        <img src="${(prop.images && prop.images[0]) ? prop.images[0] : 'img/property-placeholder.jpg'}" class="inquiry-prop-thumb" alt="${prop.title}">
+                        <div class="inquiry-prop-meta">
+                            <span class="inquiry-prop-title">${prop.title}</span>
+                            <span class="inquiry-prop-sub"><strong style="color: #0f766e;">${formattedPrice}</strong> • ${prop.neighborhood}, ${prop.city}</span>
+                        </div>
                     </div>
-                    <div class="inquiry-check-grid">
-                        <label><input type="checkbox" id="chk-info-dossier" checked> Dossier de inversión y planos</label>
-                        <label><input type="checkbox" id="chk-info-expenses" checked> Detalle de expensas e impuestos</label>
-                        <label><input type="checkbox" id="chk-info-yield"> Proyección de retorno / alquiler</label>
-                    </div>
-                `;
-                submitBtn.className = "inquiry-btn-submit";
-                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Enviar Solicitud de Información';
-            } else if (type === "whatsapp_contact") {
-                dynamicSec.innerHTML = `
-                    <div class="inquiry-dynamic-title" style="color: #16a34a;">
-                        <i class="fab fa-whatsapp"></i> Chat Directo e Inmediato
-                    </div>
-                    <p style="font-size: 0.76rem; color: #475569; margin: 0; line-height: 1.4;">
-                        Se registrará tu solicitud y se abrirá WhatsApp con el asesor oficial asignado a este inmueble.
-                    </p>
-                `;
-                submitBtn.className = "inquiry-btn-submit whatsapp";
-                submitBtn.innerHTML = '<i class="fab fa-whatsapp"></i> Chatear por WhatsApp Ahora';
-            } else if (type === "call_contact") {
-                dynamicSec.innerHTML = `
-                    <div class="inquiry-dynamic-title" style="color: #0284c7;">
-                        <i class="fas fa-phone-volume"></i> Horario preferido para tu llamada
-                    </div>
-                    <select id="inquiry-call-time" class="inquiry-input-field" style="padding: 6px 10px; font-size: 0.78rem;">
-                        <option value="Lo antes posible (< 15 min)">⚡ Lo antes posible (< 15 min)</option>
-                        <option value="Mañana (09:00 a 12:00)">🌅 Por la mañana (09:00 a 12:00)</option>
-                        <option value="Tarde (14:00 a 18:00)">🌇 Por la tarde (14:00 a 18:00)</option>
-                        <option value="Noche (18:00 a 20:00)">🌙 Por la noche (18:00 a 20:00)</option>
-                    </select>
-                `;
-                submitBtn.className = "inquiry-btn-submit";
-                submitBtn.innerHTML = '<i class="fas fa-phone-volume"></i> Solicitar Llamada Telefónica';
-            } else if (type === "visit_request") {
-                dynamicSec.innerHTML = `
-                    <div class="inquiry-dynamic-title" style="color: #7e22ce;">
-                        <i class="fas fa-calendar-check"></i> Coordinar Visita
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 6px;">
-                        <select id="inquiry-visit-day" class="inquiry-input-field" style="padding: 6px 8px; font-size: 0.75rem;">
-                            <option value="Mañana">📅 Mañana</option>
-                            <option value="En 48 horas">📅 En 48 horas</option>
-                            <option value="Este Sábado">📅 Este Sábado</option>
-                            <option value="Este Domingo">📅 Este Domingo</option>
-                            <option value="A coordinar">📅 A coordinar</option>
-                        </select>
-                        <select id="inquiry-visit-slot" class="inquiry-input-field" style="padding: 6px 8px; font-size: 0.75rem;">
-                            <option value="10:00 hs">⏰ 10:00 hs</option>
-                            <option value="11:30 hs">⏰ 11:30 hs</option>
-                            <option value="15:00 hs">⏰ 15:00 hs</option>
-                            <option value="16:30 hs">⏰ 16:30 hs</option>
-                            <option value="18:00 hs">⏰ 18:00 hs</option>
-                        </select>
-                    </div>
-                    <div style="font-size: 0.72rem; color: #64748b; margin-top: 2px;">
-                        Modalidad: <strong>Visita Presencial en el Inmueble</strong>
-                    </div>
-                `;
-                submitBtn.className = "inquiry-btn-submit";
-                submitBtn.innerHTML = '<i class="fas fa-calendar-check"></i> Solicitar Agendamiento de Visita';
-            }
+
+                    <form onsubmit="window.ModalManager.submitInquiry(event, '${prop.id}')" class="inquiry-form-group">
+                        <div class="inquiry-field">
+                            <label>Nombre y Apellido *</label>
+                            <input type="text" id="inq-name" required placeholder="Ej: Dr. Fernando Gómez">
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div class="inquiry-field">
+                                <label>WhatsApp / Teléfono *</label>
+                                <input type="tel" id="inq-phone" required placeholder="+595 981 123 456">
+                            </div>
+                            <div class="inquiry-field">
+                                <label>Correo Electrónico</label>
+                                <input type="email" id="inq-email" placeholder="ejemplo@correo.com">
+                            </div>
+                        </div>
+
+                        <div class="inquiry-field">
+                            <label>Documentación de interés:</label>
+                            <div class="inquiry-checks-grid">
+                                <label class="inquiry-check-item">
+                                    <input type="checkbox" id="inq-check-brochure" checked>
+                                    <span>Brochure oficial en PDF & Ficha Técnica</span>
+                                </label>
+                                <label class="inquiry-check-item">
+                                    <input type="checkbox" id="inq-check-plans" checked>
+                                    <span>Planos arquitectónicos y superficies</span>
+                                </label>
+                                <label class="inquiry-check-item">
+                                    <input type="checkbox" id="inq-check-exp">
+                                    <span>Detalle de expensas e impuestos municipales</span>
+                                </label>
+                                <label class="inquiry-check-item">
+                                    <input type="checkbox" id="inq-check-yield">
+                                    <span>Proyección de rentabilidad / Cap Rate Airbnb</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="inquiry-field">
+                            <label>Consulta o mensaje adicional (opcional)</label>
+                            <textarea id="inq-message" rows="2" placeholder="¿Tienes alguna duda específica sobre el inmueble?"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block popout-close-btn" style="margin-top: 6px;">
+                            <i class="fas fa-paper-plane"></i> Enviar Solicitud de Información
+                        </button>
+                    </form>
+                </div>
+            `;
+
+            document.body.appendChild(modalOverlay);
         },
 
         /**
-         * Procesar y Guardar Solicitud en Supabase y CRM de Agentes
+         * Abrir Modal para Agendar una Visita
          */
-        handleInquirySubmit: async function (event, propId) {
-            event.preventDefault();
-            if (!currentModalProperty) return;
+        openScheduleModal: function (propId) {
+            const prop = currentModalProperty || (window.PropertiesData ? window.PropertiesData.find(p => p.id === propId) : null);
+            if (!prop) return;
 
-            const submitBtn = document.getElementById("inquiry-submit-btn");
-            if (submitBtn) {
-                submitBtn.disabled = true;
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando con Supabase...';
-            }
+            const existingModal = document.getElementById("zilla-schedule-modal");
+            if (existingModal) existingModal.remove();
 
-            const reqType = document.getElementById("inquiry-selected-type") ? document.getElementById("inquiry-selected-type").value : "info_request";
-            const name = document.getElementById("inquiry-name") ? document.getElementById("inquiry-name").value.trim() : "Cliente";
-            const phone = document.getElementById("inquiry-phone") ? document.getElementById("inquiry-phone").value.trim() : "+595 981 000 000";
-            const email = document.getElementById("inquiry-email") ? document.getElementById("inquiry-email").value.trim() : "No especificado";
-            const notes = document.getElementById("inquiry-notes") ? document.getElementById("inquiry-notes").value.trim() : "";
-            const isAFD = document.getElementById("inquiry-afd-check") ? document.getElementById("inquiry-afd-check").checked : false;
+            const modalOverlay = document.createElement("div");
+            modalOverlay.className = "inquiry-dialog-overlay active";
+            modalOverlay.id = "zilla-schedule-modal";
 
-            let preferredDate = "Inmediata";
-            let customMessage = notes;
+            const formattedPrice = window.CurrencyManager 
+                ? window.CurrencyManager.formatPrice(prop.priceUSD, prop.pricePYG)
+                : `$${prop.priceUSD.toLocaleString()} USD`;
 
-            if (reqType === "visit_request") {
-                const day = document.getElementById("inquiry-visit-day") ? document.getElementById("inquiry-visit-day").value : "Mañana";
-                const slot = document.getElementById("inquiry-visit-slot") ? document.getElementById("inquiry-visit-slot").value : "10:00 hs";
-                preferredDate = `${day} a las ${slot}`;
-                customMessage = `Solicitó agendar visita para ${preferredDate}. ${notes}`;
-            } else if (reqType === "call_contact") {
-                const callTime = document.getElementById("inquiry-call-time") ? document.getElementById("inquiry-call-time").value : "Lo antes posible";
-                preferredDate = callTime;
-                customMessage = `Solicitó llamada telefónica preferente: ${callTime}. ${notes}`;
-            } else if (reqType === "info_request") {
-                const reqDossier = document.getElementById("chk-info-dossier") && document.getElementById("chk-info-dossier").checked;
-                const reqExp = document.getElementById("chk-info-expenses") && document.getElementById("chk-info-expenses").checked;
-                const reqYield = document.getElementById("chk-info-yield") && document.getElementById("chk-info-yield").checked;
-                const items = [];
-                if (reqDossier) items.push("Dossier/Planos");
-                if (reqExp) items.push("Expensas");
-                if (reqYield) items.push("Rentabilidad");
-                customMessage = `Solicitó más información de: ${items.join(", ") || "Ficha general"}. ${notes}`;
-            } else if (reqType === "whatsapp_contact") {
-                customMessage = `Inició contacto vía WhatsApp para este inmueble. ${notes}`;
-            }
+            // Fecha por defecto: Mañana
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const defaultDateStr = tomorrow.toISOString().split('T')[0];
 
-            // Crear y persistir el lead en Supabase y B2B CRM
-            let createdLead = null;
-            if (window.ZillaB2B && typeof window.ZillaB2B.createCRMLead === "function") {
-                createdLead = await window.ZillaB2B.createCRMLead({
-                    name: name,
-                    phone: phone,
-                    email: email,
-                    request_type: reqType,
-                    property_id: currentModalProperty.id,
-                    property_title: currentModalProperty.title,
-                    property_code: currentModalProperty.code || `PY-${currentModalProperty.id.replace(/[^0-9]/g, '') || '101'}`,
-                    property_image: (currentModalProperty.images && currentModalProperty.images[0]) || 'img/property-placeholder.jpg',
-                    property_price: currentModalProperty.priceUSD,
-                    zone: `${currentModalProperty.neighborhood}, ${currentModalProperty.city}`,
-                    budget_usd: currentModalProperty.priceUSD,
-                    intent: reqType === "visit_request" ? "Visita Inmueble" : (reqType === "info_request" ? "Más Información" : "Contacto Directo"),
-                    urgency: preferredDate,
-                    preferred_date: preferredDate,
-                    message: customMessage,
-                    afd: isAFD,
-                    bank: isAFD ? "Banco Itaú (Crédito AFD)" : "Fondos Propios"
-                });
-            }
-
-            const solCode = createdLead ? (createdLead.code || 'SOL-101') : 'SOL-101';
-            const phoneClean = (currentModalProperty.advertiser.phone || '+595981000000').replace(/[^0-9]/g, '');
-            const waGreeting = encodeURIComponent(`Hola ${currentModalProperty.advertiser.name}, mi nombre es ${name}. Me comunico en relación a "${currentModalProperty.title}" (${solCode}). ${customMessage}`);
-            const waUrl = `https://wa.me/${phoneClean}?text=${waGreeting}`;
-
-            // Mostrar Banner de Éxito en el widget
-            const widgetBox = document.getElementById("inquiry-widget-box");
-            if (widgetBox) {
-                widgetBox.innerHTML = `
-                    <div class="inquiry-success-banner">
-                        <div class="inquiry-success-icon"><i class="fas fa-check"></i></div>
-                        <h4 class="inquiry-success-title">¡Solicitud Registrada con Éxito!</h4>
-                        <span class="inquiry-code-tag">${solCode}</span>
-                        <p class="inquiry-success-desc">
-                            Tu solicitud ha sido transmitida en vivo a la base de datos de <strong>Supabase</strong> y al panel de agentes de <strong>Zilla CRM</strong>.
-                        </p>
-                        <a href="${waUrl}" target="_blank" rel="noopener noreferrer" class="inquiry-btn-submit whatsapp" style="text-decoration: none; margin-top: 6px;">
-                            <i class="fab fa-whatsapp"></i> Abrir Chat con el Asesor
-                        </a>
-                        <button type="button" class="btn btn-secondary btn-sm btn-block" onclick="window.ModalManager.openPropertyModal(window.currentModalPropRef || window.lastModalProp)" style="margin-top: 4px; font-size: 0.74rem;">
-                            Enviar otra consulta
-                        </button>
+            modalOverlay.innerHTML = `
+                <div class="inquiry-dialog-card">
+                    <div class="inquiry-header-row">
+                        <div class="inquiry-title-wrap">
+                            <h3><i class="fas fa-calendar-check text-emerald-600"></i> Agendar Visita a la Propiedad</h3>
+                            <p>Elige tu fecha y horario preferido para conocer el inmueble.</p>
+                        </div>
+                        <button type="button" class="inquiry-close-btn" onclick="document.getElementById('zilla-schedule-modal').remove()">&times;</button>
                     </div>
-                `;
-            }
 
-            // Si la opción era WhatsApp, abrir directamente
-            if (reqType === "whatsapp_contact") {
-                window.open(waUrl, "_blank");
-            }
+                    <!-- Resumen del Inmueble -->
+                    <div class="inquiry-prop-snippet">
+                        <img src="${(prop.images && prop.images[0]) ? prop.images[0] : 'img/property-placeholder.jpg'}" class="inquiry-prop-thumb" alt="${prop.title}">
+                        <div class="inquiry-prop-meta">
+                            <span class="inquiry-prop-title">${prop.title}</span>
+                            <span class="inquiry-prop-sub"><strong style="color: #0f766e;">${formattedPrice}</strong> • ${prop.neighborhood}, ${prop.city}</span>
+                        </div>
+                    </div>
+
+                    <form onsubmit="window.ModalManager.submitSchedule(event, '${prop.id}')" class="inquiry-form-group">
+                        <div class="inquiry-field">
+                            <label>Nombre y Apellido *</label>
+                            <input type="text" id="sch-name" required placeholder="Ej: Dra. Natalia Benítez">
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div class="inquiry-field">
+                                <label>WhatsApp / Teléfono *</label>
+                                <input type="tel" id="sch-phone" required placeholder="+595 982 456 789">
+                            </div>
+                            <div class="inquiry-field">
+                                <label>Correo Electrónico</label>
+                                <input type="email" id="sch-email" placeholder="ejemplo@correo.com">
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 10px;">
+                            <div class="inquiry-field">
+                                <label>Fecha Preferida *</label>
+                                <input type="date" id="sch-date" value="${defaultDateStr}" required min="${new Date().toISOString().split('T')[0]}">
+                            </div>
+                            <div class="inquiry-field">
+                                <label>Horario / Turno *</label>
+                                <select id="sch-time">
+                                    <option value="Mañana (09:00 - 12:00 hs)">Mañana (09:00 - 12:00 hs)</option>
+                                    <option value="Tarde (14:00 - 17:00 hs)" selected>Tarde (14:00 - 17:00 hs)</option>
+                                    <option value="Sábado (10:00 - 13:00 hs)">Sábado (10:00 - 13:00 hs)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="inquiry-field">
+                            <label>Modalidad de la Visita:</label>
+                            <div class="inquiry-checks-grid" style="flex-direction: row; justify-content: space-around;">
+                                <label class="inquiry-check-item">
+                                    <input type="radio" name="sch-type" value="presencial" checked>
+                                    <span>Presencial en la Propiedad</span>
+                                </label>
+                                <label class="inquiry-check-item">
+                                    <input type="radio" name="sch-type" value="virtual">
+                                    <span>Tour Virtual en Vivo</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="inquiry-field">
+                            <label>Comentario o indicación para el asesor (opcional)</label>
+                            <textarea id="sch-message" rows="2" placeholder="Ej: Asistiré con mi cónyuge / Requiere acceso con vehículo"></textarea>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary btn-block popout-close-btn" style="margin-top: 6px;">
+                            <i class="fas fa-calendar-check"></i> Confirmar y Agendar Visita
+                        </button>
+                    </form>
+                </div>
+            `;
+
+            document.body.appendChild(modalOverlay);
         },
 
-        openScheduleModal: function (propId) {
-            this.selectInquiryType("visit_request");
-            const formEl = document.getElementById("inquiry-form");
-            if (formEl) formEl.scrollIntoView({ behavior: 'smooth' });
+        /**
+         * Procesar Envío de Solicitud de Información
+         */
+        submitInquiry: async function (e, propId) {
+            e.preventDefault();
+            const prop = currentModalProperty || (window.PropertiesData ? window.PropertiesData.find(p => p.id === propId) : null);
+            if (!prop) return;
+
+            const name = document.getElementById("inq-name").value.trim();
+            const phone = document.getElementById("inq-phone").value.trim();
+            const email = (document.getElementById("inq-email").value || '').trim();
+            const customMsg = (document.getElementById("inq-message").value || '').trim();
+
+            const docs = [];
+            if (document.getElementById("inq-check-brochure") && document.getElementById("inq-check-brochure").checked) docs.push("Brochure PDF");
+            if (document.getElementById("inq-check-plans") && document.getElementById("inq-check-plans").checked) docs.push("Planos");
+            if (document.getElementById("inq-check-exp") && document.getElementById("inq-check-exp").checked) docs.push("Costos Expensas");
+            if (document.getElementById("inq-check-yield") && document.getElementById("inq-check-yield").checked) docs.push("Rendimiento Cap Rate");
+
+            const fullMessage = customMsg 
+                ? `${customMsg} (Solicitó: ${docs.join(', ')})`
+                : `Solicitó recibir: ${docs.join(', ')}`;
+
+            // Cerrar modal de formulario
+            const formModal = document.getElementById("zilla-inquiry-modal");
+            if (formModal) formModal.remove();
+
+            // Guardar en CRM y Supabase
+            const code = 'SOL-' + Math.floor(100 + Math.random() * 900);
+            const leadData = {
+                code: code,
+                name: name,
+                phone: phone,
+                email: email || 'No especificado',
+                client_type: 'Particular (Web)',
+                request_type: 'info_request',
+                request_type_label: 'Más Información',
+                property_id: prop.id,
+                property_title: prop.title,
+                property_code: prop.id.toUpperCase(),
+                property_image: (prop.images && prop.images[0]) ? prop.images[0] : 'img/property-placeholder.jpg',
+                property_price: prop.priceUSD,
+                zone: `${prop.neighborhood}, ${prop.city}`,
+                budget_usd: prop.priceUSD,
+                intent: 'Consulta e Información de Inmueble',
+                urgency: 'Próximos 30 días',
+                afd: Boolean(prop.acceptsCheRogaPora || prop.operation === 'sale'),
+                bank: prop.acceptsCheRogaPora ? 'Apto Crédito AFD' : 'Fondos Propios / A consultar',
+                score: 90,
+                tier: 'Platinum',
+                status: 'new_inquiry',
+                message: fullMessage,
+                dossier: `Interesado en ${prop.title}. Solicitó dossier: ${docs.join(', ')}.`,
+                notes: 'Lead generado desde el botón "Recibir más Información" en la ficha del anuncio.'
+            };
+
+            await this.saveInquiryToSupabaseAndCRM(leadData);
+
+            // Mostrar POP-OUT central
+            this.showSuccessPopout(
+                '¡Solicitud Enviada con Éxito!',
+                'Hemos recibido tu solicitud de más información. Un asesor inmobiliario te enviará el dossier y será contactado a la brevedad.',
+                {
+                    code: code,
+                    propertyTitle: prop.title
+                }
+            );
+        },
+
+        /**
+         * Procesar Envío de Solicitud de Visita
+         */
+        submitSchedule: async function (e, propId) {
+            e.preventDefault();
+            const prop = currentModalProperty || (window.PropertiesData ? window.PropertiesData.find(p => p.id === propId) : null);
+            if (!prop) return;
+
+            const name = document.getElementById("sch-name").value.trim();
+            const phone = document.getElementById("sch-phone").value.trim();
+            const email = (document.getElementById("sch-email").value || '').trim();
+            const dateVal = document.getElementById("sch-date").value;
+            const timeVal = document.getElementById("sch-time").value;
+            const customMsg = (document.getElementById("sch-message").value || '').trim();
+
+            const dateFormatted = `${dateVal} (${timeVal})`;
+
+            // Cerrar modal de formulario
+            const formModal = document.getElementById("zilla-schedule-modal");
+            if (formModal) formModal.remove();
+
+            // Guardar en CRM y Supabase
+            const code = 'SOL-' + Math.floor(100 + Math.random() * 900);
+            const leadData = {
+                code: code,
+                name: name,
+                phone: phone,
+                email: email || 'No especificado',
+                client_type: 'Particular (Visita)',
+                request_type: 'visit_request',
+                request_type_label: 'Solicita Visita',
+                property_id: prop.id,
+                property_title: prop.title,
+                property_code: prop.id.toUpperCase(),
+                property_image: (prop.images && prop.images[0]) ? prop.images[0] : 'img/property-placeholder.jpg',
+                property_price: prop.priceUSD,
+                zone: `${prop.neighborhood}, ${prop.city}`,
+                budget_usd: prop.priceUSD,
+                intent: 'Visita Presencial a la Propiedad',
+                urgency: `Fecha coordinada: ${dateFormatted}`,
+                preferred_date: dateFormatted,
+                afd: Boolean(prop.acceptsCheRogaPora || prop.operation === 'sale'),
+                bank: prop.acceptsCheRogaPora ? 'Apto Crédito AFD' : 'Fondos Propios',
+                score: 95,
+                tier: 'Platinum',
+                status: 'visit_scheduled',
+                message: customMsg ? `${customMsg} (Visita para: ${dateFormatted})` : `Solicitud de visita para: ${dateFormatted}`,
+                dossier: `Visita agendada para conocer ${prop.title} en ${dateFormatted}.`,
+                notes: 'Lead generado desde el botón "Agendar una Visita" en la ficha del anuncio.'
+            };
+
+            await this.saveInquiryToSupabaseAndCRM(leadData);
+
+            // Mostrar POP-OUT central
+            this.showSuccessPopout(
+                '¡Visita Solicitada con Éxito!',
+                'Tu solicitud de visita fue enviada y será contactado a la brevedad para confirmar los accesos al inmueble.',
+                {
+                    code: code,
+                    propertyTitle: prop.title,
+                    datePref: dateFormatted
+                }
+            );
+        },
+
+        /**
+         * POP-OUT Central en la Pantalla
+         */
+        showSuccessPopout: function (title, message, details) {
+            const existing = document.getElementById("zilla-success-popout");
+            if (existing) existing.remove();
+
+            const popout = document.createElement("div");
+            popout.className = "zilla-popout-overlay active";
+            popout.id = "zilla-success-popout";
+
+            popout.innerHTML = `
+                <div class="zilla-popout-card">
+                    <div class="zilla-popout-icon-wrap">
+                        <div class="popout-pulse-ring"></div>
+                        <i class="fas fa-circle-check popout-check-icon"></i>
+                    </div>
+                    
+                    <h3 class="zilla-popout-title">${title}</h3>
+                    <p class="zilla-popout-desc">${message}</p>
+                    
+                    <div class="zilla-popout-details-box">
+                        <div class="popout-detail-row">
+                            <span>Código de Solicitud:</span>
+                            <strong style="color: #0f766e; font-family: monospace; font-size: 0.95rem;">${details.code}</strong>
+                        </div>
+                        <div class="popout-detail-row">
+                            <span>Inmueble:</span>
+                            <strong style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">${details.propertyTitle}</strong>
+                        </div>
+                        ${details.datePref ? `
+                        <div class="popout-detail-row">
+                            <span>Fecha Coordinada:</span>
+                            <strong style="color: #7e22ce;"><i class="far fa-calendar-check"></i> ${details.datePref}</strong>
+                        </div>` : ''}
+                    </div>
+
+                    <div class="zilla-popout-alert">
+                        <i class="fas fa-headset text-emerald-600"></i>
+                        <span>Un asesor inmobiliario se comunicará contigo a la brevedad vía WhatsApp o llamada telefónica.</span>
+                    </div>
+
+                    <button type="button" class="btn btn-primary btn-block popout-close-btn" onclick="document.getElementById('zilla-success-popout').remove()">
+                        Entendido, ¡muchas gracias!
+                    </button>
+                </div>
+            `;
+
+            document.body.appendChild(popout);
+        },
+
+        /**
+         * Guardar Solicitud en LocalStorage y Supabase API
+         */
+        saveInquiryToSupabaseAndCRM: async function (leadData) {
+            try {
+                // 1. Guardar en LocalStorage para disponibilidad inmediata en el CRM B2B
+                const storageKey = 'zilla_b2b_crm_leads';
+                let leads = [];
+                try {
+                    const raw = localStorage.getItem(storageKey);
+                    if (raw) leads = JSON.parse(raw);
+                } catch (e) {}
+
+                const newLead = {
+                    id: 'lead-' + Date.now(),
+                    date: 'Hoy ' + new Date().toLocaleTimeString('es-PY', { hour: '2-digit', minute: '2-digit' }),
+                    ...leadData
+                };
+
+                leads.unshift(newLead);
+                localStorage.setItem(storageKey, JSON.stringify(leads));
+
+                // 2. Enviar a Supabase REST API (si está conectado)
+                try {
+                    const SUPABASE_URL = 'https://chzxwihqmvotxhiztehk.supabase.co';
+                    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.placeholder';
+
+                    await fetch(`${SUPABASE_URL}/rest/v1/b2b_crm_leads`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Prefer': 'return=minimal'
+                        },
+                        body: JSON.stringify(newLead)
+                    });
+                } catch (apiErr) {
+                    console.info("Supabase sync:", apiErr);
+                }
+
+                // 3. Disparar evento para actualización reactiva en otras pestañas
+                window.dispatchEvent(new CustomEvent('crmLeadCreated', { detail: newLead }));
+            } catch (err) {
+                console.warn("Error guardando lead en CRM:", err);
+            }
         },
 
         getOperationLabel: function (op) {
