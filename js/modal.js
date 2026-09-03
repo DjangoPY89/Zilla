@@ -515,6 +515,23 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Barra Flotante Inferior de Contacto Rápido para Móvil -->
+                    <div class="modal-mobile-sticky-bar">
+                        <div class="mobile-sticky-price-wrap">
+                            <span class="mobile-sticky-lbl">Precio</span>
+                            <span class="mobile-sticky-price">${formattedPrice}</span>
+                        </div>
+                        <div class="mobile-sticky-actions">
+                            <a href="${whatsappUrl}" target="_blank" rel="noopener noreferrer" class="btn-sticky-cta btn-sticky-whatsapp" title="WhatsApp Directo">
+                                <i class="fab fa-whatsapp"></i>
+                                <span>WhatsApp</span>
+                            </a>
+                            <a href="tel:${prop.advertiser.phone}" class="btn-sticky-cta btn-sticky-call" title="Llamar al Anunciante">
+                                <i class="fas fa-phone-alt"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             `;
         },
