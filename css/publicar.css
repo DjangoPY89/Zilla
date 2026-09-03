@@ -60,10 +60,20 @@ html, body {
     display: flex;
     align-items: center;
     gap: 2px;
+    text-decoration: none;
 }
 
-.publish-logo-badge span {
-    color: #bef264;
+.publish-logo-badge .zilla-brand-vector {
+    height: 28px;
+    width: auto;
+    max-width: 120px;
+    display: block;
+    object-fit: contain;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.publish-logo-badge:hover .zilla-brand-vector {
+    transform: scale(1.04);
 }
 
 .publish-pro-tag {

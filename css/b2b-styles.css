@@ -70,6 +70,19 @@ body.b2b-light-theme {
     letter-spacing: -0.03em;
 }
 
+.b2b-sidebar-brand .zilla-brand-vector {
+    height: 32px;
+    width: auto;
+    max-width: 130px;
+    display: block;
+    object-fit: contain;
+    transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.b2b-sidebar-brand a.evergreen-brand-logo:hover .zilla-brand-vector {
+    transform: scale(1.03);
+}
+
 .brand-badge-dot {
     width: 8px;
     height: 8px;

@@ -25,9 +25,8 @@
                 <div class="zilla-mobile-drawer" id="zilla-mobile-drawer">
                     <!-- Header -->
                     <div class="drawer-header">
-                        <a href="index.html" class="drawer-brand">
-                            <span>Zilla</span>
-                            <span class="brand-dot"></span>
+                        <a href="index.html" class="drawer-brand" title="Zilla">
+                            <img src="assets/logo-dark.svg" alt="Zilla" class="zilla-brand-vector">
                         </a>
                         <div class="drawer-header-actions">
                             <button type="button" class="drawer-close-btn" id="btn-close-mobile-drawer" aria-label="Cerrar Menú">
