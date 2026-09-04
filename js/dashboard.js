@@ -268,6 +268,15 @@
                 applyUserData(e.detail.user);
             }
         });
+
+        // Detectar y limpiar errores de OAuth en la URL si los hubiera
+        const urlParams = new URLSearchParams(window.location.search);
+        const hashParams = new URLSearchParams(window.location.hash.startsWith('#') ? window.location.hash.substring(1) : window.location.hash);
+        const errorDesc = urlParams.get('error_description') || hashParams.get('error_description');
+        if (errorDesc) {
+            console.warn("[OAuth Redirect Error]:", decodeURIComponent(errorDesc));
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
     });
 
     /**
