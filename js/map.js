@@ -790,10 +790,16 @@
             else if (prop.operation === "rent_temporary") opBadgeText = "Temporal";
             else if (prop.operation === "off_plan") opBadgeText = "En Pozo";
 
+            const rawPhone = (prop.advertiser && prop.advertiser.phone) || prop.contactPhone || "+595981123456";
+            const cleanPhone = rawPhone.replace(/[^0-9]/g, "");
+            const telUrl = `tel:${cleanPhone}`;
+
             const whatsappMsg = encodeURIComponent(
                 `Hola! Me interesa este inmueble publicado en Zilla: "${prop.title}" en ${prop.neighborhood}, ${prop.city} (${formattedPrice}). ¿Sigue disponible?`
             );
-            const whatsappUrl = `https://wa.me/${prop.contactWhatsapp || '595981123456'}?text=${whatsappMsg}`;
+            const waPhone = (prop.advertiser && prop.advertiser.whatsapp) || prop.contactWhatsapp || cleanPhone;
+            const cleanWaPhone = waPhone.replace(/[^0-9]/g, "");
+            const whatsappUrl = `https://wa.me/${cleanWaPhone}?text=${whatsappMsg}`;
 
             return `
                 <div class="apple-mini-property-card" id="mini-popup-${prop.id}">
@@ -823,11 +829,14 @@
 
                         <div class="mini-card-footer-btns">
                             <button type="button" class="btn btn-primary btn-mini-details" onclick="window.MapManager.viewFullProperty('${prop.id}')">
-                                <span>Ver Ficha Completa</span>
+                                <span>Ver Ficha</span>
                                 <i class="fas fa-arrow-up-right-from-square"></i>
                             </button>
                             <a href="${whatsappUrl}" target="_blank" class="btn btn-whatsapp btn-mini-wa" title="Contactar por WhatsApp">
                                 <i class="fab fa-whatsapp"></i>
+                            </a>
+                            <a href="${telUrl}" class="btn btn-mini-call" title="Llamar al anunciante">
+                                <i class="fas fa-phone"></i>
                             </a>
                         </div>
                     </div>

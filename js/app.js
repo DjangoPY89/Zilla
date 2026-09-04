@@ -1024,8 +1024,8 @@
 
                 // Clic en la tarjeta abre el modal completo de la propiedad
                 card.addEventListener("click", (e) => {
-                    // Si el clic fue en un botón de carrusel o favorito, no abrir modal
-                    if (e.target.closest('.card-carousel-btn') || e.target.closest('.card-fav-btn')) {
+                    // Si el clic fue en un botón de carrusel, favorito o botones de contacto directo, no abrir modal
+                    if (e.target.closest('.card-carousel-btn') || e.target.closest('.card-fav-btn') || e.target.closest('.btn-card-action') || e.target.closest('.card-action-buttons')) {
                         return;
                     }
                     window.ModalManager.openPropertyModal(prop);
@@ -1059,9 +1059,14 @@
                 ? `₲ ${(pricePerM2PYG / 1000000).toFixed(1)}M/m²`
                 : `$${pricePerM2USD.toLocaleString()}/m²`;
 
-            const cleanPhone = (prop.contactPhone || "+595981123456").replace(/[^0-9]/g, "");
-            const waMessage = encodeURIComponent(`¡Hola! Me interesa la propiedad "${prop.title}" en Zilla Paraguay. ¿Podrías brindarme más información?`);
-            const waLink = `https://wa.me/${cleanPhone}?text=${waMessage}`;
+            const rawPhone = (prop.advertiser && prop.advertiser.phone) || prop.contactPhone || "+595981123456";
+            const cleanPhone = rawPhone.replace(/[^0-9]/g, "");
+            const waPhone = (prop.advertiser && prop.advertiser.whatsapp) || prop.contactWhatsapp || cleanPhone;
+            const cleanWaPhone = waPhone.replace(/[^0-9]/g, "");
+            const advertiserName = (prop.advertiser && prop.advertiser.name) || "Agente Inmobiliario";
+            const waMessage = encodeURIComponent(`¡Hola ${advertiserName}! Me interesa la propiedad "${prop.title}" (${formattedPrice}) en Zilla Paraguay. ¿Podrías brindarme más información?`);
+            const waLink = `https://wa.me/${cleanWaPhone}?text=${waMessage}`;
+            const telLink = `tel:${cleanPhone}`;
 
             return `
                 <div class="property-card ${isPlatinum ? 'card-platinum' : ''}" id="card-${prop.id}">
@@ -1120,18 +1125,19 @@
                         </div>
 
                         <div class="card-price-footer">
-                            <div>
+                            <div class="card-price-block">
                                 <div class="card-price-main">${formattedPrice}</div>
                                 ${prop.expensesPYG > 0 ? `<div class="card-expenses">+ ₲ ${prop.expensesPYG.toLocaleString('es-PY')}/m exp.</div>` : ''}
                             </div>
 
-                            <div class="card-row-actions">
-                                <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="btn-row-whatsapp" onclick="event.stopPropagation();" title="Contactar por WhatsApp">
-                                    <i class="fab fa-whatsapp"></i> WhatsApp
+                            <!-- Botones de Contacto Directo: WhatsApp y Llamar -->
+                            <div class="card-action-buttons">
+                                <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="btn-card-action btn-card-whatsapp" onclick="event.stopPropagation();" title="Contactar por WhatsApp a ${advertiserName}">
+                                    <i class="fab fa-whatsapp"></i> <span class="btn-action-label">WhatsApp</span>
                                 </a>
-                                <button type="button" class="btn-row-details" title="Ver ficha completa">
-                                    <i class="fas fa-arrow-up-right-from-square"></i> Ver Ficha
-                                </button>
+                                <a href="${telLink}" class="btn-card-action btn-card-call" onclick="event.stopPropagation();" title="Llamar a ${advertiserName} (${cleanPhone})">
+                                    <i class="fas fa-phone"></i> <span class="btn-action-label">Llamar</span>
+                                </a>
                             </div>
                         </div>
                     </div>

@@ -1279,22 +1279,30 @@ button, input, select, textarea {
 
 .card-price-footer {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     justify-content: space-between;
-    margin-top: 8px;
-    padding-top: 10px;
+    margin-top: 10px;
+    padding-top: 12px;
     border-top: 1px solid var(--border-subtle);
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.card-price-block {
+    display: flex;
+    flex-direction: column;
 }
 
 .card-price-main {
     font-family: 'Outfit', sans-serif;
-    font-size: 1.25rem;
+    font-size: 1.22rem;
     font-weight: 800;
     color: var(--text-primary);
+    line-height: 1.2;
 }
 
 .card-expenses {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     color: var(--text-muted);
 }
 
@@ -1426,48 +1434,94 @@ button, input, select, textarea {
     gap: 8px !important;
 }
 
-.properties-grid:not(.layout-detailed-rows) .card-row-actions {
+/* Botones de Contacto Directo en Cada Anuncio (WhatsApp & Llamar) */
+.card-action-buttons {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* 1. Vista en Cuadrícula (Grid): Solo Iconos Circulares */
+.btn-card-action {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 34px;
+    height: 34px;
+    min-width: 34px;
+    border-radius: 50%;
+    padding: 0;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    user-select: none;
+    line-height: 1;
+}
+
+.btn-card-action .btn-action-label {
     display: none;
 }
 
-.btn-row-whatsapp {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+.btn-card-whatsapp {
     background: #25d366;
     color: #ffffff;
-    font-size: 0.78rem;
-    font-weight: 800;
-    padding: 6px 12px;
-    border-radius: var(--radius-full);
-    text-decoration: none;
-    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(37, 211, 102, 0.3);
 }
 
-.btn-row-whatsapp:hover {
-    background: #128c7e;
-    transform: scale(1.04);
-}
-
-.btn-row-details {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: #f1f5f9;
-    color: var(--text-primary);
-    font-size: 0.78rem;
-    font-weight: 700;
-    padding: 6px 12px;
-    border-radius: var(--radius-full);
-    border: 1px solid #cbd5e1;
-    cursor: pointer;
-    transition: all 0.2s ease;
-}
-
-.btn-row-details:hover {
-    background: #0f766e;
+.btn-card-whatsapp:hover {
+    background: #1eb956;
     color: #ffffff;
-    border-color: #0f766e;
+    transform: translateY(-2px) scale(1.08);
+    box-shadow: 0 4px 14px rgba(37, 211, 102, 0.5);
+}
+
+.btn-card-whatsapp i {
+    font-size: 1.05rem;
+}
+
+.btn-card-call {
+    background: #0f172a;
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2);
+}
+
+.btn-card-call:hover {
+    background: #1e293b;
+    color: #38bdf8;
+    border-color: #38bdf8;
+    transform: translateY(-2px) scale(1.08);
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.4);
+}
+
+.btn-card-call i {
+    font-size: 0.85rem;
+    color: #38bdf8;
+}
+
+/* 2. Vista Detallada (1 por Fila): Botones con Texto Expandido */
+.properties-grid.layout-detailed-rows .btn-card-action {
+    width: auto;
+    height: auto;
+    min-width: unset;
+    border-radius: var(--radius-full);
+    padding: 8px 16px;
+    font-size: 0.84rem;
+    font-weight: 800;
+    gap: 7px;
+}
+
+.properties-grid.layout-detailed-rows .btn-card-action .btn-action-label {
+    display: inline;
+}
+
+.properties-grid.layout-detailed-rows .btn-card-whatsapp i {
+    font-size: 0.95rem;
+}
+
+.properties-grid.layout-detailed-rows .btn-card-call i {
+    font-size: 0.82rem;
 }
 
 @media (max-width: 768px) {
@@ -1910,6 +1964,27 @@ button, input, select, textarea {
 
 .btn-mini-wa:hover {
     background: var(--whatsapp-hover);
+    transform: scale(1.05);
+}
+
+.btn-mini-call {
+    padding: 8px 12px;
+    border-radius: var(--radius-full);
+    font-size: 0.85rem;
+    background: #0f172a;
+    color: #ffffff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
+    transition: all 0.15s ease;
+}
+
+.btn-mini-call:hover {
+    background: #1e293b;
+    color: #38bdf8;
     transform: scale(1.05);
 }
 
