@@ -11,7 +11,7 @@
 
     const SUPABASE_CONFIG = {
         url: 'https://chzxwihqmvotxhiztehk.supabase.co',
-        anonKey: 'sb_publishable_45-h_r-q0fhiQoQ4Xgz8ZA_ep_fCnp0',
+        anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNoenh3aWhxbXZvdHhoaXp0ZWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgzNDgzNTMsImV4cCI6MjEwMzkyNDM1M30.3arrsG_Zk3JQ7ibFmAJn2_cn_-r-vaFjF200LTk4EE8',
         storageKey: 'zilla_b2b_crm_leads'
     };
 

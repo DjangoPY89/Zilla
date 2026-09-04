@@ -10,7 +10,7 @@
 
     // 1. Configuración de Supabase
     const SUPABASE_URL = 'https://chzxwihqmvotxhiztehk.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_45-h_r-q0fhiQoQ4Xgz8ZA_ep_fCnp0';
+    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImNoenh3aWhxbXZvdHhoaXp0ZWhrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODgzNDgzNTMsImV4cCI6MjEwMzkyNDM1M30.3arrsG_Zk3JQ7ibFmAJn2_cn_-r-vaFjF200LTk4EE8';
     let supabaseClient = null;
 
     if (window.supabase && typeof window.supabase.createClient === 'function') {
