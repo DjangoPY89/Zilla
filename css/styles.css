@@ -1953,42 +1953,35 @@ button, input, select, textarea {
 }
 
 /* Botón Móvil Flotante para Alternar Mapa/Lista */
-/* Botón Móvil Flotante para Alternar Mapa/Lista - Glassmorphism Dark Capsule */
+/* Botón Móvil para Alternar Mapa/Lista - Clean White Capsule */
 .mobile-view-btn {
     display: none;
-    position: fixed;
-    bottom: 24px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #0f172a;
-    color: #ffffff;
-    padding: 12px 22px;
-    border-radius: var(--radius-full);
-    font-family: 'Outfit', sans-serif;
-    font-size: 0.88rem;
-    font-weight: 800;
-    box-shadow: 0 10px 30px rgba(15, 23, 42, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.16);
-    z-index: 10000;
-    cursor: pointer;
-    border: none;
     align-items: center;
-    gap: 9px;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    gap: 7px;
+    padding: 7px 16px;
+    border-radius: var(--radius-full);
+    background: #ffffff;
+    color: #0f172a;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 700;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     letter-spacing: -0.01em;
+    user-select: none;
 }
 
-.mobile-view-btn:hover,
-.mobile-view-btn:active {
-    background: #1e293b;
-    transform: translateX(-50%) scale(1.04);
-    box-shadow: 0 14px 35px rgba(15, 23, 42, 0.5), 0 0 0 1px rgba(56, 189, 248, 0.3);
+.mobile-view-btn:hover {
+    background: #f8fafc;
+    border-color: #cbd5e1;
+    color: #0f172a;
 }
 
 .mobile-view-btn i {
-    font-size: 1rem;
-    color: #38bdf8;
+    font-size: 0.88rem;
+    color: #10b981;
 }
 
 /* ============================================================
@@ -3438,35 +3431,58 @@ button, input, select, textarea {
         content: "Restablecer Filtros";
     }
 
-    /* Controles de Cabecera de Feed en Móvil (Sincronizar Mapa y Botón Pantalla Completa) */
+    /* Controles de Cabecera de Feed en Móvil (Sincronizar Mapa y Botón Mapa al lado) */
     .map-sync-and-mobile-btn-wrap {
         display: flex !important;
         align-items: center !important;
-        justify-content: space-between !important;
+        justify-content: flex-start !important;
         width: 100% !important;
-        gap: 8px !important;
+        gap: 10px !important;
+        flex-wrap: wrap !important;
     }
 
     .mobile-view-btn {
         display: inline-flex !important;
         position: static !important;
         transform: none !important;
-        padding: 6px 14px !important;
-        font-size: 0.78rem !important;
+        padding: 7px 16px !important;
+        font-size: 0.8rem !important;
         font-weight: 700 !important;
-        border-radius: 9999px !important;
-        background: #0f172a !important;
-        color: #ffffff !important;
-        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.2) !important;
-        border: 1px solid rgba(255, 255, 255, 0.15) !important;
-        gap: 6px !important;
-        height: 34px !important;
+        border-radius: var(--radius-full) !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
+        gap: 7px !important;
+        height: auto !important;
         white-space: nowrap !important;
     }
 
+    .mobile-view-btn:hover,
+    .mobile-view-btn:active {
+        background: #f8fafc !important;
+        border-color: #cbd5e1 !important;
+        color: #0f172a !important;
+    }
+
     .mobile-view-btn i {
-        font-size: 0.85rem !important;
+        font-size: 0.88rem !important;
         color: #10b981 !important;
+    }
+
+    /* Cuando el mapa está activo en pantalla completa en móvil, botón flotante blanco para volver */
+    body.mobile-map-active #mobile-view-toggle {
+        display: inline-flex !important;
+        position: fixed !important;
+        bottom: 24px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 99999 !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15) !important;
+        padding: 10px 20px !important;
     }
     .split-screen-container {
         height: auto;
