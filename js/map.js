@@ -928,6 +928,10 @@
             }
         },
 
+        panToCoordinates: function (lat, lng, zoom = 15) {
+            this.panTo(lat, lng, zoom);
+        },
+
         invalidateSize: function () {
             if (!map) return;
             if (isGoogleMap) {

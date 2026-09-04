@@ -83,24 +83,76 @@
                 <div class="realtor-hero-header">
                     <h1 class="realtor-hero-heading">
                         <span class="realtor-heading-line1">#1 sitio inmobiliario</span>
-                        <span class="realtor-heading-line2">que los agentes recomiendan*</span>
+                        <span class="realtor-heading-line2">que los agentes recomiendan en Paraguay<span class="hero-asterisk">*</span></span>
                     </h1>
                 </div>
 
                 <!-- Buscador Central Realtor.com Style -->
                 <div class="realtor-search-box-wrapper">
-                    <!-- Pestañas Superiores (Tabs) -->
+                    <!-- Pestañas Superiores (Tabs Glassmorphism Semi-Rectangulares) -->
                     <div class="realtor-search-tabs">
                         <button type="button" class="realtor-tab-btn active" data-op="sale" onclick="setRealtorHeroTab('sale', this)">Comprar</button>
                         <button type="button" class="realtor-tab-btn" data-op="rent_monthly" onclick="setRealtorHeroTab('rent_monthly', this)">Alquilar</button>
-                        <button type="button" class="realtor-tab-btn" data-op="sell" onclick="window.location.href='publicar.html'">Vender</button>
+                        <button type="button" class="realtor-tab-btn" data-op="rent_temporary" onclick="setRealtorHeroTab('rent_temporary', this)">Alquiler Temporal</button>
+                        <button type="button" class="realtor-tab-btn" data-op="off_plan" onclick="setRealtorHeroTab('off_plan', this)">Proyectos</button>
                     </div>
 
-                    <!-- Cápsula de Búsqueda Ovalada Blanca -->
+                    <!-- Cápsula de Búsqueda Ovalada Blanca con Filtro de Tipo a la Izquierda -->
                     <form action="explorar.html" method="GET" class="realtor-search-capsule" id="hero-search-form">
                         <input type="hidden" name="operation" id="realtor-op-input" value="sale">
                         <input type="hidden" name="che_roga" id="realtor-che-roga-input" value="">
-                        
+                        <input type="hidden" name="propType" id="hero-proptype-input" value="">
+                        <input type="hidden" name="lat" id="hero-lat-input" value="">
+                        <input type="hidden" name="lng" id="hero-lng-input" value="">
+
+                        <!-- Menú Desplegable: Tipo de Inmueble (Lado Izquierdo del Buscador) -->
+                        <div class="hero-type-dropdown-wrapper" id="hero-type-dropdown-wrapper">
+                            <button type="button" class="btn-hero-type-trigger" id="btn-hero-type-trigger" aria-label="Filtrar por tipo de inmueble">
+                                <i class="fas fa-house hero-type-icon"></i>
+                                <span id="hero-type-label">Tipo de Inmueble</span>
+                                <i class="fas fa-chevron-down hero-chevron"></i>
+                            </button>
+                            <div class="hero-type-menu" id="hero-type-menu">
+                                <div class="hero-type-menu-header">
+                                    <span>Tipo de Inmueble</span>
+                                    <button type="button" class="btn-clear-hero-type" onclick="selectHeroType('all', null)">Todos</button>
+                                </div>
+                                <div class="hero-type-options-list">
+                                    <button type="button" class="hero-type-option-item active" data-value="all" onclick="selectHeroType('all', this)">
+                                        <span class="opt-label">Todos los Inmuebles</span>
+                                        <i class="fas fa-check check-only-icon"></i>
+                                    </button>
+                                    <button type="button" class="hero-type-option-item" data-value="house" onclick="selectHeroType('house', this)">
+                                        <span class="opt-label">Casas Residenciales</span>
+                                        <i class="fas fa-check check-only-icon"></i>
+                                    </button>
+                                    <button type="button" class="hero-type-option-item" data-value="apartment" onclick="selectHeroType('apartment', this)">
+                                        <span class="opt-label">Departamentos</span>
+                                        <i class="fas fa-check check-only-icon"></i>
+                                    </button>
+                                    <button type="button" class="hero-type-option-item" data-value="gated_community" onclick="selectHeroType('gated_community', this)">
+                                        <span class="opt-label">Barrios Cerrados</span>
+                                        <i class="fas fa-check check-only-icon"></i>
+                                    </button>
+                                    <button type="button" class="hero-type-option-item" data-value="duplex" onclick="selectHeroType('duplex', this)">
+                                        <span class="opt-label">Dúplex</span>
+                                        <i class="fas fa-check check-only-icon"></i>
+                                    </button>
+                                    <button type="button" class="hero-type-option-item" data-value="land" onclick="selectHeroType('land', this)">
+                                        <span class="opt-label">Terrenos / Lotes</span>
+                                        <i class="fas fa-check check-only-icon"></i>
+                                    </button>
+                                    <button type="button" class="hero-type-option-item" data-value="commercial" onclick="selectHeroType('commercial', this)">
+                                        <span class="opt-label">Comercial / Oficinas</span>
+                                        <i class="fas fa-check check-only-icon"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Separador vertical sutil -->
+                        <div class="hero-capsule-divider"></div>
+
                         <div class="realtor-search-input-wrap">
                             <input type="text" name="keyword" id="hero-location-input" class="realtor-search-input" placeholder="Dirección, barrio, ciudad (ej. 3 dorm con piscina en Villa Morra)" autocomplete="off">
                         </div>
@@ -1077,11 +1129,15 @@
             } else if (op === 'off_plan') {
                 if (opInput) opInput.value = 'off_plan';
                 if (cheRogaInput) cheRogaInput.value = '';
-                if (searchInput) searchInput.placeholder = 'Proyectos en pozo, cuotas, Ykua Satî, Santa Teresa...';
+                if (searchInput) searchInput.placeholder = 'Proyectos en pozo, preventa, cuotas, Santa Teresa...';
+            } else if (op === 'rent_temporary') {
+                if (opInput) opInput.value = 'rent_temporary';
+                if (cheRogaInput) cheRogaInput.value = '';
+                if (searchInput) searchInput.placeholder = 'Alquiler temporal de verano en San Bernardino, Asunción...';
             } else if (op === 'rent_monthly') {
                 if (opInput) opInput.value = 'rent_monthly';
                 if (cheRogaInput) cheRogaInput.value = '';
-                if (searchInput) searchInput.placeholder = 'Alquileres en Asunción, Luque, amoblados o temporales...';
+                if (searchInput) searchInput.placeholder = 'Alquileres en Asunción, Luque, amoblados o residenciales...';
             } else {
                 if (opInput) opInput.value = 'sale';
                 if (cheRogaInput) cheRogaInput.value = '';
@@ -1089,157 +1145,59 @@
             }
         }
 
-        // Tags superiores en el Hero
-
         // ============================================================
-        // 5. CONTROL DE PRECIOS CON VISIBILIDAD AMPLIADA
+        // 5. CONTROL DE TIPOS DE INMUEBLE EN EL HERO
         // ============================================================
-        function setHeroPricePreset(min, max) {
-            const minInput = document.getElementById("hero-min-price-input");
-            const maxInput = document.getElementById("hero-max-price-input");
-            if (minInput) minInput.value = min > 0 ? min : "";
-            if (maxInput) maxInput.value = max < 10000000 ? max : "";
-            updateHeroPriceSelection();
-        }
+        const HERO_TYPE_LABELS = {
+            all: "Todos los Tipos",
+            house: "Casas",
+            apartment: "Departamentos",
+            gated_community: "Barrios Cerrados",
+            duplex: "Dúplex",
+            land: "Terrenos",
+            commercial: "Comercial"
+        };
 
-        function updateHeroPriceSelection() {
-            const minInput = document.getElementById("hero-min-price-input");
-            const maxInput = document.getElementById("hero-max-price-input");
-            const minHidden = document.getElementById("hero-min-price-hidden");
-            const maxHidden = document.getElementById("hero-max-price-hidden");
-            const label = document.getElementById("text-hero-price");
+        function selectHeroType(typeVal, element) {
+            const hidden = document.getElementById("hero-proptype-input");
+            const label = document.getElementById("hero-type-label");
+            const menu = document.getElementById("hero-type-menu");
 
-            const minVal = minInput && minInput.value ? parseFloat(minInput.value) : 0;
-            const maxVal = maxInput && maxInput.value ? parseFloat(maxInput.value) : 0;
+            document.querySelectorAll(".hero-type-option-item").forEach(item => {
+                const isMatch = item.dataset.value === typeVal;
+                item.classList.toggle("active", isMatch);
+            });
 
-            if (minHidden) minHidden.value = minVal > 0 ? minVal : "";
-            if (maxHidden) maxHidden.value = maxVal > 0 ? maxVal : "";
-
-            const curr = (window.CurrencyManager ? window.CurrencyManager.getCurrency() : 'USD');
-            const sym = curr === 'USD' ? '$' : '₲ ';
-
-            if (minVal > 0 && maxVal > 0) {
-                if (label) {
-                    label.textContent = curr === 'USD'
-                        ? `$${Math.round(minVal/1000)}k - $${Math.round(maxVal/1000)}k`
-                        : `₲ ${Math.round(minVal*7950/1000000)}M - ${Math.round(maxVal*7950/1000000)}M`;
-                }
-            } else if (minVal > 0) {
-                if (label) {
-                    label.textContent = curr === 'USD'
-                        ? `> $${Math.round(minVal/1000)}k`
-                        : `> ₲ ${Math.round(minVal*7950/1000000)}M`;
-                }
-            } else if (maxVal > 0) {
-                if (label) {
-                    label.textContent = curr === 'USD'
-                        ? `< $${Math.round(maxVal/1000)}k`
-                        : `< ₲ ${Math.round(maxVal*7950/1000000)}M`;
-                }
+            if (typeVal === "all" || !typeVal) {
+                if (hidden) hidden.value = "";
+                if (label) label.textContent = "Tipo de Inmueble";
             } else {
-                if (label) label.textContent = "Cualquier Precio";
+                if (hidden) hidden.value = typeVal;
+                if (label) label.textContent = HERO_TYPE_LABELS[typeVal] || typeVal;
             }
+
+            if (menu) menu.classList.remove("open");
         }
 
-        function resetHeroPrice() {
-            const minInput = document.getElementById("hero-min-price-input");
-            const maxInput = document.getElementById("hero-max-price-input");
-            if (minInput) minInput.value = "";
-            if (maxInput) maxInput.value = "";
-            updateHeroPriceSelection();
-        }
+        // Toggle y cierre del dropdown de tipo de inmueble al hacer clic fuera
+        document.addEventListener("DOMContentLoaded", () => {
+            const trigger = document.getElementById("btn-hero-type-trigger");
+            const menu = document.getElementById("hero-type-menu");
+            const wrapper = document.getElementById("hero-type-dropdown-wrapper");
 
-        // ============================================================
-        // 6. CONTROL DE HABITACIONES & BAÑOS
-        // ============================================================
-        let heroBedrooms = 0;
-        let heroBathrooms = 0;
-
-        function setHeroBedrooms(val, element) {
-            heroBedrooms = val;
-            const segs = document.querySelectorAll("#hero-control-bedrooms .seg-item");
-            segs.forEach(s => s.classList.remove("active"));
-            if (element) element.classList.add("active");
-            document.getElementById("hero-bedrooms-hidden").value = val;
-            updateHeroRoomsLabel();
-        }
-
-        function setHeroBathrooms(val, element) {
-            heroBathrooms = val;
-            const segs = document.querySelectorAll("#hero-control-bathrooms .seg-item");
-            segs.forEach(s => s.classList.remove("active"));
-            if (element) element.classList.add("active");
-            document.getElementById("hero-bathrooms-hidden").value = val;
-            updateHeroRoomsLabel();
-        }
-
-        function updateHeroRoomsLabel() {
-            const label = document.getElementById("text-hero-rooms");
-            if (!label) return;
-
-            if (heroBedrooms === 0 && heroBathrooms === 0) {
-                label.textContent = "Cualquiera";
-            } else if (heroBedrooms > 0 && heroBathrooms > 0) {
-                label.textContent = `${heroBedrooms}+ Dorms, ${heroBathrooms}+ Bñ`;
-            } else if (heroBedrooms > 0) {
-                label.textContent = `${heroBedrooms}+ Dormitorios`;
-            } else if (heroBathrooms > 0) {
-                label.textContent = `${heroBathrooms}+ Baños`;
-            }
-        }
-
-        function resetHeroRooms() {
-            heroBedrooms = 0;
-            heroBathrooms = 0;
-            document.querySelectorAll("#hero-control-bedrooms .seg-item").forEach((s, idx) => {
-                s.classList.toggle("active", idx === 0);
-            });
-            document.querySelectorAll("#hero-control-bathrooms .seg-item").forEach((s, idx) => {
-                s.classList.toggle("active", idx === 0);
-            });
-            document.getElementById("hero-bedrooms-hidden").value = 0;
-            document.getElementById("hero-bathrooms-hidden").value = 0;
-            updateHeroRoomsLabel();
-        }
-
-        // ============================================================
-        // 7. GOOGLE PLACES AUTOCOMPLETE
-        // ============================================================
-        function initHeroAutocomplete() {
-            const input = document.getElementById("hero-location-input");
-            const latInput = document.getElementById("hero-lat-input");
-            const lngInput = document.getElementById("hero-lng-input");
-
-            if (!input || !window.google || !window.google.maps || !window.google.maps.places) return;
-
-            try {
-                const autocomplete = new google.maps.places.Autocomplete(input, {
-                    componentRestrictions: { country: "py" },
-                    fields: ["geometry", "name", "formatted_address"]
+            if (trigger && menu) {
+                trigger.addEventListener("click", (e) => {
+                    e.stopPropagation();
+                    menu.classList.toggle("open");
                 });
 
-                autocomplete.addListener("place_changed", () => {
-                    const place = autocomplete.getPlace();
-                    if (place && place.geometry && place.geometry.location) {
-                        const lat = place.geometry.location.lat();
-                        const lng = place.geometry.location.lng();
-                        if (latInput) latInput.value = lat;
-                        if (lngInput) lngInput.value = lng;
-                        
-                        const cleanName = (place.name || place.formatted_address || "").replace(/, Paraguay$/i, "");
-                        if (input) input.value = cleanName;
+                document.addEventListener("click", (e) => {
+                    if (wrapper && !wrapper.contains(e.target)) {
+                        menu.classList.remove("open");
                     }
                 });
-            } catch (err) {
-                console.warn("Places autocomplete error on landing:", err);
             }
-        }
 
-        // ============================================================
-        // 8. INICIALIZACIÓN
-        // ============================================================
-        window.addEventListener("DOMContentLoaded", () => {
-            initHeroAutocomplete();
             const initialCurr = window.CurrencyManager ? window.CurrencyManager.getCurrency() : "USD";
             applyCurrencyToPage(initialCurr);
         });

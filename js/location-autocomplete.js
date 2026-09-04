@@ -8,50 +8,50 @@
 (function () {
     // 1. Catálogo estructurado de ubicaciones de Paraguay
     const PARAGUAY_LOCATIONS = [
-        // CIUDADES PRINCIPALES
-        { name: "Asunción", type: "city", subtitle: "Capital de Paraguay", dept: "Capital", coordinates: [-25.2867, -57.647] },
-        { name: "San Bernardino", type: "city", subtitle: "Ciudad turística / Lago Ypacaraí", dept: "Cordillera", coordinates: [-25.3115, -57.2961] },
-        { name: "Luque", type: "city", subtitle: "Gran Asunción / Zona Aeropuerto", dept: "Central", coordinates: [-25.2678, -57.4857] },
-        { name: "Lambaré", type: "city", subtitle: "Gran Asunción / Yacht y Golf Club", dept: "Central", coordinates: [-25.3458, -57.6067] },
-        { name: "Fernando de la Mora", type: "city", subtitle: "Gran Asunción (Zona Norte y Sur)", dept: "Central", coordinates: [-25.3211, -57.5469] },
-        { name: "Mariano Roque Alonso", type: "city", subtitle: "Gran Asunción / Expo y Puente Remanso", dept: "Central", coordinates: [-25.2167, -57.5333] },
-        { name: "San Lorenzo", type: "city", subtitle: "Gran Asunción / Ciudad Universitaria", dept: "Central", coordinates: [-25.3406, -57.5097] },
-        { name: "Villa Elisa", type: "city", subtitle: "Gran Asunción / Acceso Sur", dept: "Central", coordinates: [-25.3678, -57.5908] },
-        { name: "Capiatá", type: "city", subtitle: "Gran Asunción / Ruta PY02", dept: "Central", coordinates: [-25.3556, -57.4444] },
-        { name: "Areguá", type: "city", subtitle: "Capital de Central / Alfarería y Frutilla", dept: "Central", coordinates: [-25.3117, -57.3847] },
-        { name: "Altos", type: "city", subtitle: "Cordillera / AquaVillage y Colinas", dept: "Cordillera", coordinates: [-25.2636, -57.2558] },
-        { name: "Ypacaraí", type: "city", subtitle: "Cordillera / Ruta PY02", dept: "Central", coordinates: [-25.4022, -57.2872] },
-        { name: "Encarnación", type: "city", subtitle: "Perla del Sur / Costanera y Playas", dept: "Itapúa", coordinates: [-27.3306, -55.8667] },
-        { name: "Ciudad del Este", type: "city", subtitle: "Alto Paraná / Eje Comercial y Frontera", dept: "Alto Paraná", coordinates: [-25.5097, -54.6111] },
-        { name: "Hernandarias", type: "city", subtitle: "Alto Paraná / Paraná Country Club", dept: "Alto Paraná", coordinates: [-25.4056, -54.6361] },
-        { name: "Presidente Franco", type: "city", subtitle: "Alto Paraná / Saltos del Monday", dept: "Alto Paraná", coordinates: [-25.5647, -54.6156] },
+        // CIUDADES PRINCIPALES (Vista panorámica amplia con zoom 12-13 para abarcar todo el ancho de la ciudad)
+        { name: "Asunción", type: "city", subtitle: "Capital de Paraguay (Vista completa)", dept: "Capital", coordinates: [-25.2967, -57.5950], zoom: 12 },
+        { name: "San Bernardino", type: "city", subtitle: "Ciudad turística / Lago Ypacaraí", dept: "Cordillera", coordinates: [-25.3115, -57.2961], zoom: 13 },
+        { name: "Luque", type: "city", subtitle: "Gran Asunción / Zona Aeropuerto", dept: "Central", coordinates: [-25.2678, -57.4857], zoom: 12.5 },
+        { name: "Lambaré", type: "city", subtitle: "Gran Asunción / Yacht y Golf Club", dept: "Central", coordinates: [-25.3458, -57.6067], zoom: 13 },
+        { name: "Fernando de la Mora", type: "city", subtitle: "Gran Asunción (Zona Norte y Sur)", dept: "Central", coordinates: [-25.3211, -57.5469], zoom: 13 },
+        { name: "Mariano Roque Alonso", type: "city", subtitle: "Gran Asunción / Expo y Puente Remanso", dept: "Central", coordinates: [-25.2167, -57.5333], zoom: 13 },
+        { name: "San Lorenzo", type: "city", subtitle: "Gran Asunción / Ciudad Universitaria", dept: "Central", coordinates: [-25.3406, -57.5097], zoom: 13 },
+        { name: "Villa Elisa", type: "city", subtitle: "Gran Asunción / Acceso Sur", dept: "Central", coordinates: [-25.3678, -57.5908], zoom: 13 },
+        { name: "Capiatá", type: "city", subtitle: "Gran Asunción / Ruta PY02", dept: "Central", coordinates: [-25.3556, -57.4444], zoom: 13 },
+        { name: "Areguá", type: "city", subtitle: "Capital de Central / Alfarería y Frutilla", dept: "Central", coordinates: [-25.3117, -57.3847], zoom: 13 },
+        { name: "Altos", type: "city", subtitle: "Cordillera / AquaVillage y Colinas", dept: "Cordillera", coordinates: [-25.2636, -57.2558], zoom: 13 },
+        { name: "Ypacaraí", type: "city", subtitle: "Cordillera / Ruta PY02", dept: "Central", coordinates: [-25.4022, -57.2872], zoom: 13 },
+        { name: "Encarnación", type: "city", subtitle: "Perla del Sur / Costanera y Playas", dept: "Itapúa", coordinates: [-27.3306, -55.8667], zoom: 12.5 },
+        { name: "Ciudad del Este", type: "city", subtitle: "Alto Paraná / Eje Comercial y Frontera", dept: "Alto Paraná", coordinates: [-25.5097, -54.6111], zoom: 12.5 },
+        { name: "Hernandarias", type: "city", subtitle: "Alto Paraná / Paraná Country Club", dept: "Alto Paraná", coordinates: [-25.4056, -54.6361], zoom: 13 },
+        { name: "Presidente Franco", type: "city", subtitle: "Alto Paraná / Saltos del Monday", dept: "Alto Paraná", coordinates: [-25.5647, -54.6156], zoom: 13 },
 
-        // BARRIOS DE ASUNCIÓN (ALTA DEMANDA)
-        { name: "Villa Morra", type: "neighborhood", subtitle: "Barrio en Asunción / Eje Comercial", dept: "Asunción", coordinates: [-25.2938, -57.5794] },
-        { name: "Carmelitas", type: "neighborhood", subtitle: "Barrio en Asunción / Gastronómico & Residencial", dept: "Asunción", coordinates: [-25.2814, -57.5722] },
-        { name: "Mburucuyá", type: "neighborhood", subtitle: "Barrio en Asunción / Residencial Exclusivo", dept: "Asunción", coordinates: [-25.2694, -57.5678] },
-        { name: "Santa Teresa", type: "neighborhood", subtitle: "Barrio / Eje Corporativo en Asunción", dept: "Asunción", coordinates: [-25.2858, -57.5583] },
-        { name: "Ykua Satî", type: "neighborhood", subtitle: "Barrio en Asunción / Torres y Residencias", dept: "Asunción", coordinates: [-25.2917, -57.5611] },
-        { name: "Los Laureles", type: "neighborhood", subtitle: "Barrio en Asunción / Residencial Arbolado", dept: "Asunción", coordinates: [-25.3056, -57.575] },
-        { name: "Manora", type: "neighborhood", subtitle: "Barrio en Asunción / Zona Embajadas", dept: "Asunción", coordinates: [-25.2861, -57.5778] },
-        { name: "Recoleta", type: "neighborhood", subtitle: "Barrio en Asunción / Mariscal López", dept: "Asunción", coordinates: [-25.3014, -57.5889] },
-        { name: "Las Mercedes", type: "neighborhood", subtitle: "Barrio tradicional en Asunción", dept: "Asunción", coordinates: [-25.2806, -57.6139] },
-        { name: "Herrera", type: "neighborhood", subtitle: "Barrio en Asunción / Zona Municipalidad", dept: "Asunción", coordinates: [-25.2972, -57.5528] },
-        { name: "Sajonia", type: "neighborhood", subtitle: "Barrio en Asunción / Palacio de Justicia", dept: "Asunción", coordinates: [-25.2917, -57.6583] },
-        { name: "Centro Histórico", type: "neighborhood", subtitle: "Asunción / Bahía y Costanera", dept: "Asunción", coordinates: [-25.2825, -57.635] },
-        { name: "Trinidad", type: "neighborhood", subtitle: "Barrio en Asunción / Jardín Botánico", dept: "Asunción", coordinates: [-25.2583, -57.5722] },
-        { name: "Villa Aurelia", type: "neighborhood", subtitle: "Barrio en Asunción / Residencial", dept: "Asunción", coordinates: [-25.3111, -57.5639] },
-        { name: "San Cristóbal", type: "neighborhood", subtitle: "Barrio en Asunción / Denis Roa", dept: "Asunción", coordinates: [-25.2986, -57.5694] },
-        { name: "Campo Grande", type: "neighborhood", subtitle: "Barrio en Asunción / Autopista", dept: "Asunción", coordinates: [-25.2667, -57.5444] },
+        // BARRIOS DE ASUNCIÓN (ALTA DEMANDA - Zoom barrial focalizado)
+        { name: "Villa Morra", type: "neighborhood", subtitle: "Barrio en Asunción / Eje Comercial", dept: "Asunción", coordinates: [-25.2938, -57.5794], zoom: 14.5 },
+        { name: "Carmelitas", type: "neighborhood", subtitle: "Barrio en Asunción / Gastronómico & Residencial", dept: "Asunción", coordinates: [-25.2814, -57.5722], zoom: 14.5 },
+        { name: "Mburucuyá", type: "neighborhood", subtitle: "Barrio en Asunción / Residencial Exclusivo", dept: "Asunción", coordinates: [-25.2694, -57.5678], zoom: 14.5 },
+        { name: "Santa Teresa", type: "neighborhood", subtitle: "Barrio / Eje Corporativo en Asunción", dept: "Asunción", coordinates: [-25.2858, -57.5583], zoom: 14.5 },
+        { name: "Ykua Satî", type: "neighborhood", subtitle: "Barrio en Asunción / Torres y Residencias", dept: "Asunción", coordinates: [-25.2917, -57.5611], zoom: 14.5 },
+        { name: "Los Laureles", type: "neighborhood", subtitle: "Barrio en Asunción / Residencial Arbolado", dept: "Asunción", coordinates: [-25.3056, -57.575], zoom: 14.5 },
+        { name: "Manora", type: "neighborhood", subtitle: "Barrio en Asunción / Zona Embajadas", dept: "Asunción", coordinates: [-25.2861, -57.5778], zoom: 14.5 },
+        { name: "Recoleta", type: "neighborhood", subtitle: "Barrio en Asunción / Mariscal López", dept: "Asunción", coordinates: [-25.3014, -57.5889], zoom: 14.5 },
+        { name: "Las Mercedes", type: "neighborhood", subtitle: "Barrio tradicional en Asunción", dept: "Asunción", coordinates: [-25.2806, -57.6139], zoom: 14.5 },
+        { name: "Herrera", type: "neighborhood", subtitle: "Barrio en Asunción / Zona Municipalidad", dept: "Asunción", coordinates: [-25.2972, -57.5528], zoom: 14.5 },
+        { name: "Sajonia", type: "neighborhood", subtitle: "Barrio en Asunción / Palacio de Justicia", dept: "Asunción", coordinates: [-25.2917, -57.6583], zoom: 14.5 },
+        { name: "Centro Histórico", type: "neighborhood", subtitle: "Asunción / Bahía y Costanera", dept: "Asunción", coordinates: [-25.2825, -57.635], zoom: 14.5 },
+        { name: "Trinidad", type: "neighborhood", subtitle: "Barrio en Asunción / Jardín Botánico", dept: "Asunción", coordinates: [-25.2583, -57.5722], zoom: 14.5 },
+        { name: "Villa Aurelia", type: "neighborhood", subtitle: "Barrio en Asunción / Residencial", dept: "Asunción", coordinates: [-25.3111, -57.5639], zoom: 14.5 },
+        { name: "San Cristóbal", type: "neighborhood", subtitle: "Barrio en Asunción / Denis Roa", dept: "Asunción", coordinates: [-25.2986, -57.5694], zoom: 14.5 },
+        { name: "Campo Grande", type: "neighborhood", subtitle: "Barrio en Asunción / Autopista", dept: "Asunción", coordinates: [-25.2667, -57.5444], zoom: 14.5 },
 
         // EJES Y AVENIDAS ESTRATÉGICAS
-        { name: "Eje Corporativo", type: "avenue", subtitle: "Av. Aviadores del Chaco / WTC y Shopping del Sol", dept: "Asunción", coordinates: [-25.2806, -57.5611] },
-        { name: "Av. Molas López", type: "avenue", subtitle: "Eje Residencial de Torres Premium", dept: "Asunción", coordinates: [-25.275, -57.5694] },
-        { name: "Av. Mariscal López", type: "avenue", subtitle: "Eje Comercial y Bancario", dept: "Asunción", coordinates: [-25.2944, -57.5806] },
-        { name: "Av. Santa Teresa", type: "avenue", subtitle: "Corredor de Torres de Lujo", dept: "Asunción", coordinates: [-25.2858, -57.5583] },
-        { name: "Costanera de Asunción", type: "avenue", subtitle: "Frente a la Bahía de Asunción", dept: "Asunción", coordinates: [-25.275, -57.6333] },
-        { name: "Ciervo Cuá", type: "neighborhood", subtitle: "San Bernardino / Condominios y Lago", dept: "Cordillera", coordinates: [-25.3333, -57.2833] },
-        { name: "Paraná Country Club", type: "neighborhood", subtitle: "Hernandarias / Barrio Cerrado de Lujo", dept: "Alto Paraná", coordinates: [-25.4389, -54.6222] }
+        { name: "Eje Corporativo", type: "avenue", subtitle: "Av. Aviadores del Chaco / WTC y Shopping del Sol", dept: "Asunción", coordinates: [-25.2806, -57.5611], zoom: 15 },
+        { name: "Av. Molas López", type: "avenue", subtitle: "Eje Residencial de Torres Premium", dept: "Asunción", coordinates: [-25.275, -57.5694], zoom: 15 },
+        { name: "Av. Mariscal López", type: "avenue", subtitle: "Eje Comercial y Bancario", dept: "Asunción", coordinates: [-25.2944, -57.5806], zoom: 15 },
+        { name: "Av. Santa Teresa", type: "avenue", subtitle: "Corredor de Torres de Lujo", dept: "Asunción", coordinates: [-25.2858, -57.5583], zoom: 15 },
+        { name: "Costanera de Asunción", type: "avenue", subtitle: "Frente a la Bahía de Asunción", dept: "Asunción", coordinates: [-25.275, -57.6333], zoom: 14.5 },
+        { name: "Ciervo Cuá", type: "neighborhood", subtitle: "San Bernardino / Condominios y Lago", dept: "Cordillera", coordinates: [-25.3333, -57.2833], zoom: 14 },
+        { name: "Paraná Country Club", type: "neighborhood", subtitle: "Hernandarias / Barrio Cerrado de Lujo", dept: "Alto Paraná", coordinates: [-25.4389, -54.6222], zoom: 14 }
     ];
 
     const POPULAR_ZONES = [
@@ -305,13 +305,19 @@
 
             this.hide();
 
+            const targetZoom = loc.zoom || (loc.type === "city" ? 12 : (loc.type === "neighborhood" ? 14.5 : 15));
+
             // Callback personalizado o sincronización con FilterManager
             if (typeof this.options.onSelect === "function") {
                 this.options.onSelect(loc);
             } else if (!this.options.isHero && window.FilterManager) {
                 window.FilterManager.setFilter("keyword", loc.name);
-                if (loc.coordinates && window.MapManager && typeof window.MapManager.panToCoordinates === "function") {
-                    window.MapManager.panToCoordinates(loc.coordinates[0], loc.coordinates[1], 15);
+                if (loc.coordinates && window.MapManager) {
+                    if (typeof window.MapManager.panTo === "function") {
+                        window.MapManager.panTo(loc.coordinates[0], loc.coordinates[1], targetZoom);
+                    } else if (typeof window.MapManager.panToCoordinates === "function") {
+                        window.MapManager.panToCoordinates(loc.coordinates[0], loc.coordinates[1], targetZoom);
+                    }
                 }
             }
         }
@@ -383,8 +389,13 @@
                     if (window.FilterManager) {
                         window.FilterManager.setFilter("keyword", loc.name);
                     }
-                    if (loc.coordinates && window.MapManager && typeof window.MapManager.panToCoordinates === "function") {
-                        window.MapManager.panToCoordinates(loc.coordinates[0], loc.coordinates[1], 15);
+                    const targetZoom = loc.zoom || (loc.type === "city" ? 12 : (loc.type === "neighborhood" ? 14.5 : 15));
+                    if (loc.coordinates && window.MapManager) {
+                        if (typeof window.MapManager.panTo === "function") {
+                            window.MapManager.panTo(loc.coordinates[0], loc.coordinates[1], targetZoom);
+                        } else if (typeof window.MapManager.panToCoordinates === "function") {
+                            window.MapManager.panToCoordinates(loc.coordinates[0], loc.coordinates[1], targetZoom);
+                        }
                     }
                 }
             });

@@ -38,6 +38,29 @@
                     window.FilterManager.filters.keyword = qKw;
                     const searchInput = document.getElementById("search-input");
                     if (searchInput) searchInput.value = qKw;
+
+                    const normKw = qKw.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+                    if (normKw.includes("asuncion")) {
+                        setTimeout(() => {
+                            if (window.MapManager) window.MapManager.panTo(-25.2967, -57.5950, 12);
+                        }, 400);
+                    } else if (normKw.includes("san bernardino")) {
+                        setTimeout(() => {
+                            if (window.MapManager) window.MapManager.panTo(-25.3115, -57.2961, 13);
+                        }, 400);
+                    } else if (normKw.includes("luque")) {
+                        setTimeout(() => {
+                            if (window.MapManager) window.MapManager.panTo(-25.2678, -57.4857, 12.5);
+                        }, 400);
+                    } else if (qLat && qLng) {
+                        const latNum = parseFloat(qLat);
+                        const lngNum = parseFloat(qLng);
+                        if (!isNaN(latNum) && !isNaN(lngNum)) {
+                            setTimeout(() => {
+                                if (window.MapManager) window.MapManager.panTo(latNum, lngNum, 12.5);
+                            }, 400);
+                        }
+                    }
                 }
 
                 if (qOp && qOp !== "all") {
