@@ -9,9 +9,8 @@
     'use strict';
 
     // 1. Configuración de Credenciales de Supabase
-    // Obtén tu URL y clave 'anon' 'public' en: Supabase Dashboard > Project Settings > API
     const SUPABASE_URL = window.SUPABASE_CUSTOM_URL || 'https://chzxwihqmvotxhiztehk.supabase.co';
-    const SUPABASE_ANON_KEY = window.SUPABASE_CUSTOM_KEY || ''; // Pega aquí tu clave anon public de Supabase
+    const SUPABASE_ANON_KEY = window.SUPABASE_CUSTOM_KEY || 'sb_publishable_45-h_r-q0fhiQoQ4Xgz8ZA_ep_fCnp0';
 
     let supabaseClient = null;
     let isMockMode = false;
@@ -19,7 +18,7 @@
     // Verificar si la clave es real o está vacía/placeholder
     const isRealKey = SUPABASE_ANON_KEY && 
                       !SUPABASE_ANON_KEY.includes('placeholder') && 
-                      SUPABASE_ANON_KEY.length > 50;
+                      SUPABASE_ANON_KEY.length > 15;
 
     // 2. Inicializar Cliente Supabase
     if (window.supabase && typeof window.supabase.createClient === 'function' && isRealKey) {
@@ -39,8 +38,9 @@
         }
     } else {
         isMockMode = true;
-        console.info("[Zilla Supabase] Operando en modo local/desarrollo. Para conectar con la nube de Supabase, coloca tu clave anon_key en js/supabase-config.js.");
+        console.info("[Zilla Supabase] Operando en modo local/desarrollo.");
     }
+
 
 
     // 3. API de Autenticación y Base de Datos de Clientes

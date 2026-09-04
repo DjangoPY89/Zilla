@@ -10,7 +10,7 @@
 
     // 1. Configuración de Supabase
     const SUPABASE_URL = 'https://chzxwihqmvotxhiztehk.supabase.co';
-    const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.placeholder';
+    const SUPABASE_KEY = 'sb_publishable_45-h_r-q0fhiQoQ4Xgz8ZA_ep_fCnp0';
     let supabaseClient = null;
 
     if (window.supabase && typeof window.supabase.createClient === 'function') {
@@ -20,6 +20,7 @@
             console.warn("Supabase client initialized in offline / mock mode:", e);
         }
     }
+
 
     // 2. Estado del Formulario
     let currentStep = 1;

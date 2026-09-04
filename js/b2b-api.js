@@ -11,9 +11,10 @@
 
     const SUPABASE_CONFIG = {
         url: 'https://chzxwihqmvotxhiztehk.supabase.co',
-        anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.e30.placeholder', // Placeholder o key real
+        anonKey: 'sb_publishable_45-h_r-q0fhiQoQ4Xgz8ZA_ep_fCnp0',
         storageKey: 'zilla_b2b_crm_leads'
     };
+
 
     // Datos maestros locales de alta precisión para Paraguay (Fallback & Cache instantáneo)
     const MOCK_DATA = {
