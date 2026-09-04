@@ -561,4 +561,10 @@
     .feed-layout-switcher {
         display: none !important;
     }
+
+    /* Ocultar tags superiores y tarjeta de descripción del Hero en versión móvil */
+    .hero-top-tags,
+    .hero-subtext-card {
+        display: none !important;
+    }
 }
