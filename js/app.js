@@ -282,27 +282,33 @@
                 });
             });
 
-            // Conmutador de Vista Móvil (Mapa Pantalla Completa / Lista)
-            const mobileViewToggle = document.getElementById("mobile-view-toggle");
-            if (mobileViewToggle) {
-                mobileViewToggle.addEventListener("click", () => {
-                    const isMapVisible = document.body.classList.toggle("mobile-map-active");
-                    const icon = mobileViewToggle.querySelector("i");
-                    const text = mobileViewToggle.querySelector("span");
+            // Conmutador de Vista Móvil (Mapa / Lista)
+            const setMobileMapView = (showMap) => {
+                if (showMap) {
+                    document.body.classList.add("mobile-map-active");
+                    if (window.MapManager && window.MapManager.invalidateSize) {
+                        setTimeout(() => window.MapManager.invalidateSize(), 60);
+                        setTimeout(() => window.MapManager.invalidateSize(), 250);
+                    }
+                } else {
+                    document.body.classList.remove("mobile-map-active");
+                }
+            };
 
-                    if (isMapVisible) {
-                        if (icon) icon.className = "fas fa-list-ul";
-                        if (text) text.textContent = "Ver Lista";
-                        if (window.MapManager && window.MapManager.invalidateSize) {
-                            setTimeout(() => window.MapManager.invalidateSize(), 50);
-                            setTimeout(() => window.MapManager.invalidateSize(), 250);
-                        }
+            const mobileMapTriggers = document.querySelectorAll(
+                "#mobile-view-toggle, #btn-mobile-return-list, #mobile-map-floating-exit-btn, .btn-mobile-return-list, .mobile-map-floating-exit-btn"
+            );
+            mobileMapTriggers.forEach(btn => {
+                btn.addEventListener("click", (e) => {
+                    e.preventDefault();
+                    if (btn.id === "btn-mobile-return-list" || btn.id === "mobile-map-floating-exit-btn") {
+                        setMobileMapView(false);
                     } else {
-                        if (icon) icon.className = "fas fa-map-location-dot";
-                        if (text) text.textContent = "Mapa";
+                        const isCurrentlyMap = document.body.classList.contains("mobile-map-active");
+                        setMobileMapView(!isCurrentlyMap);
                     }
                 });
-            }
+            });
 
             // Input de búsqueda rápida
             const searchInput = document.getElementById("search-input");

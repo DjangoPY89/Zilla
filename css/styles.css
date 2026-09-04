@@ -1984,6 +1984,11 @@ button, input, select, textarea {
     color: #10b981;
 }
 
+.btn-mobile-return-list,
+.mobile-map-floating-exit-btn {
+    display: none;
+}
+
 /* ============================================================
    MODAL FICHA DE PROPIEDAD EN PANTALLA COMPLETA (Apple Pro Style)
    ============================================================ */
@@ -3548,10 +3553,67 @@ button, input, select, textarea {
         display: flex !important;
         justify-content: center !important;
         z-index: 9999 !important;
+        gap: 8px !important;
     }
     
-    .mobile-view-btn {
+    /* Botones para salir del Mapa y volver al Listado en Móvil */
+    body.mobile-map-active .btn-mobile-return-list {
         display: inline-flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: 9999px !important;
+        padding: 7px 14px !important;
+        font-size: 0.8rem !important;
+        font-weight: 700 !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08) !important;
+        cursor: pointer !important;
+    }
+
+    body.mobile-map-active .btn-mobile-return-list i {
+        color: #10b981 !important;
+        font-size: 0.85rem !important;
+    }
+
+    body.mobile-map-active .mobile-map-floating-exit-btn {
+        display: inline-flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        gap: 8px !important;
+        position: fixed !important;
+        bottom: 24px !important;
+        left: 50% !important;
+        transform: translateX(-50%) !important;
+        z-index: 100000 !important;
+        background: #ffffff !important;
+        color: #0f172a !important;
+        border: 1px solid #e2e8f0 !important;
+        border-radius: var(--radius-full) !important;
+        padding: 11px 22px !important;
+        font-family: 'Outfit', sans-serif !important;
+        font-size: 0.88rem !important;
+        font-weight: 800 !important;
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.16) !important;
+        cursor: pointer !important;
+        white-space: nowrap !important;
+        transition: transform 0.2s ease, box-shadow 0.2s ease !important;
+        animation: floatUpExitBtn 0.25s cubic-bezier(0.16, 1, 0.3, 1) !important;
+    }
+
+    body.mobile-map-active .mobile-map-floating-exit-btn:active {
+        transform: translateX(-50%) scale(0.96) !important;
+    }
+
+    body.mobile-map-active .mobile-map-floating-exit-btn i {
+        color: #10b981 !important;
+        font-size: 0.95rem !important;
+    }
+
+    @keyframes floatUpExitBtn {
+        from { opacity: 0; transform: translate(-50%, 15px); }
+        to { opacity: 1; transform: translate(-50%, 0); }
     }
     
     /* ============================================================
