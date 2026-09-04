@@ -299,7 +299,7 @@
                         }
                     } else {
                         if (icon) icon.className = "fas fa-map-location-dot";
-                        if (text) text.textContent = "Mapa Pantalla Completa";
+                        if (text) text.textContent = "Mapa";
                     }
                 });
             }

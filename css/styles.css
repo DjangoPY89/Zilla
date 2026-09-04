@@ -836,18 +836,16 @@ button, input, select, textarea {
     box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35) !important;
 }
 
-/* Switcher Segmentado de Tamaño del Mapa - High-Visibility Dark Capsule Design */
+/* Switcher Segmentado de Tamaño del Mapa - Clean White Capsule Design */
 .apple-map-size-switcher {
     display: inline-flex;
     align-items: center;
-    background: #0f172a;
+    background: #ffffff;
     padding: 4px;
     border-radius: var(--radius-full);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    box-shadow: 0 4px 20px rgba(15, 23, 42, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.1);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     gap: 3px;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
 }
 
 .btn-map-size {
@@ -858,7 +856,7 @@ button, input, select, textarea {
     border-radius: var(--radius-full);
     font-size: 0.8rem;
     font-weight: 700;
-    color: #94a3b8;
+    color: #64748b;
     border: 1px solid transparent;
     background: transparent;
     cursor: pointer;
@@ -875,19 +873,19 @@ button, input, select, textarea {
 }
 
 .btn-map-size:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.08);
+    color: #0f172a;
+    background: #f8fafc;
 }
 
 .btn-map-size:hover i {
-    color: #38bdf8;
+    color: #0f172a;
 }
 
 .btn-map-size.active {
-    background: #1e293b;
+    background: #0f172a;
     color: #ffffff;
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.45), inset 0 1px 1px rgba(255, 255, 255, 0.18);
+    border: 1px solid #0f172a;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.25);
 }
 
 .btn-map-size.active::before {
@@ -916,7 +914,7 @@ button, input, select, textarea {
 }
 
 .btn-map-size.active i {
-    color: #38bdf8;
+    color: #ffffff;
 }
 
 /* Pestaña flotante lateral en el mapa para achicar/expandir */
@@ -928,25 +926,25 @@ button, input, select, textarea {
     transform: translateY(-50%);
     width: 28px;
     height: 52px;
-    background: #0f172a;
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     border-radius: var(--radius-full);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 0.8rem;
-    color: #94a3b8;
+    color: #64748b;
     cursor: pointer;
     z-index: 550;
     transition: all 0.2s ease;
 }
 
 .map-collapse-edge-btn:hover {
-    background: #1e293b;
-    color: #38bdf8;
-    border-color: #38bdf8;
-    box-shadow: 0 0 16px rgba(56, 189, 248, 0.4);
+    background: #f8fafc;
+    color: #0f172a;
+    border-color: #cbd5e1;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
 }
 
 /* ============================================================
@@ -978,17 +976,17 @@ button, input, select, textarea {
     display: flex;
     align-items: center;
     gap: 8px;
-    background: #0f172a;
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
     padding: 6px 14px;
     border-radius: var(--radius-full);
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.2);
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .apple-sort-wrapper label {
     font-size: 0.78rem;
     font-weight: 700;
-    color: #94a3b8;
+    color: #64748b;
     display: flex;
     align-items: center;
     gap: 5px;
@@ -999,14 +997,14 @@ button, input, select, textarea {
     background: transparent;
     font-size: 0.8rem;
     font-weight: 700;
-    color: #ffffff;
+    color: #0f172a;
     cursor: pointer;
     outline: none;
 }
 
 .apple-sort-select option {
-    background: #0f172a;
-    color: #ffffff;
+    background: #ffffff;
+    color: #0f172a;
 }
 
 .map-sync-toggle {
@@ -1014,22 +1012,22 @@ button, input, select, textarea {
     align-items: center;
     gap: 8px;
     font-size: 0.8rem;
-    color: #cbd5e1;
+    color: #0f172a;
     font-weight: 700;
-    background: #0f172a;
+    background: #ffffff;
     padding: 7px 14px;
     border-radius: var(--radius-full);
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.2);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
     cursor: pointer;
     transition: all 0.2s ease;
     user-select: none;
 }
 
 .map-sync-toggle:hover {
-    border-color: rgba(255, 255, 255, 0.3);
-    color: #ffffff;
-    background: #1e293b;
+    border-color: #cbd5e1;
+    color: #0f172a;
+    background: #f8fafc;
 }
 
 .map-sync-toggle input[type="checkbox"] {
