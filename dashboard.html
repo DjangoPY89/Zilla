@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Cliente | Zilla PropTech Paraguay</title>
+    
+    <!-- Google Fonts: Outfit & Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6.5.1 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Custom Stylesheets -->
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+</head>
+<body class="dash-layout-body">
+
+    <!-- ============================================================
+         1. BARRA SUPERIOR (TOPBAR / HEADER)
+         ============================================================ -->
+    <header class="dash-topbar">
+        <div class="topbar-left-group">
+            <button type="button" class="btn-sidebar-collapse" id="btn-sidebar-collapse-toggle" aria-label="Colapsar Menú Lateral">
+                <i class="fas fa-bars-staggered"></i>
+            </button>
+            <div class="topbar-global-search">
+                <i class="fas fa-magnifying-glass search-icon-left"></i>
+                <input type="text" class="topbar-search-input" id="topbar-global-search-input" placeholder="Buscar en Zilla...">
+                <span class="search-shortcut-badge">⌘K</span>
+            </div>
+        </div>
+
+        <nav class="topbar-center-links">
+            <a href="javascript:void(0)" onclick="switchTab('resumen')" class="topbar-nav-link active">Dashboard</a>
+            <a href="javascript:void(0)" onclick="switchTab('propiedades')" class="topbar-nav-link">Mis Inmuebles</a>
+            <a href="javascript:void(0)" onclick="switchTab('consultas')" class="topbar-nav-link">Mensajes</a>
+            <a href="explorar.html" class="topbar-nav-link">Explorar Mapa</a>
+            <a href="https://wa.me/595981123456" target="_blank" class="topbar-nav-link">Ayuda</a>
+        </nav>
+
+        <div class="topbar-right-group">
+            <!-- Selector Moneda USD / PYG -->
+            <div class="dashboard-currency-wrap" style="display: flex; background: #f1f5f9; padding: 2px; border-radius: 8px;">
+                <button type="button" class="dash-currency-btn active" data-currency="USD" style="border: none; background: #ffffff; padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; cursor: pointer;">USD</button>
+                <button type="button" class="dash-currency-btn" data-currency="PYG" style="border: none; background: transparent; padding: 4px 10px; border-radius: 6px; font-size: 0.78rem; font-weight: 700; color: #64748b; cursor: pointer;">PYG</button>
+            </div>
+
+            <!-- Botón Notificaciones -->
+            <button type="button" class="topbar-icon-btn" title="Notificaciones" onclick="switchTab('consultas')">
+                <i class="far fa-bell"></i>
+                <span class="badge-dot"></span>
+            </button>
+
+            <!-- Botón Publicar Propiedad (Estilo Upgrade Pill) -->
+            <a href="publicar.html" class="btn-topbar-upgrade">
+                <i class="fas fa-plus"></i>
+                <span>Publicar Inmueble</span>
+            </a>
+
+            <!-- Avatar Usuario -->
+            <div class="topbar-avatar-wrap" id="topbar-avatar-btn" title="Configurar Perfil">
+                <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=300&q=80" alt="Avatar" class="topbar-avatar-img" id="topbar-user-avatar">
+            </div>
+        </div>
+    </header>
+
+    <!-- ============================================================
+         2. CONTENEDOR PRINCIPAL: SIDEBAR + ÁREA DE CONTENIDO
+         ============================================================ -->
+    <div class="dash-main-container">
+
+        <!-- SIDEBAR IZQUIERDO (CONSTRUCTOR X DESIGN) -->
+        <aside class="dash-sidebar" id="dash-sidebar">
+            <div class="sidebar-top-section">
+                <!-- Logotipo Zilla -->
+                <div class="sidebar-top-brand">
+                    <a href="index.html" class="sidebar-brand-link">
+                        <img src="assets/logo-dark.svg" alt="Zilla Logo" class="sidebar-brand-logo-img">
+                        <span class="sidebar-brand-name">Zilla<span style="color: var(--zilla-lime);">.py</span></span>
+                    </a>
+                </div>
+
+                <!-- Grupo 1: Navigate -->
+                <div class="sidebar-group-wrapper">
+                    <div class="sidebar-group-title">
+                        <span>Navegación</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="sidebar-nav-list">
+                        <button type="button" class="sidebar-nav-item active" data-tab="propiedades">
+                            <div class="nav-item-left">
+                                <i class="fas fa-layer-group nav-item-icon"></i>
+                                <span class="nav-item-text">Mis Propiedades</span>
+                            </div>
+                        </button>
+                        <button type="button" class="sidebar-nav-item" data-tab="consultas">
+                            <div class="nav-item-left">
+                                <i class="far fa-comments nav-item-icon"></i>
+                                <span class="nav-item-text">Consultas Recibidas</span>
+                            </div>
+                            <span class="nav-item-badge-neutral">3</span>
+                        </button>
+                        <button type="button" class="sidebar-nav-item" data-tab="finanzas">
+                            <div class="nav-item-left">
+                                <i class="fas fa-receipt nav-item-icon"></i>
+                                <span class="nav-item-text">Finanzas & Pagos</span>
+                            </div>
+                        </button>
+                        <button type="button" class="sidebar-nav-item" data-tab="favoritos">
+                            <div class="nav-item-left">
+                                <i class="far fa-heart nav-item-icon"></i>
+                                <span class="nav-item-text">Favoritos</span>
+                            </div>
+                        </button>
+                        <button type="button" class="sidebar-nav-item" data-tab="historial">
+                            <div class="nav-item-left">
+                                <i class="fas fa-clock-rotate-left nav-item-icon"></i>
+                                <span class="nav-item-text">Historial</span>
+                            </div>
+                        </button>
+                        <button type="button" class="sidebar-nav-item" data-tab="consultas_enviadas">
+                            <div class="nav-item-left">
+                                <i class="far fa-paper-plane nav-item-icon"></i>
+                                <span class="nav-item-text">Consultas Enviadas</span>
+                            </div>
+                            <span class="nav-item-badge">136</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Grupo 2: More -->
+                <div class="sidebar-group-wrapper">
+                    <div class="sidebar-group-title">
+                        <span>Más Opciones</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="sidebar-nav-list">
+                        <button type="button" class="sidebar-nav-item" onclick="document.getElementById('sidebar-user-card-btn').click()">
+                            <div class="nav-item-left">
+                                <i class="fas fa-sliders nav-item-icon"></i>
+                                <span class="nav-item-text">Ajustes de Cuenta</span>
+                            </div>
+                        </button>
+                        <a href="explorar.html" class="sidebar-nav-item" style="text-decoration: none;">
+                            <div class="nav-item-left">
+                                <i class="fas fa-compass nav-item-icon"></i>
+                                <span class="nav-item-text">Explorar Mapa</span>
+                            </div>
+                        </a>
+                        <a href="https://wa.me/595981123456" target="_blank" class="sidebar-nav-item" style="text-decoration: none;">
+                            <div class="nav-item-left">
+                                <i class="fab fa-whatsapp nav-item-icon" style="color: #22c55e;"></i>
+                                <span class="nav-item-text">Soporte WhatsApp</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tarjeta Inferior de Usuario (Constructor X Sidebar Footer) -->
+            <div class="sidebar-user-card" id="sidebar-user-card-btn" title="Editar Perfil">
+                <div class="user-card-left">
+                    <img src="https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=300&q=80" alt="Avatar" class="user-card-avatar" id="sidebar-user-avatar">
+                    <div class="user-card-info">
+                        <span class="user-card-name" id="sidebar-user-name">Juan Solalinde</span>
+                        <span class="user-card-email" id="sidebar-user-email">juan@zilla.com.py</span>
+                    </div>
+                </div>
+                <i class="fas fa-ellipsis-vertical user-card-chevron"></i>
+            </div>
+        </aside>
+
+        <!-- ÁREA DE CONTENIDO (MAIN) -->
+        <main class="dash-content-area">
+
+            <!-- BARRA DE BREADCRUMBS & ACCIONES RÁPIDAS -->
+            <div class="dash-breadcrumbs-bar">
+                <div class="breadcrumbs-path">
+                    <a href="index.html" class="bc-item">Inicio</a>
+                    <i class="fas fa-chevron-right bc-separator"></i>
+                    <a href="javascript:void(0)" onclick="switchTab('resumen')" class="bc-item">Dashboard</a>
+                    <i class="fas fa-chevron-right bc-separator"></i>
+                    <span class="bc-item current" id="breadcrumb-current-title">Mis Propiedades</span>
+                </div>
+                <div class="breadcrumbs-actions">
+                    <button type="button" class="bc-action-btn" onclick="window.open('https://wa.me/595981123456', '_blank')">
+                        <i class="far fa-circle-question"></i> Help Chat
+                    </button>
+                    <button type="button" class="bc-action-btn" onclick="window.location.href='index.html'">
+                        <i class="far fa-file-lines"></i> Docs
+                    </button>
+                    <button type="button" class="bc-action-btn" onclick="window.print()">
+                        <i class="fas fa-print"></i> Print
+                    </button>
+                </div>
+            </div>
+
+            <!-- CONTENIDO INTERIOR -->
+            <div class="dash-inner-content">
+
+                <!-- BARRA DE HERRAMIENTAS Y FILTROS (TOOLBAR) -->
+                <div class="dash-section-toolbar">
+                    <div class="toolbar-left">
+                        <div class="section-icon-title-wrap">
+                            <div class="section-icon-badge">
+                                <i class="fas fa-building"></i>
+                            </div>
+                            <h1 class="section-main-title">Mis Inmuebles</h1>
+                        </div>
+
+                        <!-- Filtro de Tabs: Todas, Activas, En Pausa, En Revisión -->
+                        <div class="toolbar-filter-tabs">
+                            <button type="button" class="toolbar-tab-btn active" data-status="all">Todas</button>
+                            <button type="button" class="toolbar-tab-btn" data-status="active">Activas</button>
+                            <button type="button" class="toolbar-tab-btn" data-status="paused">En Pausa</button>
+                            <button type="button" class="toolbar-tab-btn" data-status="review">En Revisión</button>
+                        </div>
+                    </div>
+
+                    <div class="toolbar-right">
+                        <!-- Conmutador Grid / List -->
+                        <div class="view-mode-toggle">
+                            <button type="button" class="btn-view-mode active" id="btn-view-grid" title="Vista Cuadrícula">
+                                <i class="fas fa-border-all"></i>
+                            </button>
+                            <button type="button" class="btn-view-mode" id="btn-view-list" title="Vista Lista">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+
+                        <!-- Barra de Búsqueda Local con Atajo ⌘K -->
+                        <div class="toolbar-search-wrap">
+                            <input type="text" class="toolbar-search-input" id="toolbar-search-input" placeholder="Buscar por título, barrio...">
+                        </div>
+
+                        <!-- Botón Primario de Acción "+ Publicar Inmueble" -->
+                        <button type="button" class="btn-primary-action" onclick="openPublishModal()">
+                            <i class="fas fa-plus"></i> Publicar Inmueble
+                        </button>
+                    </div>
+                </div>
+
+                <!-- CUADRÍCULA DE TARJETAS 3 COLUMNAS (STYLE CONSTRUCTOR X) -->
+                <div class="dash-cards-grid-3" id="dash-cards-grid-container">
+                    <!-- Las tarjetas se generan dinámicamente vía dashboard.js -->
+                </div>
+
+                <!-- PAGINACIÓN NUMÉRICA INFERIOR (STYLE CONSTRUCTOR X) -->
+                <div class="dash-pagination-bar">
+                    <button type="button" class="page-nav-btn" aria-label="Página anterior"><i class="fas fa-chevron-left"></i></button>
+                    <button type="button" class="page-num-btn active">1</button>
+                    <button type="button" class="page-num-btn">2</button>
+                    <button type="button" class="page-num-btn">3</button>
+                    <span style="color: var(--dash-text-subtle); padding: 0 4px;">...</span>
+                    <button type="button" class="page-num-btn">5</button>
+                    <button type="button" class="btn-load-more">Cargar Más</button>
+                    <button type="button" class="page-nav-btn" aria-label="Página siguiente"><i class="fas fa-chevron-right"></i></button>
+                </div>
+
+            </div>
+
+            <!-- FOOTER INFERIOR (STYLE CONSTRUCTOR X) -->
+            <footer class="dash-page-footer">
+                <p class="footer-copy-text">© 2026 Zilla PropTech Paraguay. Todos los derechos reservados.</p>
+                
+                <div class="footer-social-cluster">
+                    <a href="https://instagram.com" target="_blank" class="footer-social-pill" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://facebook.com" target="_blank" class="footer-social-pill" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://linkedin.com" target="_blank" class="footer-social-pill" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="https://twitter.com" target="_blank" class="footer-social-pill" aria-label="Twitter"><i class="fab fa-x-twitter"></i></a>
+                </div>
+
+                <div class="footer-right-cluster">
+                    <select class="footer-lang-dropdown" aria-label="Idioma">
+                        <option value="es">Español (PY)</option>
+                        <option value="en">English (US)</option>
+                    </select>
+                    <button type="button" class="btn-scroll-top" onclick="window.scrollTo({top:0, behavior:'smooth'})" aria-label="Subir">
+                        <i class="fas fa-chevron-up"></i>
+                    </button>
+                </div>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- ============================================================
+         3. MODAL DE EDICIÓN DE PERFIL
+         ============================================================ -->
+    <div class="dash-modal-overlay" id="profile-edit-modal" style="display: none;">
+        <div class="dash-modal-card">
+            <div class="dash-modal-header">
+                <h3 class="dash-modal-title">Editar Perfil de Usuario</h3>
+                <button type="button" class="btn-close-modal" id="btn-close-profile-modal">&times;</button>
+            </div>
+            <div class="dash-modal-body">
+                <div class="dash-input-group">
+                    <label for="modal-profile-name" class="dash-label">Nombre y Apellido</label>
+                    <input type="text" id="modal-profile-name" class="dash-input" placeholder="Tu nombre">
+                </div>
+                <div class="dash-input-group">
+                    <label for="modal-profile-email" class="dash-label">Correo Electrónico</label>
+                    <input type="email" id="modal-profile-email" class="dash-input" placeholder="tu@correo.com">
+                </div>
+            </div>
+            <div class="dash-modal-footer">
+                <button type="button" class="btn-dash-secondary" onclick="document.getElementById('profile-edit-modal').style.display='none'">Cancelar</button>
+                <button type="button" class="btn-dash-primary" id="btn-save-profile-modal">Guardar Cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/currency.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/dashboard.js"></script>
+</body>
+</html>

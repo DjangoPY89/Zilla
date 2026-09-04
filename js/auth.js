@@ -389,13 +389,17 @@
                 </div>
             </div>
             <div class="user-menu-divider"></div>
-            <a href="explorar.html" class="user-menu-item">
+            <a href="dashboard.html" class="user-menu-item">
+                <i class="fas fa-gauge-high text-emerald-500"></i>
+                <span>Mi Panel / Dashboard</span>
+            </a>
+            <a href="dashboard.html#favoritos" class="user-menu-item" onclick="if(window.location.pathname.includes('dashboard')){window.switchClientTab('favoritos');}">
                 <i class="fas fa-heart text-rose-500"></i>
                 <span>Mis Inmuebles Favoritos</span>
             </a>
-            <a href="explorar.html" class="user-menu-item">
-                <i class="fas fa-bell text-amber-400"></i>
-                <span>Alertas de Precio</span>
+            <a href="dashboard.html#propiedades" class="user-menu-item" onclick="if(window.location.pathname.includes('dashboard')){window.switchClientTab('propiedades');}">
+                <i class="fas fa-building text-sky-500"></i>
+                <span>Mis Propiedades (hasta 5)</span>
             </a>
             <div class="user-menu-divider"></div>
             <button type="button" class="user-menu-item user-menu-logout" id="user-logout-btn">

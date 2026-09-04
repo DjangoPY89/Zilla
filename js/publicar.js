@@ -39,7 +39,116 @@
         renderUploadedPhotos();
         syncLivePreview();
         initPickerMap();
+        loadPropertyForEdit();
     });
+
+    /**
+     * Cargar y Prellenar Formulario si se está en Modo Edición
+     */
+    function loadPropertyForEdit() {
+        try {
+            const urlParams = new URLSearchParams(window.location.search);
+            const editPropId = urlParams.get('id');
+            let editData = null;
+
+            const rawLocal = localStorage.getItem('zilla_edit_property');
+            if (rawLocal) {
+                editData = JSON.parse(rawLocal);
+            }
+
+            if (editData && (editData.id === editPropId || !editPropId)) {
+                // Prellenar Paso 1 (Operación y Tipo)
+                if (editData.operation) {
+                    const opCard = document.querySelector(`.visual-select-card[data-field="operation"][data-value="${editData.operation}"]`);
+                    if (opCard) selectVisualCard(opCard);
+                }
+                if (editData.propType) {
+                    const typeCard = document.querySelector(`.visual-select-card[data-field="propType"][data-value="${editData.propType}"]`);
+                    if (typeCard) selectVisualCard(typeCard);
+                }
+                const titleEl = document.getElementById('pub-title');
+                if (titleEl && editData.title) titleEl.value = editData.title;
+
+                // Prellenar Paso 2 (Ubicación)
+                const cityEl = document.getElementById('pub-city');
+                if (cityEl && editData.city) cityEl.value = editData.city;
+                const neighEl = document.getElementById('pub-neighborhood');
+                if (neighEl && editData.neighborhood) neighEl.value = editData.neighborhood;
+                const addrEl = document.getElementById('pub-address');
+                if (addrEl && editData.address) addrEl.value = editData.address;
+
+                // Prellenar Paso 3 (Superficies & Ambientes)
+                const m2El = document.getElementById('pub-total-m2');
+                if (m2El && editData.totalM2) m2El.value = editData.totalM2;
+                const builtM2El = document.getElementById('pub-built-m2');
+                if (builtM2El && editData.builtM2) builtM2El.value = editData.builtM2;
+                if (editData.bedrooms) {
+                    const bedEl = document.getElementById('pub-bedrooms');
+                    const bedVal = document.getElementById('pub-bedrooms-val');
+                    if (bedEl) bedEl.value = editData.bedrooms;
+                    if (bedVal) bedVal.textContent = editData.bedrooms;
+                }
+                if (editData.bathrooms) {
+                    const bathEl = document.getElementById('pub-bathrooms');
+                    const bathVal = document.getElementById('pub-bathrooms-val');
+                    if (bathEl) bathEl.value = editData.bathrooms;
+                    if (bathVal) bathVal.textContent = editData.bathrooms;
+                }
+                if (editData.parking) {
+                    const parkEl = document.getElementById('pub-parking');
+                    const parkVal = document.getElementById('pub-parking-val');
+                    if (parkEl) parkEl.value = editData.parking;
+                    if (parkVal) parkVal.textContent = editData.parking;
+                }
+                const descEl = document.getElementById('pub-description');
+                if (descEl && editData.description) descEl.value = editData.description;
+
+                // Prellenar Paso 4 (Galería de Fotos)
+                if (editData.image) {
+                    uploadedPhotos = [editData.image, ...uploadedPhotos.filter(img => img !== editData.image)];
+                    renderUploadedPhotos();
+                }
+
+                // Prellenar Paso 5 (Precios)
+                const priceUsdEl = document.getElementById('pub-price-usd');
+                if (priceUsdEl && editData.priceUSD) priceUsdEl.value = editData.priceUSD;
+                const expPygEl = document.getElementById('pub-expenses-pyg');
+                if (expPygEl && editData.expensesPYG !== undefined) expPygEl.value = editData.expensesPYG;
+
+                // Insertar banner visual de edición
+                const formWrapper = document.querySelector('.publish-form-wrapper');
+                if (formWrapper && !document.querySelector('.edit-mode-alert-banner')) {
+                    const banner = document.createElement('div');
+                    banner.className = 'edit-mode-alert-banner';
+                    banner.style.cssText = 'background: #0f766e; color: #ffffff; padding: 14px 18px; border-radius: 12px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; gap: 12px; box-shadow: 0 4px 12px rgba(15, 118, 110, 0.25);';
+                    banner.innerHTML = `
+                        <div style="display: flex; align-items: center; gap: 12px;">
+                            <i class="fas fa-pen-to-square" style="font-size: 1.3rem; color: #7bc133;"></i>
+                            <div>
+                                <strong style="font-size: 0.92rem; display: block;">Modo Edición de Inmueble (${editData.id || 'PUB'})</strong>
+                                <span style="font-size: 0.8rem; opacity: 0.9;">Editando: "${editData.title}". Los cambios actualizarán tu publicación en el panel.</span>
+                            </div>
+                        </div>
+                        <a href="dashboard.html" style="background: rgba(255,255,255,0.2); color: #fff; text-decoration: none; padding: 6px 14px; border-radius: 6px; font-size: 0.8rem; font-weight: 700; white-space: nowrap;">
+                            <i class="fas fa-arrow-left"></i> Volver al Dashboard
+                        </a>
+                    `;
+                    formWrapper.insertBefore(banner, formWrapper.firstChild);
+                }
+
+                // Modificar texto del botón de envío
+                const submitBtn = document.getElementById('btn-submit-publish');
+                if (submitBtn) {
+                    submitBtn.innerHTML = `<i class="fas fa-floppy-disk"></i> Guardar Cambios del Inmueble`;
+                }
+
+                syncLivePreview();
+            }
+        } catch (e) {
+            console.warn("Error loading edit property:", e);
+        }
+    }
+
 
     // ============================================================
     // 4. CONTROL DE PASOS DEL WIZARD (STEPPER)
