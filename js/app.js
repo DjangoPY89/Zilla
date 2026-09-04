@@ -430,6 +430,7 @@
             const mapSizeBtns = document.querySelectorAll(".btn-map-size:not(.btn-feed-layout)");
             const splitContainer = document.querySelector(".split-screen-container");
             const mapCollapseEdgeBtn = document.getElementById("map-collapse-edge-btn");
+            const autoSearchCheckbox = document.getElementById("search-on-map-move");
 
             let currentMapSize = "split"; // "split", "wide", "compact", "hide"
 
@@ -452,6 +453,30 @@
                         icon.className = size === "compact" || size === "hide" ? "fas fa-chevron-left" : "fas fa-chevron-right";
                     }
                     mapCollapseEdgeBtn.title = size === "hide" ? "Restaurar Mapa" : (size === "compact" ? "Ocultar Mapa" : (size === "wide" ? "Achicar a Dividido" : "Agrandar a 3/4"));
+                }
+
+                // Desincronizar / Reconectar automáticamente el mapa según el modo
+                if (size === "hide") {
+                    // Modo "Solo Lista": Desincronizar el mapa automáticamente para mostrar todos los inmuebles
+                    if (autoSearchCheckbox) {
+                        autoSearchCheckbox.checked = false;
+                    }
+                    if (window.FilterManager) {
+                        window.FilterManager.setFilter("mapBounds", null);
+                    }
+                } else {
+                    // Cualquier otro modo ("split", "wide", "compact"): Reconectar y sincronizar el mapa automáticamente
+                    if (autoSearchCheckbox) {
+                        autoSearchCheckbox.checked = true;
+                    }
+                    setTimeout(() => {
+                        if (window.MapManager && window.MapManager.getCurrentBounds) {
+                            const bounds = window.MapManager.getCurrentBounds();
+                            if (window.FilterManager && bounds) {
+                                window.FilterManager.setFilter("mapBounds", bounds);
+                            }
+                        }
+                    }, 400);
                 }
 
                 // Ajustar renderizado de canvas en Google Maps / Leaflet
@@ -761,16 +786,6 @@
             const maxPriceInput = document.getElementById("input-max-price");
             const applyPriceBtn = document.getElementById("apply-price-btn");
             const resetPriceBtn = document.getElementById("reset-price-btn");
-
-            // Presets de precio rápidos
-            document.querySelectorAll(".price-chip").forEach(chip => {
-                chip.addEventListener("click", () => {
-                    const min = chip.dataset.min;
-                    const max = chip.dataset.max;
-                    if (minPriceInput) minPriceInput.value = min > 0 ? min : "";
-                    if (maxPriceInput) maxPriceInput.value = max < 10000000 ? max : "";
-                });
-            });
 
             // Toggle mini de moneda para precio
             let priceFilterCurrency = "USD";
@@ -1130,13 +1145,13 @@
                                 ${prop.expensesPYG > 0 ? `<div class="card-expenses">+ ₲ ${prop.expensesPYG.toLocaleString('es-PY')}/m exp.</div>` : ''}
                             </div>
 
-                            <!-- Botones de Contacto Directo: WhatsApp y Llamar -->
+                            <!-- Botones de Contacto Directo: Llamar y WhatsApp -->
                             <div class="card-action-buttons">
-                                <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="btn-card-action btn-card-whatsapp" onclick="event.stopPropagation();" title="Contactar por WhatsApp a ${advertiserName}">
-                                    <i class="fab fa-whatsapp"></i> <span class="btn-action-label">WhatsApp</span>
-                                </a>
                                 <a href="${telLink}" class="btn-card-action btn-card-call" onclick="event.stopPropagation();" title="Llamar a ${advertiserName} (${cleanPhone})">
-                                    <i class="fas fa-phone"></i> <span class="btn-action-label">Llamar</span>
+                                    <i class="fas fa-phone-alt"></i> <span class="btn-action-label">Llamar</span>
+                                </a>
+                                <a href="${waLink}" target="_blank" rel="noopener noreferrer" class="btn-card-action btn-card-whatsapp" onclick="event.stopPropagation();" title="Contactar por WhatsApp a ${advertiserName}">
+                                    <i class="fab fa-whatsapp"></i> <span class="btn-action-label">Whatsapp</span>
                                 </a>
                             </div>
                         </div>
