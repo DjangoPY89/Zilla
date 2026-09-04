@@ -282,7 +282,7 @@
                 });
             });
 
-            // Conmutador de Vista Móvil (Mapa Pantalla Completa / Lista)
+            // Conmutador de Vista Móvil (Mapa / Lista)
             const mobileViewToggle = document.getElementById("mobile-view-toggle");
             if (mobileViewToggle) {
                 mobileViewToggle.addEventListener("click", () => {
@@ -292,14 +292,14 @@
 
                     if (isMapVisible) {
                         if (icon) icon.className = "fas fa-list-ul";
-                        if (text) text.textContent = "Ver Lista";
+                        if (text) text.textContent = "Lista";
                         if (window.MapManager && window.MapManager.invalidateSize) {
                             setTimeout(() => window.MapManager.invalidateSize(), 50);
                             setTimeout(() => window.MapManager.invalidateSize(), 250);
                         }
                     } else {
                         if (icon) icon.className = "fas fa-map-location-dot";
-                        if (text) text.textContent = "Mapa Pantalla Completa";
+                        if (text) text.textContent = "Mapa";
                     }
                 });
             }
@@ -388,72 +388,9 @@
             window.addEventListener("propertiesFiltered", updateActiveFilterCount);
             window.addEventListener("filtersReset", updateActiveFilterCount);
 
-            // 3. Repliegue automático al scrollear hacia abajo, reaparece al scrollear hacia arriba
-            let lastScrollY = window.scrollY || document.documentElement.scrollTop;
-            let isTicking = false;
-
-            const handleScroll = (currentY) => {
-                if (!filterBar) return;
-                const isMobile = window.innerWidth <= 768;
-                if (!isMobile) {
-                    filterBar.classList.remove("filter-bar-hidden");
-                    return;
-                }
-
-                // Si el menú desplegable o algún popover está abierto, no ocultarlo
-                const hasOpenPopover = document.querySelector(".apple-dropdown-container.open");
-                if ((pillsWrap && pillsWrap.classList.contains("mobile-expanded")) || hasOpenPopover) {
-                    filterBar.classList.remove("filter-bar-hidden");
-                    return;
-                }
-
-                const delta = currentY - lastScrollY;
-
-                if (currentY <= 15) {
-                    // En la parte superior siempre visible
-                    filterBar.classList.remove("filter-bar-hidden");
-                } else if (delta > 8 && currentY > 50) {
-                    // Scroll hacia abajo: ocultar hacia arriba
-                    filterBar.classList.add("filter-bar-hidden");
-                } else if (delta < -8) {
-                    // Scroll hacia arriba: reaparecer
-                    filterBar.classList.remove("filter-bar-hidden");
-                }
-
-                lastScrollY = currentY;
-            };
-
-            window.addEventListener("scroll", () => {
-                if (!isTicking) {
-                    window.requestAnimationFrame(() => {
-                        handleScroll(window.scrollY || document.documentElement.scrollTop);
-                        isTicking = false;
-                    });
-                    isTicking = true;
-                }
-            }, { passive: true });
-
-            if (feedCol) {
-                let lastFeedY = 0;
-                feedCol.addEventListener("scroll", () => {
-                    const currentY = feedCol.scrollTop;
-                    const delta = currentY - lastFeedY;
-                    const isMobile = window.innerWidth <= 768;
-
-                    if (isMobile && filterBar) {
-                        const hasOpenPopover = document.querySelector(".apple-dropdown-container.open");
-                        if ((!pillsWrap || !pillsWrap.classList.contains("mobile-expanded")) && !hasOpenPopover) {
-                            if (currentY <= 15) {
-                                filterBar.classList.remove("filter-bar-hidden");
-                            } else if (delta > 8 && currentY > 50) {
-                                filterBar.classList.add("filter-bar-hidden");
-                            } else if (delta < -8) {
-                                filterBar.classList.remove("filter-bar-hidden");
-                            }
-                        }
-                    }
-                    lastFeedY = currentY;
-                }, { passive: true });
+            // Barra de filtros siempre visible permanentemente
+            if (filterBar) {
+                filterBar.classList.remove("filter-bar-hidden");
             }
         },
 
