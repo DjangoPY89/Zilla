@@ -10,20 +10,10 @@
 
     const MAX_FREE_PROPERTIES = 5;
 
-    // Estado del cliente
-    let clientState = {
-        user: {
-            name: "Usuario",
-            email: "",
-            phone: "+595 981 000 000",
-            avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80",
-            role: "Cliente Particular"
-        },
-        currentTab: "propiedades",
-        currency: "USD",
-        searchFilter: "",
-        statusFilter: "all",
-        viewMode: "grid", // grid o list
+    const DEMO_ACCOUNT_EMAIL = "juanas89@gmail.com";
+
+    // Datos de demostración asignados exclusivamente a la cuenta principal
+    const DEMO_DATA = {
         properties: [
             {
                 id: "PUB-001",
@@ -174,7 +164,7 @@
                 phone: "+595 982 334 455",
                 email: "mj.fernandez@gmail.com",
                 date: "Hoy, 10:45 AM",
-                message: "¡Hola Juan! Estoy interesada en visitar la propiedad este fin de semana. ¿Tiene crédito bancario o Che Róga Porã?",
+                message: "¡Hola! Estoy interesada en visitar la propiedad este fin de semana. ¿Tiene crédito bancario o Che Róga Porã?",
                 status: "pending"
             },
             {
@@ -250,6 +240,26 @@
         ]
     };
 
+    // Estado del cliente (inicializado vacío para cuentas nuevas)
+    let clientState = {
+        user: {
+            name: "Usuario",
+            email: "",
+            phone: "",
+            avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80",
+            role: "Cliente Particular"
+        },
+        currentTab: "propiedades",
+        currency: "USD",
+        searchFilter: "",
+        statusFilter: "all",
+        viewMode: "grid", // grid o list
+        properties: [],
+        receivedInquiries: [],
+        favorites: [],
+        payments: []
+    };
+
 
     // Inicialización al cargar la página
     document.addEventListener("DOMContentLoaded", () => {
@@ -287,7 +297,33 @@
         if (user.name) clientState.user.name = user.name;
         if (user.email) clientState.user.email = user.email;
         if (user.avatar) clientState.user.avatar = user.avatar;
+
+        const userEmail = (user.email || "").toLowerCase().trim();
+
+        // 1. Si es la cuenta principal designada (juanas89@gmail.com), asignar anuncios de prueba
+        if (userEmail === DEMO_ACCOUNT_EMAIL.toLowerCase()) {
+            clientState.properties = [...DEMO_DATA.properties];
+            clientState.receivedInquiries = [...DEMO_DATA.receivedInquiries];
+            clientState.favorites = [...DEMO_DATA.favorites];
+            clientState.payments = [...DEMO_DATA.payments];
+        } else {
+            // 2. Para todos los demás usuarios (incluyendo django3515@gmail.com y nuevos registros), iniciar limpio
+            let savedUserProps = [];
+            try {
+                const rawProps = localStorage.getItem('zilla_user_properties_' + userEmail);
+                if (rawProps) savedUserProps = JSON.parse(rawProps);
+            } catch (e) {
+                console.warn("Error al cargar propiedades del usuario:", e);
+            }
+
+            clientState.properties = savedUserProps;
+            clientState.receivedInquiries = [];
+            clientState.favorites = [];
+            clientState.payments = [];
+        }
+
         renderUserInfo();
+        renderMainContent();
     }
 
     /**
@@ -537,10 +573,16 @@
         if (filtered.length === 0) {
             container.innerHTML = `
                 <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;">
-                    <i class="fas fa-building" style="font-size: 2.5rem; color: #cbd5e1; margin-bottom: 12px;"></i>
-                    <h3 style="margin: 0 0 6px 0; font-family: 'Outfit', sans-serif;">No se encontraron inmuebles</h3>
-                    <p style="color: var(--dash-text-muted); font-size: 0.9rem; margin: 0 0 16px 0;">Ajusta tus términos de búsqueda o publica un nuevo inmueble.</p>
-                    <button class="btn-primary-action" onclick="openPublishModal()"><i class="fas fa-plus"></i> Publicar Propiedad (Gratis)</button>
+                    <div style="width: 64px; height: 64px; border-radius: 50%; background: #ecfdf5; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+                        <i class="fas fa-building" style="font-size: 1.8rem; color: var(--zilla-primary);"></i>
+                    </div>
+                    <h3 style="margin: 0 0 8px 0; font-family: 'Outfit', sans-serif; font-size: 1.3rem;">Aún no tienes inmuebles publicados</h3>
+                    <p style="color: var(--dash-text-muted); font-size: 0.92rem; max-width: 480px; margin: 0 auto 24px auto;">
+                        ¡Tu cuenta te permite publicar hasta 5 inmuebles de forma 100% gratuita con fotos, mapa y contacto directo!
+                    </p>
+                    <button class="btn-primary-action" onclick="openPublishModal()" style="padding: 12px 24px; font-size: 0.95rem;">
+                        <i class="fas fa-plus"></i> Publicar Mi Primer Inmueble (Gratis)
+                    </button>
                 </div>
             `;
             return;
@@ -651,6 +693,21 @@
         const container = document.getElementById("dash-cards-grid-container");
         if (!container) return;
 
+        if (!clientState.receivedInquiries || clientState.receivedInquiries.length === 0) {
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;">
+                    <div style="width: 64px; height: 64px; border-radius: 50%; background: #eff6ff; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+                        <i class="far fa-comments" style="font-size: 1.8rem; color: #3b82f6;"></i>
+                    </div>
+                    <h3 style="margin: 0 0 8px 0; font-family: 'Outfit', sans-serif; font-size: 1.3rem;">Bandeja de Consultas Vacía</h3>
+                    <p style="color: var(--dash-text-muted); font-size: 0.92rem; max-width: 480px; margin: 0 auto 20px auto;">
+                        Aquí recibirás los mensajes y consultas de personas interesadas en tus propiedades publicadas.
+                    </p>
+                </div>
+            `;
+            return;
+        }
+
         container.innerHTML = clientState.receivedInquiries.map(inq => `
             <div class="company-card-style" style="grid-column: span 3;">
                 <div class="card-header-row">
@@ -677,6 +734,24 @@
     function renderFavoritesView() {
         const container = document.getElementById("dash-cards-grid-container");
         if (!container) return;
+
+        if (!clientState.favorites || clientState.favorites.length === 0) {
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 60px 20px; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px;">
+                    <div style="width: 64px; height: 64px; border-radius: 50%; background: #fff1f2; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 16px;">
+                        <i class="fas fa-heart" style="font-size: 1.8rem; color: #f43f5e;"></i>
+                    </div>
+                    <h3 style="margin: 0 0 8px 0; font-family: 'Outfit', sans-serif; font-size: 1.3rem;">No tienes inmuebles guardados</h3>
+                    <p style="color: var(--dash-text-muted); font-size: 0.92rem; max-width: 480px; margin: 0 auto 24px auto;">
+                        Guarda tus propiedades preferidas haciendo clic en el corazón mientras navegas en el mapa interactivo de Zilla.
+                    </p>
+                    <a href="explorar.html" class="btn-primary-action" style="display: inline-flex; align-items: center; gap: 8px; text-decoration: none; padding: 12px 24px;">
+                        <i class="fas fa-compass"></i> Explorar Inmuebles en Mapa
+                    </a>
+                </div>
+            `;
+            return;
+        }
 
         container.innerHTML = clientState.favorites.map(f => `
             <div class="company-card-style">
@@ -770,7 +845,14 @@
                             </tr>
                         </thead>
                         <tbody>
-                            ${clientState.payments.map(pay => `
+                            ${clientState.payments.length === 0 ? `
+                                <tr>
+                                    <td colspan="6" style="text-align: center; padding: 40px 20px; color: var(--dash-text-muted);">
+                                        <i class="fas fa-receipt" style="font-size: 1.5rem; margin-bottom: 8px; color: #cbd5e1; display: block;"></i>
+                                        No registras pagos adicionales. Tu plan actual es 100% gratuito (hasta 5 propiedades).
+                                    </td>
+                                </tr>
+                            ` : clientState.payments.map(pay => `
                                 <tr>
                                     <td style="font-weight: 700; color: #0f172a;">${pay.id}</td>
                                     <td>
