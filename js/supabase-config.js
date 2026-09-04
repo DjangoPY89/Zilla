@@ -260,6 +260,31 @@
         },
 
         /**
+         * Asegurar que el usuario tenga un registro en public.profiles (Google/Facebook/Email)
+         */
+        ensureProfile: async function (user) {
+            if (supabaseClient && !isMockMode && user && user.id) {
+                try {
+                    const fullName = user.user_metadata?.full_name || user.user_metadata?.name || (user.email ? user.email.split('@')[0] : 'Usuario');
+                    const avatar = user.user_metadata?.avatar_url || user.user_metadata?.picture || null;
+                    const provider = user.app_metadata?.provider || 'google';
+
+                    await supabaseClient.from('profiles').upsert({
+                        id: user.id,
+                        email: user.email,
+                        full_name: fullName,
+                        avatar_url: avatar,
+                        auth_provider: provider,
+                        updated_at: new Date().toISOString()
+                    }, { onConflict: 'id' });
+                    console.info("[Zilla Supabase] Perfil verificado/creado exitosamente en public.profiles para:", user.email);
+                } catch (e) {
+                    console.warn("[Zilla Supabase] Error asegurando perfil en base de datos:", e);
+                }
+            }
+        },
+
+        /**
          * Actualizar Perfil del Cliente en public.profiles
          */
         updateProfile: async function (userId, updates) {

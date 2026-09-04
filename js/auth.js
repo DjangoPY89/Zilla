@@ -49,6 +49,11 @@
                             loginDate: new Date().toISOString()
                         };
                         saveUserSession(currentUser);
+
+                        // Garantizar que exista en la tabla public.profiles
+                        if (window.ZillaSupabase.ensureProfile) {
+                            window.ZillaSupabase.ensureProfile(u);
+                        }
                     } else if (event === 'SIGNED_OUT') {
                         currentUser = null;
                         localStorage.removeItem(STORAGE_KEY);
