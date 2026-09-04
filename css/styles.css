@@ -959,6 +959,12 @@ button, input, select, textarea {
     flex-wrap: wrap;
 }
 
+.sort-and-mobile-map-wrap {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
 .apple-sort-wrapper {
     display: flex;
     align-items: center;
@@ -968,6 +974,11 @@ button, input, select, textarea {
     padding: 6px 14px;
     border-radius: var(--radius-full);
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.apple-sort-wrapper:hover {
+    border-color: #cbd5e1;
 }
 
 .apple-sort-wrapper label {
@@ -977,6 +988,8 @@ button, input, select, textarea {
     display: flex;
     align-items: center;
     gap: 5px;
+    cursor: pointer;
+    white-space: nowrap;
 }
 
 .apple-sort-select {
@@ -987,41 +1000,12 @@ button, input, select, textarea {
     color: #0f172a;
     cursor: pointer;
     outline: none;
+    font-family: inherit;
 }
 
 .apple-sort-select option {
     background: #ffffff;
     color: #0f172a;
-}
-
-.map-sync-toggle {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.8rem;
-    color: #0f172a;
-    font-weight: 700;
-    background: #ffffff;
-    padding: 7px 14px;
-    border-radius: var(--radius-full);
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    user-select: none;
-}
-
-.map-sync-toggle:hover {
-    border-color: #cbd5e1;
-    color: #0f172a;
-    background: #f8fafc;
-}
-
-.map-sync-toggle input[type="checkbox"] {
-    accent-color: #10b981;
-    width: 15px;
-    height: 15px;
-    cursor: pointer;
 }
 
 /* Rejilla de Tarjetas */
@@ -3513,21 +3497,53 @@ button, input, select, textarea {
         content: "Restablecer Filtros";
     }
 
-    /* Controles de Cabecera de Feed en Móvil (Sincronizar Mapa y Botón Mapa al lado) */
-    .map-sync-and-mobile-btn-wrap {
+    /* Controles de Cabecera de Feed en Móvil (Ordenar achicado y Botón Mapa al lado) */
+    .sort-and-mobile-map-wrap {
         display: flex !important;
         align-items: center !important;
-        justify-content: flex-start !important;
+        justify-content: space-between !important;
         width: 100% !important;
-        gap: 10px !important;
-        flex-wrap: wrap !important;
+        gap: 8px !important;
+    }
+
+    .apple-sort-wrapper {
+        flex: 1 1 auto !important;
+        min-width: 0 !important;
+        padding: 5px 10px !important;
+        height: 38px !important;
+        box-sizing: border-box !important;
+        gap: 6px !important;
+        border-radius: var(--radius-full) !important;
+    }
+
+    .apple-sort-wrapper label {
+        font-size: 0.75rem !important;
+        gap: 0 !important;
+        flex-shrink: 0 !important;
+    }
+
+    .apple-sort-wrapper label .sort-label-text {
+        display: none !important;
+    }
+
+    .apple-sort-select {
+        font-size: 0.76rem !important;
+        font-weight: 700 !important;
+        width: 100% !important;
+        min-width: 0 !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        padding-right: 2px !important;
     }
 
     .mobile-view-btn {
         display: inline-flex !important;
         position: static !important;
         transform: none !important;
-        padding: 7px 16px !important;
+        flex-shrink: 0 !important;
+        height: 38px !important;
+        padding: 0 14px !important;
         font-size: 0.8rem !important;
         font-weight: 700 !important;
         border-radius: var(--radius-full) !important;
@@ -3535,9 +3551,11 @@ button, input, select, textarea {
         color: #0f172a !important;
         border: 1px solid #e2e8f0 !important;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05) !important;
-        gap: 7px !important;
-        height: auto !important;
+        gap: 6px !important;
+        align-items: center !important;
+        justify-content: center !important;
         white-space: nowrap !important;
+        box-sizing: border-box !important;
     }
 
     .mobile-view-btn:hover,
@@ -3549,7 +3567,7 @@ button, input, select, textarea {
 
     .mobile-view-btn i {
         font-size: 0.88rem !important;
-        color: #10b981 !important;
+        color: #0f766e !important;
     }
 
     /* Cuando el mapa está activo en pantalla completa en móvil, botón flotante blanco para volver */

@@ -426,17 +426,26 @@
                         </button>
                     </div>
 
-                    <!-- Selector de Ordenamiento Apple Glassmorphism -->
-                    <div class="apple-sort-wrapper">
-                        <label for="sort-by-select"><i class="fas fa-arrow-down-short-wide text-primary"></i> Ordenar:</label>
-                        <select id="sort-by-select" class="apple-sort-select">
-                            <option value="popularity">🌟 Más Populares / Destacados</option>
-                            <option value="price_asc">💵 Precio: Menor a Mayor</option>
-                            <option value="price_desc">💎 Precio: Mayor a Menor</option>
-                            <option value="m2_desc">📐 Metros Cuadrados: Mayor a Menor</option>
-                            <option value="m2_asc">📐 Metros Cuadrados: Menor a Mayor</option>
-                            <option value="rating">⭐ Mejor Calificados (Platino)</option>
-                        </select>
+                    <!-- Contenedor de Ordenar y Botón Mapa en Móvil -->
+                    <div class="sort-and-mobile-map-wrap">
+                        <!-- Selector de Ordenamiento Apple Glassmorphism -->
+                        <div class="apple-sort-wrapper">
+                            <label for="sort-by-select"><i class="fas fa-arrow-down-short-wide text-primary"></i> <span class="sort-label-text">Ordenar:</span></label>
+                            <select id="sort-by-select" class="apple-sort-select">
+                                <option value="popularity">🌟 Más Populares / Destacados</option>
+                                <option value="price_asc">💵 Precio: Menor a Mayor</option>
+                                <option value="price_desc">💎 Precio: Mayor a Menor</option>
+                                <option value="m2_desc">📐 Metros Cuadrados: Mayor a Menor</option>
+                                <option value="m2_asc">📐 Metros Cuadrados: Menor a Mayor</option>
+                                <option value="rating">⭐ Mejor Calificados (Platino)</option>
+                            </select>
+                        </div>
+
+                        <!-- Botón Móvil para alternar a Mapa (Al lado de Ordenar en móvil) -->
+                        <button type="button" class="mobile-view-btn" id="mobile-view-toggle" aria-label="Alternar entre Lista y Mapa">
+                            <i class="fas fa-map-location-dot"></i>
+                            <span>Mapa</span>
+                        </button>
                     </div>
 
                     <!-- Selector de Tamaño del Mapa Estilo Apple (Ordenado: Solo Lista, Achicar, Dividido, Mapa 3/4) -->
@@ -459,18 +468,8 @@
                         </button>
                     </div>
 
-                    <div class="map-sync-and-mobile-btn-wrap">
-                        <label class="map-sync-toggle">
-                            <input type="checkbox" id="search-on-map-move" checked>
-                            <span>Sincronizar Mapa</span>
-                        </label>
-
-                        <!-- Botón Móvil al lado de Sincronizar Mapa -->
-                        <button type="button" class="mobile-view-btn" id="mobile-view-toggle" aria-label="Alternar entre Lista y Mapa">
-                            <i class="fas fa-map-location-dot"></i>
-                            <span>Mapa</span>
-                        </button>
-                    </div>
+                    <!-- Checkbox invisible para mantener sincronización continua en segundo plano -->
+                    <input type="checkbox" id="search-on-map-move" checked style="display:none;" aria-hidden="true">
                 </div>
             </div>
 
