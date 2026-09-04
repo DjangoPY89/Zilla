@@ -282,7 +282,7 @@
                 });
             });
 
-            // Conmutador de Vista Móvil (Mapa / Lista)
+            // Conmutador de Vista Móvil (Mapa Pantalla Completa / Lista)
             const mobileViewToggle = document.getElementById("mobile-view-toggle");
             if (mobileViewToggle) {
                 mobileViewToggle.addEventListener("click", () => {
@@ -292,14 +292,14 @@
 
                     if (isMapVisible) {
                         if (icon) icon.className = "fas fa-list-ul";
-                        if (text) text.textContent = "Lista";
+                        if (text) text.textContent = "Ver Lista";
                         if (window.MapManager && window.MapManager.invalidateSize) {
                             setTimeout(() => window.MapManager.invalidateSize(), 50);
                             setTimeout(() => window.MapManager.invalidateSize(), 250);
                         }
                     } else {
                         if (icon) icon.className = "fas fa-map-location-dot";
-                        if (text) text.textContent = "Mapa";
+                        if (text) text.textContent = "Mapa Pantalla Completa";
                     }
                 });
             }
@@ -388,7 +388,7 @@
             window.addEventListener("propertiesFiltered", updateActiveFilterCount);
             window.addEventListener("filtersReset", updateActiveFilterCount);
 
-            // Barra de filtros siempre visible permanentemente
+            // 3. Barra de filtros siempre visible en móvil (sin ocultamiento por scroll)
             if (filterBar) {
                 filterBar.classList.remove("filter-bar-hidden");
             }
