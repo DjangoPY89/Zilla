@@ -38,6 +38,29 @@
                     window.FilterManager.filters.keyword = qKw;
                     const searchInput = document.getElementById("search-input");
                     if (searchInput) searchInput.value = qKw;
+
+                    const normKw = qKw.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+                    if (normKw.includes("asuncion")) {
+                        setTimeout(() => {
+                            if (window.MapManager) window.MapManager.panTo(-25.2967, -57.5950, 12);
+                        }, 400);
+                    } else if (normKw.includes("san bernardino")) {
+                        setTimeout(() => {
+                            if (window.MapManager) window.MapManager.panTo(-25.3115, -57.2961, 13);
+                        }, 400);
+                    } else if (normKw.includes("luque")) {
+                        setTimeout(() => {
+                            if (window.MapManager) window.MapManager.panTo(-25.2678, -57.4857, 12.5);
+                        }, 400);
+                    } else if (qLat && qLng) {
+                        const latNum = parseFloat(qLat);
+                        const lngNum = parseFloat(qLng);
+                        if (!isNaN(latNum) && !isNaN(lngNum)) {
+                            setTimeout(() => {
+                                if (window.MapManager) window.MapManager.panTo(latNum, lngNum, 12.5);
+                            }, 400);
+                        }
+                    }
                 }
 
                 if (qOp && qOp !== "all") {
@@ -174,87 +197,54 @@
                 // NAVEGACIÓN DIRECTA EN EL MAPA HACIA LA UBICACIÓN BUSCADA
                 // ============================================================
                 const PARAGUAY_KNOWN_ZONES = {
-                    // CIUDADES COMPLETAS (Vista panorámica amplia para abarcar todo el ancho de la ciudad)
-                    "asuncion": { name: "Asunción", lat: -25.2967, lng: -57.5950, zoom: 12, isCity: true },
-                    "san bernardino": { name: "San Bernardino", lat: -25.3115, lng: -57.2961, zoom: 12.5, isCity: true },
-                    "san ber": { name: "San Bernardino", lat: -25.3115, lng: -57.2961, zoom: 12.5, isCity: true },
-                    "luque": { name: "Luque", lat: -25.2678, lng: -57.4857, zoom: 12, isCity: true },
-                    "lambare": { name: "Lambaré", lat: -25.3458, lng: -57.6067, zoom: 12.5, isCity: true },
-                    "fernando de la mora": { name: "Fernando de la Mora", lat: -25.3211, lng: -57.5469, zoom: 12.5, isCity: true },
-                    "mariano roque alonso": { name: "Mariano Roque Alonso", lat: -25.2167, lng: -57.5333, zoom: 12.5, isCity: true },
-                    "mra": { name: "Mariano Roque Alonso", lat: -25.2167, lng: -57.5333, zoom: 12.5, isCity: true },
-                    "san lorenzo": { name: "San Lorenzo", lat: -25.3406, lng: -57.5097, zoom: 12.5, isCity: true },
-                    "villa elisa": { name: "Villa Elisa", lat: -25.3678, lng: -57.5908, zoom: 12.5, isCity: true },
-                    "capiata": { name: "Capiatá", lat: -25.3556, lng: -57.4444, zoom: 12, isCity: true },
-                    "aregua": { name: "Areguá", lat: -25.3117, lng: -57.3847, zoom: 12.5, isCity: true },
-                    "altos": { name: "Altos", lat: -25.2636, lng: -57.2558, zoom: 12.5, isCity: true },
-                    "ypacarai": { name: "Ypacaraí", lat: -25.4022, lng: -57.2872, zoom: 12.5, isCity: true },
-                    "encarnacion": { name: "Encarnación", lat: -27.3306, lng: -55.8667, zoom: 12, isCity: true },
-                    "ciudad del este": { name: "Ciudad del Este", lat: -25.5097, lng: -54.6111, zoom: 12, isCity: true },
-                    "cde": { name: "Ciudad del Este", lat: -25.5097, lng: -54.6111, zoom: 12, isCity: true },
-                    "hernandarias": { name: "Hernandarias", lat: -25.4056, lng: -54.6361, zoom: 12.5, isCity: true },
-                    "presidente franco": { name: "Presidente Franco", lat: -25.5647, lng: -54.6156, zoom: 12.5, isCity: true },
-                    "villarrica": { name: "Villarrica", lat: -25.7494, lng: -56.4461, zoom: 12.5, isCity: true },
-                    "coronel oviedo": { name: "Coronel Oviedo", lat: -25.4444, lng: -56.4403, zoom: 12.5, isCity: true },
-                    "pedro juan caballero": { name: "Pedro Juan Caballero", lat: -22.5478, lng: -55.7333, zoom: 12.5, isCity: true },
-                    "concepcion": { name: "Concepción", lat: -23.4000, lng: -57.4333, zoom: 12.5, isCity: true },
-
-                    // BARRIOS ESPECÍFICOS (Zoom barrial focalizado)
-                    "villa morra": { lat: -25.2938, lng: -57.5794, zoom: 14.5 },
-                    "santa teresa": { lat: -25.2840, lng: -57.5620, zoom: 14.5 },
-                    "ycua sati": { lat: -25.2910, lng: -57.5650, zoom: 14.5 },
-                    "recoleta": { lat: -25.3020, lng: -57.5840, zoom: 14.5 },
-                    "carmelitas": { lat: -25.2810, lng: -57.5730, zoom: 14.5 },
-                    "los laureles": { lat: -25.3050, lng: -57.5680, zoom: 14.5 },
-                    "manora": { lat: -25.2860, lng: -57.5750, zoom: 14.5 },
-                    "mburucuya": { lat: -25.2750, lng: -57.5690, zoom: 14.5 },
-                    "las mercedes": { lat: -25.2806, lng: -57.6139, zoom: 14.5 },
-                    "herrera": { lat: -25.2972, lng: -57.5528, zoom: 14.5 },
-                    "sajonia": { lat: -25.2917, lng: -57.6583, zoom: 14.5 },
-                    "centro": { lat: -25.2825, lng: -57.6350, zoom: 14.5 },
-                    "trinidad": { lat: -25.2583, lng: -57.5722, zoom: 14.5 },
-                    "villa aurelia": { lat: -25.3111, lng: -57.5639, zoom: 14.5 },
-                    "san cristobal": { lat: -25.2986, lng: -57.5694, zoom: 14.5 },
-                    "campo grande": { lat: -25.2667, lng: -57.5444, zoom: 14.5 },
+                    "villa morra": { lat: -25.2938, lng: -57.5794, zoom: 15 },
+                    "santa teresa": { lat: -25.2840, lng: -57.5620, zoom: 15 },
+                    "ycua sati": { lat: -25.2910, lng: -57.5650, zoom: 15 },
+                    "recoleta": { lat: -25.3020, lng: -57.5840, zoom: 15 },
+                    "carmelitas": { lat: -25.2810, lng: -57.5730, zoom: 15 },
+                    "los laureles": { lat: -25.3050, lng: -57.5680, zoom: 15 },
+                    "manora": { lat: -25.2860, lng: -57.5750, zoom: 15 },
+                    "mburucuya": { lat: -25.2750, lng: -57.5690, zoom: 15 },
+                    "san bernardino": { lat: -25.3120, lng: -57.2960, zoom: 14 },
+                    "san ber": { lat: -25.3120, lng: -57.2960, zoom: 14 },
                     "surubi'i": { lat: -25.1850, lng: -57.5250, zoom: 14 },
                     "surubii": { lat: -25.1850, lng: -57.5250, zoom: 14 },
+                    "mariano roque alonso": { lat: -25.2167, lng: -57.5333, zoom: 14 },
+                    "luque": { lat: -25.2690, lng: -57.4880, zoom: 14 },
+                    "ciudad del este": { lat: -25.5097, lng: -54.6111, zoom: 14 },
+                    "cde": { lat: -25.5097, lng: -54.6111, zoom: 14 },
                     "costa del lago": { lat: -25.4300, lng: -54.6300, zoom: 14 },
-                    "parana country club": { lat: -25.4389, lng: -54.6222, zoom: 14 }
+                    "hernandarias": { lat: -25.4050, lng: -54.6380, zoom: 14 },
+                    "lambare": { lat: -25.3450, lng: -57.6050, zoom: 14 },
+                    "san lorenzo": { lat: -25.3390, lng: -57.5090, zoom: 14 },
+                    "asuncion": { lat: -25.2950, lng: -57.5900, zoom: 13 }
                 };
 
-                let targetLat = null;
-                let targetLng = null;
-                let targetZoom = 12;
-
-                if (qKw) {
+                if (qLat && qLng) {
+                    setTimeout(() => {
+                        window.MapManager.panTo(parseFloat(qLat), parseFloat(qLng), 15);
+                    }, 350);
+                } else if (qKw) {
                     const normKw = qKw.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+                    let matchedZone = null;
+
                     for (const [key, val] of Object.entries(PARAGUAY_KNOWN_ZONES)) {
                         if (normKw.includes(key) || key.includes(normKw)) {
-                            targetLat = val.lat;
-                            targetLng = val.lng;
-                            targetZoom = val.zoom;
+                            matchedZone = val;
                             break;
                         }
                     }
-                }
 
-                if (!targetLat && qLat && qLng) {
-                    targetLat = parseFloat(qLat);
-                    targetLng = parseFloat(qLng);
-                    targetZoom = 14.5;
-                } else if (!targetLat && currentProperties.length > 0 && currentProperties[0].coordinates) {
-                    const [cLat, cLng] = currentProperties[0].coordinates;
-                    targetLat = cLat;
-                    targetLng = cLng;
-                    targetZoom = 14;
-                }
-
-                if (targetLat && targetLng) {
-                    setTimeout(() => {
-                        if (window.MapManager && typeof window.MapManager.panTo === "function") {
-                            window.MapManager.panTo(targetLat, targetLng, targetZoom);
-                        }
-                    }, 350);
+                    if (matchedZone) {
+                        setTimeout(() => {
+                            window.MapManager.panTo(matchedZone.lat, matchedZone.lng, matchedZone.zoom);
+                        }, 350);
+                    } else if (currentProperties.length > 0 && currentProperties[0].coordinates) {
+                        const [cLat, cLng] = currentProperties[0].coordinates;
+                        setTimeout(() => {
+                            window.MapManager.panTo(cLat, cLng, 15);
+                        }, 350);
+                    }
                 }
             } catch (err) {
                 console.warn("Error leyendo URL params:", err);
