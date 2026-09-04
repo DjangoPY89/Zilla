@@ -117,21 +117,22 @@
                                 <div class="hero-type-menu" id="hero-op-menu">
                                     <div class="hero-type-menu-header">
                                         <span>Operación</span>
+                                        <button type="button" class="btn-clear-hero-type" onclick="toggleAllHeroOps()">Todas</button>
                                     </div>
-                                    <div class="hero-type-options-list">
-                                        <button type="button" class="hero-type-option-item active" data-op="sale" onclick="selectHeroOp('sale', this)">
+                                    <div class="hero-type-options-list" id="hero-op-options-list">
+                                        <button type="button" class="hero-type-option-item active" data-op="sale" onclick="toggleHeroOpItem('sale')">
                                             <span class="opt-label">Comprar</span>
                                             <i class="fas fa-check check-only-icon"></i>
                                         </button>
-                                        <button type="button" class="hero-type-option-item" data-op="rent_monthly" onclick="selectHeroOp('rent_monthly', this)">
+                                        <button type="button" class="hero-type-option-item" data-op="rent_monthly" onclick="toggleHeroOpItem('rent_monthly')">
                                             <span class="opt-label">Alquilar</span>
                                             <i class="fas fa-check check-only-icon"></i>
                                         </button>
-                                        <button type="button" class="hero-type-option-item" data-op="rent_temporary" onclick="selectHeroOp('rent_temporary', this)">
+                                        <button type="button" class="hero-type-option-item" data-op="rent_temporary" onclick="toggleHeroOpItem('rent_temporary')">
                                             <span class="opt-label">Alquiler Temporal</span>
                                             <i class="fas fa-check check-only-icon"></i>
                                         </button>
-                                        <button type="button" class="hero-type-option-item" data-op="off_plan" onclick="selectHeroOp('off_plan', this)">
+                                        <button type="button" class="hero-type-option-item" data-op="off_plan" onclick="toggleHeroOpItem('off_plan')">
                                             <span class="opt-label">Proyectos</span>
                                             <i class="fas fa-check check-only-icon"></i>
                                         </button>
@@ -139,7 +140,7 @@
                                 </div>
                             </div>
 
-                            <!-- 2. Menú Desplegable: Tipo de Inmueble -->
+                            <!-- 2. Menú Desplegable: Tipo de Inmueble (Selección Múltiple) -->
                             <div class="hero-type-dropdown-wrapper" id="hero-type-dropdown-wrapper">
                                 <button type="button" class="btn-hero-type-trigger" id="btn-hero-type-trigger" aria-label="Filtrar por tipo de inmueble">
                                     <i class="fas fa-house hero-type-icon"></i>
@@ -149,34 +150,34 @@
                                 <div class="hero-type-menu" id="hero-type-menu">
                                     <div class="hero-type-menu-header">
                                         <span>Tipo de Inmueble</span>
-                                        <button type="button" class="btn-clear-hero-type" onclick="selectHeroType('all', null)">Todos</button>
+                                        <button type="button" class="btn-clear-hero-type" onclick="toggleAllHeroTypes()">Todos</button>
                                     </div>
-                                    <div class="hero-type-options-list">
-                                        <button type="button" class="hero-type-option-item active" data-value="all" onclick="selectHeroType('all', this)">
+                                    <div class="hero-type-options-list" id="hero-type-options-list">
+                                        <button type="button" class="hero-type-option-item active" data-value="all" onclick="toggleHeroTypeItem('all')">
                                             <span class="opt-label">Todos los Inmuebles</span>
                                             <i class="fas fa-check check-only-icon"></i>
                                         </button>
-                                        <button type="button" class="hero-type-option-item" data-value="house" onclick="selectHeroType('house', this)">
+                                        <button type="button" class="hero-type-option-item" data-value="house" onclick="toggleHeroTypeItem('house')">
                                             <span class="opt-label">Casas Residenciales</span>
                                             <i class="fas fa-check check-only-icon"></i>
                                         </button>
-                                        <button type="button" class="hero-type-option-item" data-value="apartment" onclick="selectHeroType('apartment', this)">
+                                        <button type="button" class="hero-type-option-item" data-value="apartment" onclick="toggleHeroTypeItem('apartment')">
                                             <span class="opt-label">Departamentos</span>
                                             <i class="fas fa-check check-only-icon"></i>
                                         </button>
-                                        <button type="button" class="hero-type-option-item" data-value="gated_community" onclick="selectHeroType('gated_community', this)">
+                                        <button type="button" class="hero-type-option-item" data-value="gated_community" onclick="toggleHeroTypeItem('gated_community')">
                                             <span class="opt-label">Barrios Cerrados</span>
                                             <i class="fas fa-check check-only-icon"></i>
                                         </button>
-                                        <button type="button" class="hero-type-option-item" data-value="duplex" onclick="selectHeroType('duplex', this)">
+                                        <button type="button" class="hero-type-option-item" data-value="duplex" onclick="toggleHeroTypeItem('duplex')">
                                             <span class="opt-label">Dúplex</span>
                                             <i class="fas fa-check check-only-icon"></i>
                                         </button>
-                                        <button type="button" class="hero-type-option-item" data-value="land" onclick="selectHeroType('land', this)">
+                                        <button type="button" class="hero-type-option-item" data-value="land" onclick="toggleHeroTypeItem('land')">
                                             <span class="opt-label">Terrenos / Lotes</span>
                                             <i class="fas fa-check check-only-icon"></i>
                                         </button>
-                                        <button type="button" class="hero-type-option-item" data-value="commercial" onclick="selectHeroType('commercial', this)">
+                                        <button type="button" class="hero-type-option-item" data-value="commercial" onclick="toggleHeroTypeItem('commercial')">
                                             <span class="opt-label">Comercial / Oficinas</span>
                                             <i class="fas fa-check check-only-icon"></i>
                                         </button>
@@ -1156,72 +1157,94 @@
         }
 
         // ============================================================
-        // 5. CONTROL DE OPERACIONES EN EL HERO (Desktop Tabs & Mobile Dropdown)
+        // 5. CONTROL DE OPERACIONES EN EL HERO (Desktop Tabs & Mobile Dropdown con Selección Múltiple)
         // ============================================================
         const HERO_OP_LABELS = {
             sale: "Comprar",
             rent_monthly: "Alquilar",
             rent_temporary: "Alquiler Temporal",
-            off_plan: "Proyectos",
-            che_roga: "Che Róga Porã"
+            off_plan: "Proyectos"
         };
+        const ALL_HERO_OPS = ['sale', 'rent_monthly', 'rent_temporary', 'off_plan'];
+        let selectedHeroOps = ['sale']; // Por defecto Comprar
 
-        function selectHeroOp(op, element) {
+        function toggleHeroOpItem(opVal) {
+            const index = selectedHeroOps.indexOf(opVal);
+            if (index > -1) {
+                if (selectedHeroOps.length > 1) {
+                    selectedHeroOps.splice(index, 1);
+                } else {
+                    selectedHeroOps = [...ALL_HERO_OPS];
+                }
+            } else {
+                selectedHeroOps.push(opVal);
+            }
+            updateHeroOpUI();
+        }
+
+        function toggleAllHeroOps() {
+            if (selectedHeroOps.length === ALL_HERO_OPS.length) {
+                selectedHeroOps = ['sale'];
+            } else {
+                selectedHeroOps = [...ALL_HERO_OPS];
+            }
+            updateHeroOpUI();
+        }
+
+        function updateHeroOpUI() {
             const opInput = document.getElementById('realtor-op-input');
             const cheRogaInput = document.getElementById('realtor-che-roga-input');
             const searchInput = document.getElementById('hero-location-input');
             const opLabel = document.getElementById('hero-op-label');
-            const opMenu = document.getElementById('hero-op-menu');
+            const items = document.querySelectorAll('#hero-op-options-list .hero-type-option-item');
+            const tabs = document.querySelectorAll('.realtor-tab-btn');
 
-            // Actualizar clase activa en dropdown móvil
-            document.querySelectorAll('#hero-op-menu .hero-type-option-item').forEach(item => {
-                item.classList.toggle('active', item.dataset.op === op);
+            items.forEach(item => {
+                const op = item.dataset.op;
+                item.classList.toggle('active', selectedHeroOps.includes(op));
             });
 
-            // Actualizar clase activa en tabs de escritorio
-            document.querySelectorAll('.realtor-tab-btn').forEach(btn => {
-                btn.classList.toggle('active', btn.dataset.op === op);
+            tabs.forEach(btn => {
+                const op = btn.dataset.op;
+                btn.classList.toggle('active', selectedHeroOps.includes(op));
             });
 
-            if (opLabel) {
-                opLabel.textContent = HERO_OP_LABELS[op] || 'Operación';
-            }
+            if (cheRogaInput) cheRogaInput.value = '';
 
-            if (op === 'che_roga') {
-                if (opInput) opInput.value = '';
-                if (cheRogaInput) cheRogaInput.value = 'true';
-                if (searchInput) searchInput.placeholder = 'Inmuebles con financiamiento Che Róga Porã...';
-            } else if (op === 'off_plan') {
-                if (opInput) opInput.value = 'off_plan';
-                if (cheRogaInput) cheRogaInput.value = '';
-                if (searchInput) searchInput.placeholder = 'Proyectos en pozo, preventa, cuotas, Santa Teresa...';
-            } else if (op === 'rent_temporary') {
-                if (opInput) opInput.value = 'rent_temporary';
-                if (cheRogaInput) cheRogaInput.value = '';
-                if (searchInput) searchInput.placeholder = 'Alquiler temporal de verano en San Bernardino, Asunción...';
-            } else if (op === 'rent_monthly') {
-                if (opInput) opInput.value = 'rent_monthly';
-                if (cheRogaInput) cheRogaInput.value = '';
-                if (searchInput) searchInput.placeholder = 'Alquileres en Asunción, Luque, amoblados o residenciales...';
+            if (selectedHeroOps.length === ALL_HERO_OPS.length || selectedHeroOps.length === 0) {
+                if (opInput) opInput.value = 'all';
+                if (opLabel) opLabel.textContent = 'Todas las op.';
+                if (searchInput) searchInput.placeholder = 'Dirección, barrio, ciudad (ej. Villa Morra, San Bernardino)...';
+            } else if (selectedHeroOps.length === 1) {
+                const singleOp = selectedHeroOps[0];
+                if (opInput) opInput.value = singleOp;
+                if (opLabel) opLabel.textContent = HERO_OP_LABELS[singleOp] || singleOp;
+                if (singleOp === 'off_plan') {
+                    if (searchInput) searchInput.placeholder = 'Proyectos en pozo, preventa, cuotas, Santa Teresa...';
+                } else if (singleOp === 'rent_temporary') {
+                    if (searchInput) searchInput.placeholder = 'Alquiler temporal de verano en San Bernardino, Asunción...';
+                } else if (singleOp === 'rent_monthly') {
+                    if (searchInput) searchInput.placeholder = 'Alquileres en Asunción, Luque, amoblados o residenciales...';
+                } else {
+                    if (searchInput) searchInput.placeholder = 'Dirección, barrio, ciudad (ej. 3 dorm con piscina en Villa Morra)';
+                }
             } else {
-                if (opInput) opInput.value = 'sale';
-                if (cheRogaInput) cheRogaInput.value = '';
-                if (searchInput) searchInput.placeholder = 'Dirección, barrio, ciudad (ej. 3 dorm con piscina en Villa Morra)';
+                if (opInput) opInput.value = selectedHeroOps.join(',');
+                if (opLabel) opLabel.textContent = `${selectedHeroOps.length} operaciones`;
+                if (searchInput) searchInput.placeholder = 'Dirección, barrio, ciudad (ej. Villa Morra, Luque)...';
             }
-
-            if (opMenu) opMenu.classList.remove('open');
         }
 
-        // Tabs estilo Realtor.com en el Hero
+        // Tabs estilo Realtor.com en el Hero (Desktop)
         function setRealtorHeroTab(op, element) {
-            selectHeroOp(op, element);
+            selectedHeroOps = [op];
+            updateHeroOpUI();
         }
 
         // ============================================================
-        // 6. CONTROL DE TIPOS DE INMUEBLE EN EL HERO
+        // 6. CONTROL DE TIPOS DE INMUEBLE EN EL HERO (Selección Múltiple Desktop & Mobile)
         // ============================================================
         const HERO_TYPE_LABELS = {
-            all: "Todos los Tipos",
             house: "Casas",
             apartment: "Departamentos",
             gated_community: "Barrios Cerrados",
@@ -1229,26 +1252,55 @@
             land: "Terrenos",
             commercial: "Comercial"
         };
+        const ALL_HERO_TYPES = ['house', 'apartment', 'gated_community', 'duplex', 'land', 'commercial'];
+        let selectedHeroTypes = []; // Vacío = Todos los Inmuebles
 
-        function selectHeroType(typeVal, element) {
+        function toggleHeroTypeItem(typeVal) {
+            if (typeVal === 'all') {
+                selectedHeroTypes = [];
+            } else {
+                const index = selectedHeroTypes.indexOf(typeVal);
+                if (index > -1) {
+                    selectedHeroTypes.splice(index, 1);
+                } else {
+                    selectedHeroTypes.push(typeVal);
+                }
+                if (selectedHeroTypes.length === ALL_HERO_TYPES.length) {
+                    selectedHeroTypes = [];
+                }
+            }
+            updateHeroTypeUI();
+        }
+
+        function toggleAllHeroTypes() {
+            selectedHeroTypes = [];
+            updateHeroTypeUI();
+        }
+
+        function updateHeroTypeUI() {
             const hidden = document.getElementById("hero-proptype-input");
             const label = document.getElementById("hero-type-label");
-            const menu = document.getElementById("hero-type-menu");
+            const items = document.querySelectorAll("#hero-type-options-list .hero-type-option-item");
 
-            document.querySelectorAll(".hero-type-option-item").forEach(item => {
-                const isMatch = item.dataset.value === typeVal;
-                item.classList.toggle("active", isMatch);
+            items.forEach(item => {
+                const val = item.dataset.value;
+                if (val === 'all') {
+                    item.classList.toggle('active', selectedHeroTypes.length === 0);
+                } else {
+                    item.classList.toggle('active', selectedHeroTypes.includes(val));
+                }
             });
 
-            if (typeVal === "all" || !typeVal) {
+            if (selectedHeroTypes.length === 0) {
                 if (hidden) hidden.value = "";
                 if (label) label.textContent = "Tipo de Inmueble";
+            } else if (selectedHeroTypes.length === 1) {
+                if (hidden) hidden.value = selectedHeroTypes[0];
+                if (label) label.textContent = HERO_TYPE_LABELS[selectedHeroTypes[0]] || selectedHeroTypes[0];
             } else {
-                if (hidden) hidden.value = typeVal;
-                if (label) label.textContent = HERO_TYPE_LABELS[typeVal] || typeVal;
+                if (hidden) hidden.value = selectedHeroTypes.join(",");
+                if (label) label.textContent = `${selectedHeroTypes.length} tipos`;
             }
-
-            if (menu) menu.classList.remove("open");
         }
 
         // Toggle y cierre de los dropdowns del Hero al hacer clic fuera

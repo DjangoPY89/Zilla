@@ -128,7 +128,7 @@ button, input, select, textarea {
     display: flex;
     background: #f1f5f9;
     padding: 4px;
-    border-radius: var(--radius-full);
+    border-radius: 13px;
     border: 1px solid var(--border-color);
 }
 
@@ -136,7 +136,7 @@ button, input, select, textarea {
     padding: 6px 14px;
     border: none;
     background: transparent;
-    border-radius: var(--radius-full);
+    border-radius: 9px;
     font-size: 0.82rem;
     font-weight: 600;
     color: var(--text-secondary);
@@ -3985,13 +3985,13 @@ button, input, select, textarea {
     transform: scale(1.03);
 }
 
-/* Cápsula de Navegación Flotante Central */
+/* Cápsula de Navegación Flotante Central (Semirectangular) */
 .evergreen-nav-capsule {
     display: flex;
     align-items: center;
     background: rgba(15, 23, 42, 0.05);
     padding: 4px 6px;
-    border-radius: var(--radius-full);
+    border-radius: 14px;
     gap: 4px;
     border: 1px solid rgba(0, 0, 0, 0.04);
 }
@@ -4002,7 +4002,7 @@ button, input, select, textarea {
     font-weight: 600;
     color: #475569;
     padding: 6px 18px;
-    border-radius: var(--radius-full);
+    border-radius: 10px;
     transition: all 0.2s ease;
 }
 
@@ -4034,7 +4034,7 @@ button, input, select, textarea {
     font-family: 'Outfit', sans-serif;
     font-weight: 800;
     font-size: 0.88rem;
-    border-radius: var(--radius-full);
+    border-radius: 12px;
     text-decoration: none;
     transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
     box-shadow: 0 2px 10px rgba(163, 230, 53, 0.4);
@@ -4395,6 +4395,8 @@ button, input, select, textarea {
     display: flex;
     flex-direction: column;
     align-items: center;
+    position: relative;
+    z-index: 50;
 }
 
 .hero-asterisk {
@@ -4456,25 +4458,30 @@ button, input, select, textarea {
     display: none;
 }
 
-/* Cápsula de Búsqueda Ovalada Blanca */
+/* Cápsula de Búsqueda Glassmórfica Transparente */
 .realtor-search-capsule {
+    position: relative;
+    z-index: 60;
     width: 100%;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px) saturate(180%);
+    -webkit-backdrop-filter: blur(20px) saturate(180%);
     border-radius: 9999px;
     padding: 6px 8px 6px 18px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 10px;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.28), 0 4px 16px rgba(0, 0, 0, 0.1), inset 0 1px 1px rgba(255, 255, 255, 0.9);
     transition: all 0.25s ease;
-    border: 2px solid transparent;
+    border: 1px solid rgba(255, 255, 255, 0.7);
     box-sizing: border-box;
 }
 
 .realtor-search-capsule:focus-within {
+    background: rgba(255, 255, 255, 0.95);
     border-color: #7bc133;
-    box-shadow: 0 20px 54px rgba(0, 0, 0, 0.4), 0 0 0 4px rgba(123, 193, 51, 0.25);
+    box-shadow: 0 20px 54px rgba(0, 0, 0, 0.35), 0 0 0 4px rgba(123, 193, 51, 0.25);
 }
 
 /* Dropdown de Tipos de Inmueble (Lado Izquierdo de la Cápsula Hero) */
@@ -4482,6 +4489,8 @@ button, input, select, textarea {
     display: flex;
     align-items: center;
     gap: 8px;
+    position: relative;
+    z-index: 70;
 }
 
 .mobile-only-op {
@@ -4498,6 +4507,7 @@ button, input, select, textarea {
 
 .hero-type-dropdown-wrapper {
     position: relative;
+    z-index: 80;
     flex-shrink: 0;
 }
 
@@ -4519,7 +4529,7 @@ button, input, select, textarea {
 }
 
 .btn-hero-type-trigger:hover {
-    background: #f1f5f9;
+    background: rgba(241, 245, 249, 0.8);
 }
 
 .hero-type-icon {
@@ -4540,7 +4550,7 @@ button, input, select, textarea {
 .hero-capsule-divider {
     width: 1px;
     height: 26px;
-    background: #e2e8f0;
+    background: rgba(226, 232, 240, 0.8);
     flex-shrink: 0;
 }
 
@@ -4549,10 +4559,12 @@ button, input, select, textarea {
     position: absolute;
     top: calc(100% + 14px);
     left: -12px;
-    background: #ffffff;
-    border: 1px solid #e2e8f0;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(24px) saturate(190%);
+    -webkit-backdrop-filter: blur(24px) saturate(190%);
+    border: 1px solid rgba(255, 255, 255, 0.8);
     border-radius: 18px;
-    box-shadow: 0 16px 40px rgba(15, 23, 42, 0.16), 0 4px 12px rgba(0, 0, 0, 0.06);
+    box-shadow: 0 20px 48px rgba(15, 23, 42, 0.2), 0 4px 16px rgba(0, 0, 0, 0.08), inset 0 1px 1px rgba(255, 255, 255, 0.9);
     min-width: 240px;
     padding: 10px;
     z-index: 1000;
@@ -4712,6 +4724,8 @@ button, input, select, textarea {
 
 /* Sugerencias Rápidas / Pills */
 .realtor-quick-pills {
+    position: relative;
+    z-index: 10;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -4787,14 +4801,17 @@ button, input, select, textarea {
         display: none !important;
     }
 
-    /* Cápsula de búsqueda en móvil: 2 filas (Fila 1: Operaciones y Tipo lado a lado / Fila 2: Buscador) */
+    /* Cápsula de búsqueda en móvil: 2 filas con efecto Glassmórfico Transparente */
     .realtor-search-capsule {
         flex-direction: column;
-        border-radius: 20px;
+        border-radius: 22px;
         padding: 10px;
         gap: 8px;
-        background: rgba(255, 255, 255, 0.98);
-        box-shadow: 0 16px 40px rgba(0, 0, 0, 0.35);
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(20px) saturate(180%);
+        -webkit-backdrop-filter: blur(20px) saturate(180%);
+        border: 1px solid rgba(255, 255, 255, 0.65);
+        box-shadow: 0 16px 42px rgba(0, 0, 0, 0.28), inset 0 1px 1px rgba(255, 255, 255, 0.9);
     }
 
     .hero-dropdowns-row {
@@ -4818,12 +4835,22 @@ button, input, select, textarea {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        background: #f8fafc;
-        border: 1px solid #e2e8f0;
+        background: rgba(255, 255, 255, 0.65);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.85);
         border-radius: 12px;
         padding: 9px 10px;
         font-size: 0.84rem;
         box-sizing: border-box;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        transition: all 0.2s ease;
+    }
+
+    .hero-dropdowns-row .btn-hero-type-trigger:hover,
+    .hero-dropdowns-row .btn-hero-type-trigger:focus {
+        background: rgba(255, 255, 255, 0.9);
+        border-color: rgba(123, 193, 51, 0.6);
     }
 
     .hero-dropdowns-row .btn-hero-type-trigger span {
@@ -4838,26 +4865,37 @@ button, input, select, textarea {
     .hero-type-dropdown-wrapper .hero-type-menu {
         left: 0;
         top: calc(100% + 8px);
-        min-width: 190px;
+        min-width: 200px;
         width: max-content;
-        max-width: 250px;
+        max-width: 260px;
+        background: rgba(255, 255, 255, 0.92);
+        backdrop-filter: blur(24px) saturate(190%);
+        -webkit-backdrop-filter: blur(24px) saturate(190%);
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        box-shadow: 0 18px 45px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.9);
     }
 
-    /* Fila 2: Input de búsqueda y botón Buscar */
+    /* Fila 2: Input de búsqueda y botón Buscar con estilo glassmórfico */
     .hero-search-input-and-btn-row {
         display: flex;
         align-items: center;
         width: 100%;
-        background: #ffffff;
-        border: 1.5px solid #e2e8f0;
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1.5px solid rgba(255, 255, 255, 0.9);
         border-radius: 14px;
         padding: 3px 5px 3px 12px;
         gap: 6px;
         box-sizing: border-box;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+        transition: all 0.2s ease;
     }
 
     .hero-search-input-and-btn-row:focus-within {
+        background: rgba(255, 255, 255, 0.98);
         border-color: #7bc133;
+        box-shadow: 0 4px 14px rgba(123, 193, 51, 0.25);
     }
 
     .realtor-search-input-wrap {
@@ -6565,7 +6603,7 @@ button, input, select, textarea {
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     border: 1px solid rgba(255, 255, 255, 0.9);
-    border-radius: var(--radius-full);
+    border-radius: 12px;
     color: #0f172a;
     font-family: 'Outfit', sans-serif;
     font-size: 0.88rem;

@@ -677,9 +677,12 @@
                 overlaysMap.set(prop.id, overlay);
             });
 
-            // Ajustar encuadre solo si el usuario hizo una búsqueda explícita de palabra clave o zona
-            const hasExplicitSearch = window.FilterManager && window.FilterManager.filters.keyword;
-            if (hasExplicitSearch && properties.length > 1 && !document.getElementById("map-container")?.classList.contains("drawing-active")) {
+            // Ajustar encuadre: si es una ciudad completa, mantener la vista panorámica amplia (zoom 12-12.5)
+            const explicitKw = window.FilterManager && window.FilterManager.filters.keyword;
+            const cityView = this.getCityView(explicitKw);
+            if (cityView) {
+                this.panTo(cityView.lat, cityView.lng, cityView.zoom);
+            } else if (explicitKw && properties.length > 1 && !document.getElementById("map-container")?.classList.contains("drawing-active")) {
                 map.fitBounds(bounds, { top: 60, right: 60, bottom: 60, left: 60 });
             }
         },
@@ -727,8 +730,11 @@
                 leafletMarkersMap.set(prop.id, marker);
             });
 
-            const hasExplicitSearch = window.FilterManager && window.FilterManager.filters.keyword;
-            if (hasExplicitSearch && bounds.length > 1 && !document.getElementById("map-container")?.classList.contains("drawing-active")) {
+            const explicitKw = window.FilterManager && window.FilterManager.filters.keyword;
+            const cityView = this.getCityView(explicitKw);
+            if (cityView) {
+                this.panTo(cityView.lat, cityView.lng, cityView.zoom);
+            } else if (explicitKw && bounds.length > 1 && !document.getElementById("map-container")?.classList.contains("drawing-active")) {
                 map.fitBounds(bounds, { padding: [50, 50] });
             }
         },
@@ -939,6 +945,43 @@
             } else if (map.invalidateSize) {
                 setTimeout(() => map.invalidateSize(), 200);
             }
+        },
+
+        getCityView: function (keyword) {
+            if (!keyword) return null;
+            const norm = keyword.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+            const cities = {
+                "asuncion": { name: "Asunción", lat: -25.2967, lng: -57.5950, zoom: 12 },
+                "san bernardino": { name: "San Bernardino", lat: -25.3115, lng: -57.2961, zoom: 12.5 },
+                "san ber": { name: "San Bernardino", lat: -25.3115, lng: -57.2961, zoom: 12.5 },
+                "luque": { name: "Luque", lat: -25.2678, lng: -57.4857, zoom: 12 },
+                "lambare": { name: "Lambaré", lat: -25.3458, lng: -57.6067, zoom: 12.5 },
+                "fernando de la mora": { name: "Fernando de la Mora", lat: -25.3211, lng: -57.5469, zoom: 12.5 },
+                "mariano roque alonso": { name: "Mariano Roque Alonso", lat: -25.2167, lng: -57.5333, zoom: 12.5 },
+                "mra": { name: "Mariano Roque Alonso", lat: -25.2167, lng: -57.5333, zoom: 12.5 },
+                "san lorenzo": { name: "San Lorenzo", lat: -25.3406, lng: -57.5097, zoom: 12.5 },
+                "villa elisa": { name: "Villa Elisa", lat: -25.3678, lng: -57.5908, zoom: 12.5 },
+                "capiata": { name: "Capiatá", lat: -25.3556, lng: -57.4444, zoom: 12 },
+                "aregua": { name: "Areguá", lat: -25.3117, lng: -57.3847, zoom: 12.5 },
+                "altos": { name: "Altos", lat: -25.2636, lng: -57.2558, zoom: 12.5 },
+                "ypacarai": { name: "Ypacaraí", lat: -25.4022, lng: -57.2872, zoom: 12.5 },
+                "encarnacion": { name: "Encarnación", lat: -27.3306, lng: -55.8667, zoom: 12 },
+                "ciudad del este": { name: "Ciudad del Este", lat: -25.5097, lng: -54.6111, zoom: 12 },
+                "cde": { name: "Ciudad del Este", lat: -25.5097, lng: -54.6111, zoom: 12 },
+                "hernandarias": { name: "Hernandarias", lat: -25.4056, lng: -54.6361, zoom: 12.5 },
+                "presidente franco": { name: "Presidente Franco", lat: -25.5647, lng: -54.6156, zoom: 12.5 },
+                "villarrica": { name: "Villarrica", lat: -25.7494, lng: -56.4461, zoom: 12.5 },
+                "coronel oviedo": { name: "Coronel Oviedo", lat: -25.4444, lng: -56.4403, zoom: 12.5 },
+                "pedro juan caballero": { name: "Pedro Juan Caballero", lat: -22.5478, lng: -55.7333, zoom: 12.5 },
+                "concepcion": { name: "Concepción", lat: -23.4000, lng: -57.4333, zoom: 12.5 }
+            };
+
+            for (const [key, city] of Object.entries(cities)) {
+                if (norm.includes(key) || key.includes(norm)) {
+                    return city;
+                }
+            }
+            return null;
         },
 
         getMapInstance: function () {
