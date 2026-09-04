@@ -354,35 +354,19 @@
             if (provider === 'Google') {
                 const res = await window.ZillaSupabase.signInWithGoogle();
                 if (!res.success) {
-                    showAuthToast(res.error || 'Error al conectar con Google OAuth.', 'error');
+                    showAuthToast(res.error || 'Error al conectar con Google OAuth. Verifica tu clave de Supabase.', 'error');
                 }
                 return;
             } else if (provider === 'Facebook') {
                 const res = await window.ZillaSupabase.signInWithFacebook();
                 if (!res.success) {
-                    showAuthToast(res.error || 'Error al conectar con Facebook OAuth.', 'error');
+                    showAuthToast(res.error || 'Error al conectar con Facebook OAuth. Verifica tu clave de Supabase.', 'error');
                 }
                 return;
             }
+        } else {
+            showAuthToast('Supabase requiere la clave "anon public" (eyJ...) para conectar con Google.', 'error');
         }
-
-        // Modo Mock / Fallback local para desarrollo
-        const mockName = provider === 'Google' ? 'Juan Solalinde' : 'María González';
-        const mockEmail = provider === 'Google' ? 'juan.solalinde@gmail.com' : 'maria.g@facebook.com';
-
-        const user = {
-            id: 'usr_' + provider.toLowerCase() + '_' + Date.now(),
-            name: mockName,
-            email: mockEmail,
-            provider: provider.toLowerCase(),
-            avatar: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=300&q=80',
-            role: 'client',
-            loginDate: new Date().toISOString()
-        };
-
-        saveUserSession(user);
-        closeAuthModal();
-        showAuthToast(`Has iniciado sesión con ${provider} como ${user.name}.`, 'success');
     }
 
 

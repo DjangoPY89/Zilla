@@ -158,22 +158,9 @@
                 }
             }
 
-            // Fallback Mock Local Dinámico
-            const inputEmail = document.getElementById('auth-email-input')?.value || '';
-            const fallbackEmail = inputEmail || `usuario.google.${Date.now().toString().slice(-4)}@gmail.com`;
-            const nameFromEmail = fallbackEmail.split('@')[0];
-            const fallbackName = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
-
             return {
-                success: true,
-                user: {
-                    id: 'usr_google_' + Date.now(),
-                    email: fallbackEmail,
-                    user_metadata: {
-                        full_name: fallbackName,
-                        avatar_url: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=300&q=80'
-                    }
-                }
+                success: false,
+                error: "Configuración de Supabase incompleta. Por favor proporciona la clave anon public."
             };
         },
 
@@ -203,22 +190,9 @@
                 }
             }
 
-            // Fallback Mock Local Dinámico
-            const inputEmail = document.getElementById('auth-email-input')?.value || '';
-            const fallbackEmail = inputEmail || `usuario.fb.${Date.now().toString().slice(-4)}@facebook.com`;
-            const nameFromEmail = fallbackEmail.split('@')[0];
-            const fallbackName = nameFromEmail.charAt(0).toUpperCase() + nameFromEmail.slice(1);
-
             return {
-                success: true,
-                user: {
-                    id: 'usr_facebook_' + Date.now(),
-                    email: fallbackEmail,
-                    user_metadata: {
-                        full_name: fallbackName,
-                        avatar_url: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=300&q=80'
-                    }
-                }
+                success: false,
+                error: "Configuración de Supabase incompleta. Por favor proporciona la clave anon public."
             };
         },
 
