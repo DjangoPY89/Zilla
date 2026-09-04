@@ -147,6 +147,10 @@
                         }
                     });
                     if (error) throw error;
+                    if (data && data.url) {
+                        window.location.href = data.url;
+                        return { success: true, data: data };
+                    }
                     return { success: true, data: data };
                 } catch (error) {
                     console.error("[Supabase Google Auth Error]:", error);
@@ -188,6 +192,10 @@
                         }
                     });
                     if (error) throw error;
+                    if (data && data.url) {
+                        window.location.href = data.url;
+                        return { success: true, data: data };
+                    }
                     return { success: true, data: data };
                 } catch (error) {
                     console.error("[Supabase Facebook Auth Error]:", error);
@@ -213,6 +221,7 @@
                 }
             };
         },
+
 
 
         /**
