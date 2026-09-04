@@ -13,10 +13,10 @@
     // Estado del cliente
     let clientState = {
         user: {
-            name: "Juan Solalinde",
-            email: "juan@zilla.com.py",
-            phone: "+595 981 450 120",
-            avatar: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=300&q=80",
+            name: "Usuario",
+            email: "",
+            phone: "+595 981 000 000",
+            avatar: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=300&q=80",
             role: "Cliente Particular"
         },
         currentTab: "propiedades",
@@ -261,19 +261,52 @@
         setupCurrency();
         setupProfileModal();
         renderAll();
+
+        // Escuchar eventos de actualización de sesión en tiempo real
+        window.addEventListener('zilla_user_session_updated', (e) => {
+            if (e.detail && e.detail.user) {
+                applyUserData(e.detail.user);
+            }
+        });
     });
 
     /**
-     * Sincronizar datos con localStorage
+     * Aplicar datos de usuario al estado y renderizar
      */
-    function loadSessionData() {
+    function applyUserData(user) {
+        if (!user) return;
+        if (user.name) clientState.user.name = user.name;
+        if (user.email) clientState.user.email = user.email;
+        if (user.avatar) clientState.user.avatar = user.avatar;
+        renderUserInfo();
+    }
+
+    /**
+     * Sincronizar datos con localStorage y Supabase Auth Session
+     */
+    async function loadSessionData() {
         try {
+            // 1. Cargar desde LocalStorage inmediato
             const savedUser = localStorage.getItem('zilla_user_session');
             if (savedUser) {
                 const parsed = JSON.parse(savedUser);
-                if (parsed && parsed.name) {
-                    clientState.user.name = parsed.name;
-                    clientState.user.email = parsed.email || clientState.user.email;
+                applyUserData(parsed);
+            }
+
+            // 2. Comprobar sesión activa en Supabase Cloud (Google OAuth / Email)
+            if (window.ZillaSupabase && window.ZillaSupabase.client) {
+                const { data } = await window.ZillaSupabase.client.auth.getSession();
+                if (data && data.session && data.session.user) {
+                    const u = data.session.user;
+                    const fullName = u.user_metadata?.full_name || u.user_metadata?.name || (u.email ? u.email.split('@')[0] : 'Usuario');
+                    const avatar = u.user_metadata?.avatar_url || u.user_metadata?.picture || clientState.user.avatar;
+
+                    const formattedUser = {
+                        name: fullName.charAt(0).toUpperCase() + fullName.slice(1),
+                        email: u.email,
+                        avatar: avatar
+                    };
+                    applyUserData(formattedUser);
                 }
             }
         } catch (e) {

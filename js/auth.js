@@ -68,6 +68,7 @@
         currentUser = user;
         try {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(user));
+            window.dispatchEvent(new CustomEvent('zilla_user_session_updated', { detail: { user } }));
         } catch (e) {
             console.warn('Error al guardar sesión:', e);
         }
