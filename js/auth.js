@@ -21,13 +21,40 @@
     });
 
     /**
-     * Cargar sesión persistida desde localStorage
+     * Cargar sesión persistida desde localStorage y Supabase
      */
-    function loadUserSession() {
+    async function loadUserSession() {
         try {
             const saved = localStorage.getItem(STORAGE_KEY);
             if (saved) {
                 currentUser = JSON.parse(saved);
+            }
+
+            // Escuchar cambios de sesión activos en Supabase
+            if (window.ZillaSupabase && window.ZillaSupabase.client && !window.ZillaSupabase.isMockMode) {
+                window.ZillaSupabase.client.auth.onAuthStateChange(async (event, session) => {
+                    if (session && session.user) {
+                        const u = session.user;
+                        const fullName = u.user_metadata?.full_name || u.user_metadata?.name || u.email.split('@')[0];
+                        const avatar = u.user_metadata?.avatar_url || u.user_metadata?.picture || null;
+                        const provider = u.app_metadata?.provider || 'password';
+
+                        currentUser = {
+                            id: u.id,
+                            name: fullName.charAt(0).toUpperCase() + fullName.slice(1),
+                            email: u.email,
+                            provider: provider,
+                            avatar: avatar,
+                            role: 'client',
+                            loginDate: new Date().toISOString()
+                        };
+                        saveUserSession(currentUser);
+                    } else if (event === 'SIGNED_OUT') {
+                        currentUser = null;
+                        localStorage.removeItem(STORAGE_KEY);
+                        updateNavAuthUI();
+                    }
+                });
             }
         } catch (e) {
             console.warn('No se pudo leer la sesión guardada:', e);
@@ -50,16 +77,17 @@
     /**
      * Cerrar sesión
      */
-    function logout() {
+    async function logout() {
         currentUser = null;
-        try {
+        if (window.ZillaSupabase) {
+            await window.ZillaSupabase.signOut();
+        } else {
             localStorage.removeItem(STORAGE_KEY);
-        } catch (e) {
-            console.warn('Error al eliminar sesión:', e);
         }
         updateNavAuthUI();
         showAuthToast('Has cerrado sesión correctamente.', 'info');
     }
+
 
     /**
      * Configurar escuchas de eventos en el DOM
@@ -184,12 +212,13 @@
     }
 
     /**
-     * Manejar inicio de sesión manual
+     * Manejar inicio de sesión manual (Supabase Auth)
      */
-    function handleManualLogin(e) {
+    async function handleManualLogin(e) {
         e.preventDefault();
         const emailInput = document.getElementById('auth-email-input');
         const passwordInput = document.getElementById('auth-password-input');
+        const submitBtn = e.target.querySelector('button[type="submit"]');
 
         if (!emailInput || !passwordInput) return;
 
@@ -201,18 +230,37 @@
             return;
         }
 
-        // Extraer nombre amigable del email
-        const username = email.split('@')[0];
-        const displayName = username.charAt(0).toUpperCase() + username.slice(1);
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando sesión...';
+        }
 
-        // Simular inicio de sesión exitoso
+        let res = { success: true };
+        if (window.ZillaSupabase) {
+            res = await window.ZillaSupabase.signInWithEmail(email, password);
+        }
+
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Iniciar Sesión';
+        }
+
+        if (!res.success) {
+            showAuthToast(res.error || 'Credenciales inválidas. Verifica tu correo y contraseña.', 'error');
+            return;
+        }
+
+        // Extraer nombre amigable del email o metadata
+        const username = email.split('@')[0];
+        const displayName = res.user?.user_metadata?.full_name || (username.charAt(0).toUpperCase() + username.slice(1));
+
         const user = {
-            id: 'usr_' + Date.now(),
+            id: res.user?.id || ('usr_' + Date.now()),
             name: displayName,
             email: email,
             provider: 'password',
-            avatar: null,
-            role: 'seeker',
+            avatar: res.user?.user_metadata?.avatar_url || null,
+            role: 'client',
             loginDate: new Date().toISOString()
         };
 
@@ -226,13 +274,14 @@
     }
 
     /**
-     * Manejar registro manual
+     * Manejar registro manual (Supabase Auth)
      */
-    function handleManualRegister(e) {
+    async function handleManualRegister(e) {
         e.preventDefault();
         const nameInput = document.getElementById('reg-name-input');
         const emailInput = document.getElementById('reg-email-input');
         const passwordInput = document.getElementById('reg-password-input');
+        const submitBtn = e.target.querySelector('button[type="submit"]');
 
         if (!nameInput || !emailInput || !passwordInput) return;
 
@@ -250,19 +299,39 @@
             return;
         }
 
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando cuenta...';
+        }
+
+        let res = { success: true };
+        if (window.ZillaSupabase) {
+            res = await window.ZillaSupabase.signUpWithEmail(email, password, name);
+        }
+
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = 'Crear Cuenta Gratuita';
+        }
+
+        if (!res.success) {
+            showAuthToast(res.error || 'No se pudo crear la cuenta.', 'error');
+            return;
+        }
+
         const user = {
-            id: 'usr_' + Date.now(),
+            id: res.user?.id || ('usr_' + Date.now()),
             name: name,
             email: email,
             provider: 'password',
             avatar: null,
-            role: 'seeker',
+            role: 'client',
             loginDate: new Date().toISOString()
         };
 
         saveUserSession(user);
         closeAuthModal();
-        showAuthToast(`¡Cuenta creada con éxito! Bienvenido a Zilla, ${user.name}.`, 'success');
+        showAuthToast(`¡Cuenta creada con éxito en Zilla, ${user.name}!`, 'success');
 
         nameInput.value = '';
         emailInput.value = '';
@@ -270,19 +339,38 @@
     }
 
     /**
-     * Manejar inicio de sesión social (Google / Facebook)
+     * Manejar inicio de sesión social con Google / Facebook (Supabase OAuth)
      */
-    function handleSocialAuth(provider) {
-        const mockName = provider === 'Google' ? 'Juan Pérez' : 'María González';
-        const mockEmail = provider === 'Google' ? 'juan.perez@gmail.com' : 'maria.g@facebook.com';
+    async function handleSocialAuth(provider) {
+        showAuthToast(`Conectando con ${provider}...`, 'info');
+
+        if (window.ZillaSupabase && !window.ZillaSupabase.isMockMode) {
+            if (provider === 'Google') {
+                const res = await window.ZillaSupabase.signInWithGoogle();
+                if (!res.success) {
+                    showAuthToast(res.error || 'Error al conectar con Google OAuth.', 'error');
+                }
+                return;
+            } else if (provider === 'Facebook') {
+                const res = await window.ZillaSupabase.signInWithFacebook();
+                if (!res.success) {
+                    showAuthToast(res.error || 'Error al conectar con Facebook OAuth.', 'error');
+                }
+                return;
+            }
+        }
+
+        // Modo Mock / Fallback local para desarrollo
+        const mockName = provider === 'Google' ? 'Juan Solalinde' : 'María González';
+        const mockEmail = provider === 'Google' ? 'juan.solalinde@gmail.com' : 'maria.g@facebook.com';
 
         const user = {
             id: 'usr_' + provider.toLowerCase() + '_' + Date.now(),
             name: mockName,
             email: mockEmail,
             provider: provider.toLowerCase(),
-            avatar: null,
-            role: 'seeker',
+            avatar: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&w=300&q=80',
+            role: 'client',
             loginDate: new Date().toISOString()
         };
 
@@ -290,6 +378,7 @@
         closeAuthModal();
         showAuthToast(`Has iniciado sesión con ${provider} como ${user.name}.`, 'success');
     }
+
 
     /**
      * Recuperación de contraseña
