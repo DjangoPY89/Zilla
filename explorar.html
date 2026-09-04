@@ -363,6 +363,73 @@
         </div>
     </section>
 
+    <!-- 2.5 Barra Superior de Resultados y Controles a lo Ancho de la Pantalla (Pasa por encima del mapa y del listado) -->
+    <section class="explore-top-controls-bar">
+        <div class="feed-header-info">
+            <div class="feed-left-stats">
+                <span class="results-count" id="results-count-label">Cargando inmuebles...</span>
+            </div>
+            <div class="feed-right-controls">
+                <!-- Selector de Formato de Vista: Cuadrícula vs Fila Detallada -->
+                <div class="apple-map-size-switcher feed-layout-switcher" id="feed-layout-switcher">
+                    <button type="button" class="btn-map-size btn-feed-layout active" data-layout="grid" title="Vista en Cuadrícula">
+                        <i class="fas fa-grip"></i>
+                        <span>Cuadrícula</span>
+                    </button>
+                    <button type="button" class="btn-map-size btn-feed-layout" data-layout="detailed" title="Vista Detallada (1 por fila)">
+                        <i class="fas fa-bars-staggered"></i>
+                        <span>Fila Detallada</span>
+                    </button>
+                </div>
+
+                <!-- Contenedor de Ordenar y Botón Mapa en Móvil -->
+                <div class="sort-and-mobile-map-wrap">
+                    <!-- Selector de Ordenamiento Apple Glassmorphism -->
+                    <div class="apple-sort-wrapper">
+                        <label for="sort-by-select"><i class="fas fa-arrow-down-short-wide text-primary"></i> <span class="sort-label-text">Ordenar:</span></label>
+                        <select id="sort-by-select" class="apple-sort-select">
+                            <option value="popularity">Más Populares / Destacados</option>
+                            <option value="price_asc">Precio: Menor a Mayor</option>
+                            <option value="price_desc">Precio: Mayor a Menor</option>
+                            <option value="m2_desc">Metros Cuadrados: Mayor a Menor</option>
+                            <option value="m2_asc">Metros Cuadrados: Menor a Mayor</option>
+                            <option value="rating">Mejor Calificados (Platino)</option>
+                        </select>
+                    </div>
+
+                    <!-- Botón Móvil para alternar a Mapa (Al lado de Ordenar en móvil) -->
+                    <button type="button" class="mobile-view-btn" id="mobile-view-toggle" aria-label="Alternar entre Lista y Mapa">
+                        <i class="fas fa-map-location-dot"></i>
+                        <span>Mapa</span>
+                    </button>
+                </div>
+
+                <!-- Selector de Tamaño del Mapa Estilo Apple (Ordenado: Solo Lista, Achicar, Dividido, Mapa 3/4) -->
+                <div class="apple-map-size-switcher" id="map-size-switcher">
+                    <button type="button" class="btn-map-size" data-size="hide" title="Ocultar Mapa (Solo lista de propiedades)">
+                        <i class="fas fa-table-cells-large"></i>
+                        <span>Solo Lista</span>
+                    </button>
+                    <button type="button" class="btn-map-size" data-size="compact" title="Achicar Mapa (Más espacio para la lista)">
+                        <i class="fas fa-compress-alt"></i>
+                        <span>Achicar</span>
+                    </button>
+                    <button type="button" class="btn-map-size active" data-size="split" title="Vista Dividida Equilibrada (50% / 50%)">
+                        <i class="fas fa-table-columns"></i>
+                        <span>Dividido</span>
+                    </button>
+                    <button type="button" class="btn-map-size" data-size="wide" title="Agrandar Mapa a 3/4 del ancho total (75% Mapa)">
+                        <i class="fas fa-expand-alt"></i>
+                        <span>Mapa 3/4</span>
+                    </button>
+                </div>
+
+                <!-- Checkbox invisible para mantener sincronización continua en segundo plano -->
+                <input type="checkbox" id="search-on-map-move" checked style="display:none;" aria-hidden="true">
+            </div>
+        </div>
+    </section>
+
     <!-- 3. Contenedor Principal Split-Screen (Mapa a la Izquierda / Feed de Propiedades a la Derecha) -->
     <main class="split-screen-container">
         <!-- Columna Izquierda: Mapa Interactivo -->
@@ -409,70 +476,6 @@
 
         <!-- Columna Derecha: Feed de Listados de Propiedades -->
         <section class="properties-feed-column">
-            <div class="feed-header-info">
-                <div class="feed-left-stats">
-                    <span class="results-count" id="results-count-label">Cargando inmuebles...</span>
-                </div>
-                <div class="feed-right-controls">
-                    <!-- Selector de Formato de Vista: Cuadrícula vs Fila Detallada -->
-                    <div class="apple-map-size-switcher feed-layout-switcher" id="feed-layout-switcher">
-                        <button type="button" class="btn-map-size btn-feed-layout active" data-layout="grid" title="Vista en Cuadrícula">
-                            <i class="fas fa-grip"></i>
-                            <span>Cuadrícula</span>
-                        </button>
-                        <button type="button" class="btn-map-size btn-feed-layout" data-layout="detailed" title="Vista Detallada (1 por fila)">
-                            <i class="fas fa-bars-staggered"></i>
-                            <span>Fila Detallada</span>
-                        </button>
-                    </div>
-
-                    <!-- Contenedor de Ordenar y Botón Mapa en Móvil -->
-                    <div class="sort-and-mobile-map-wrap">
-                        <!-- Selector de Ordenamiento Apple Glassmorphism -->
-                        <div class="apple-sort-wrapper">
-                            <label for="sort-by-select"><i class="fas fa-arrow-down-short-wide text-primary"></i> <span class="sort-label-text">Ordenar:</span></label>
-                            <select id="sort-by-select" class="apple-sort-select">
-                                <option value="popularity">🌟 Más Populares / Destacados</option>
-                                <option value="price_asc">💵 Precio: Menor a Mayor</option>
-                                <option value="price_desc">💎 Precio: Mayor a Menor</option>
-                                <option value="m2_desc">📐 Metros Cuadrados: Mayor a Menor</option>
-                                <option value="m2_asc">📐 Metros Cuadrados: Menor a Mayor</option>
-                                <option value="rating">⭐ Mejor Calificados (Platino)</option>
-                            </select>
-                        </div>
-
-                        <!-- Botón Móvil para alternar a Mapa (Al lado de Ordenar en móvil) -->
-                        <button type="button" class="mobile-view-btn" id="mobile-view-toggle" aria-label="Alternar entre Lista y Mapa">
-                            <i class="fas fa-map-location-dot"></i>
-                            <span>Mapa</span>
-                        </button>
-                    </div>
-
-                    <!-- Selector de Tamaño del Mapa Estilo Apple (Ordenado: Solo Lista, Achicar, Dividido, Mapa 3/4) -->
-                    <div class="apple-map-size-switcher" id="map-size-switcher">
-                        <button type="button" class="btn-map-size" data-size="hide" title="Ocultar Mapa (Solo lista de propiedades)">
-                            <i class="fas fa-table-cells-large"></i>
-                            <span>Solo Lista</span>
-                        </button>
-                        <button type="button" class="btn-map-size" data-size="compact" title="Achicar Mapa (Más espacio para la lista)">
-                            <i class="fas fa-compress-alt"></i>
-                            <span>Achicar</span>
-                        </button>
-                        <button type="button" class="btn-map-size active" data-size="split" title="Vista Dividida Equilibrada (50% / 50%)">
-                            <i class="fas fa-table-columns"></i>
-                            <span>Dividido</span>
-                        </button>
-                        <button type="button" class="btn-map-size" data-size="wide" title="Agrandar Mapa a 3/4 del ancho total (75% Mapa)">
-                            <i class="fas fa-expand-alt"></i>
-                            <span>Mapa 3/4</span>
-                        </button>
-                    </div>
-
-                    <!-- Checkbox invisible para mantener sincronización continua en segundo plano -->
-                    <input type="checkbox" id="search-on-map-move" checked style="display:none;" aria-hidden="true">
-                </div>
-            </div>
-
             <!-- Grid de Tarjetas de Propiedades -->
             <div class="properties-grid" id="properties-feed">
                 <!-- Se inyecta dinámicamente vía app.js -->

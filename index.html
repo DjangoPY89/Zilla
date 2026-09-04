@@ -74,186 +74,182 @@
     <section class="evergreen-hero-section">
         <div class="evergreen-hero-frame">
             <div class="evergreen-hero-bg-media">
-                <img src="img/hero-bg.jpg?v=2.0" alt="Barrio Residencial y Propiedades Zilla Paraguay" class="evergreen-hero-img">
+                <img src="img/hero-bg.jpg?v=3.0" alt="Barrio Residencial y Propiedades Zilla Paraguay" class="evergreen-hero-img">
                 <div class="evergreen-hero-overlay"></div>
             </div>
 
-            <div class="evergreen-hero-content-wrap">
-                <!-- Tags superiores flotantes -->
-                <div class="hero-top-tags">
-                    <button type="button" class="hero-tag-pill" onclick="setHeroPropType('house', this)">Casa</button>
-                    <button type="button" class="hero-tag-pill" onclick="setHeroPropType('apartment', this)">Departamento</button>
-                    <button type="button" class="hero-tag-pill" onclick="setHeroPropType('gated_community', this)">Residencial</button>
-                    <button type="button" class="hero-tag-pill" onclick="setHeroPropType('off_plan', this)">En Pozo</button>
+            <div class="evergreen-hero-content-wrap realtor-hero-wrap">
+                <!-- Titular Principal Centrado Estilo Realtor -->
+                <div class="realtor-hero-header">
+                    <h1 class="realtor-hero-heading">
+                        <span class="realtor-heading-line1">#1 sitio inmobiliario</span>
+                        <span class="realtor-heading-line2">que los agentes recomiendan*</span>
+                    </h1>
                 </div>
 
-                <!-- Titular Principal, Descripción Lateral y Botón Animado -->
-                <div class="evergreen-hero-titles-row">
-                    <div class="hero-titles-left">
-                        <div class="hero-highlight-badge">
-                            <i class="fas fa-sparkles pulse-sparkle"></i>
-                            <span>Portal Inmobiliario Líder en Paraguay</span>
-                        </div>
-                        <h1 class="evergreen-hero-heading">
-                            Tu Próximo Hogar,<br>
-                            En El Lugar Ideal<span class="hero-dot-green">.</span>
-                        </h1>
+                <!-- Buscador Central Realtor.com Style -->
+                <div class="realtor-search-box-wrapper">
+                    <!-- Pestañas Superiores (Tabs) -->
+                    <div class="realtor-search-tabs">
+                        <button type="button" class="realtor-tab-btn active" data-op="sale" onclick="setRealtorHeroTab('sale', this)">Comprar</button>
+                        <button type="button" class="realtor-tab-btn" data-op="rent_monthly" onclick="setRealtorHeroTab('rent_monthly', this)">Alquilar</button>
+                        <button type="button" class="realtor-tab-btn" data-op="sell" onclick="window.location.href='publicar.html'">Vender</button>
                     </div>
-                    <div class="hero-titles-right">
-                        <div class="hero-subtext-card">
-                            <p class="evergreen-hero-subtext">
-                                Descubre casas exclusivas, departamentos y proyectos en pozo en <strong>Asunción, San Bernardino y todo Paraguay</strong> con datos reales de precio por m², mapas satelitales y contacto directo con agentes verificados.
-                            </p>
-                        </div>
-                        <div class="hero-explore-cta-wrap">
-                            <a href="explorar.html" class="btn-hero-explore-animated" title="Explorar catálogo de propiedades en Paraguay">
-                                <span class="explore-glow-pulse"></span>
-                                <span class="explore-btn-content">
-                                    <i class="fas fa-compass explore-icon-spin"></i>
-                                    <span>Explorar Propiedades</span>
-                                    <i class="fas fa-arrow-right explore-arrow-slide"></i>
-                                </span>
-                            </a>
-                        </div>
-                    </div>
-                </div>
 
-                <!-- Tarjeta de Búsqueda Flotante ("Find the best place") -->
-                <div class="evergreen-search-card">
-                    <h3 class="search-card-title">Encuentra el mejor lugar</h3>
-
-                    <form action="explorar.html" method="GET" class="evergreen-search-form" id="hero-search-form">
-                        <div class="search-fields-grid">
-                            <!-- 1. Ubicación -->
-                            <div class="search-col">
-                                <label class="search-col-lbl">Ubicación</label>
-                                <div class="search-input-wrap">
-                                    <input type="text" name="keyword" id="hero-location-input" class="search-text-input" placeholder="Ej. Villa Morra, San Ber..." autocomplete="off">
-                                    <input type="hidden" name="lat" id="hero-lat-input">
-                                    <input type="hidden" name="lng" id="hero-lng-input">
-                                </div>
-                            </div>
-
-                            <!-- 2. Tipo de Operación (Selección Múltiple - Preseleccionado: Todas) -->
-                            <div class="search-col multi-select-col" id="col-operation-multiselect">
-                                <label class="search-col-lbl">Tipo de Operación</label>
-                                <div class="multi-select-wrap">
-                                    <button type="button" class="multi-select-btn" id="btn-hero-operation" onclick="toggleMultiSelectMenu('menu-hero-operation')">
-                                        <span class="btn-text" id="text-hero-operation">Todas las operaciones</span>
-                                        <i class="fas fa-chevron-down chevron-icon"></i>
-                                    </button>
-                                    <div class="multi-select-menu" id="menu-hero-operation">
-                                        <div class="multi-select-header-row">
-                                            <span class="multi-select-title">Operaciones</span>
-                                            <button type="button" class="btn-select-all" onclick="selectAllHeroOps()">Todas</button>
-                                        </div>
-                                        <label class="multi-select-item item-all">
-                                            <input type="checkbox" id="chk-hero-op-all" checked onchange="toggleHeroOpAll(this)">
-                                            <span class="custom-chk"></span>
-                                            <span class="item-label">Todas las Operaciones</span>
-                                        </label>
-                                        <label class="multi-select-item">
-                                            <input type="checkbox" name="hero_op_chk" value="sale" checked onchange="updateHeroOpSelection()">
-                                            <span class="custom-chk"></span>
-                                            <span class="item-label">Comprar (Venta)</span>
-                                        </label>
-                                        <label class="multi-select-item">
-                                            <input type="checkbox" name="hero_op_chk" value="rent_monthly" checked onchange="updateHeroOpSelection()">
-                                            <span class="custom-chk"></span>
-                                            <span class="item-label">Alquiler Mensual</span>
-                                        </label>
-                                        <label class="multi-select-item">
-                                            <input type="checkbox" name="hero_op_chk" value="rent_temporary" checked onchange="updateHeroOpSelection()">
-                                            <span class="custom-chk"></span>
-                                            <span class="item-label">Alquiler Temporal</span>
-                                        </label>
-                                        <label class="multi-select-item">
-                                            <input type="checkbox" name="hero_op_chk" value="off_plan" checked onchange="updateHeroOpSelection()">
-                                            <span class="custom-chk"></span>
-                                            <span class="item-label">En Pozo / Proyectos</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="operation" id="hero-operation-hidden" value="all">
-                            </div>
-
-                            <!-- 3. Tipo de Inmueble (Selección Múltiple - Preseleccionado: Todos) -->
-                            <div class="search-col multi-select-col" id="col-proptype-multiselect">
-                                <label class="search-col-lbl">Tipo de Inmueble</label>
-                                <div class="multi-select-wrap">
-                                    <button type="button" class="multi-select-btn" id="btn-hero-proptype" onclick="toggleMultiSelectMenu('menu-hero-proptype')">
-                                        <span class="btn-text" id="text-hero-proptype">Todos los inmuebles</span>
-                                        <i class="fas fa-chevron-down chevron-icon"></i>
-                                    </button>
-                                    <div class="multi-select-menu" id="menu-hero-proptype">
-                                        <div class="multi-select-header-row">
-                                            <span class="multi-select-title">Tipos de Inmueble</span>
-                                            <button type="button" class="btn-select-all" onclick="selectAllHeroTypes()">Todos</button>
-                                        </div>
-                                        <label class="multi-select-item item-all">
-                                            <input type="checkbox" id="chk-hero-type-all" checked onchange="toggleHeroTypeAll(this)">
-                                            <span class="custom-chk"></span>
-                                            <span class="item-label">Todos los Inmuebles</span>
-                                        </label>
-                                        <label class="multi-select-item">
-                                            <input type="checkbox" name="hero_type_chk" value="house" checked onchange="updateHeroTypeSelection()">
-                                            <span class="custom-chk"></span>
-                                            <span class="item-label">Casas Residenciales</span>
-                                        </label>
-                                        <label class="multi-select-item">
-                                            <input type="checkbox" name="hero_type_chk" value="apartment" checked onchange="updateHeroTypeSelection()">
-                                            <span class="custom-chk"></span>
-                                            <span class="item-label">Departamentos</span>
-                                        </label>
-                                        <label class="multi-select-item">
-                                            <input type="checkbox" name="hero_type_chk" value="gated_community" checked onchange="updateHeroTypeSelection()">
-                                            <span class="custom-chk"></span>
-                                            <span class="item-label">Barrios Cerrados</span>
-                                        </label>
-                                        <label class="multi-select-item">
-                                            <input type="checkbox" name="hero_type_chk" value="duplex" checked onchange="updateHeroTypeSelection()">
-                                            <span class="custom-chk"></span>
-                                            <span class="item-label">Dúplex</span>
-                                        </label>
-                                        <label class="multi-select-item">
-                                            <input type="checkbox" name="hero_type_chk" value="land" checked onchange="updateHeroTypeSelection()">
-                                            <span class="custom-chk"></span>
-                                            <span class="item-label">Terrenos / Lotes</span>
-                                        </label>
-                                        <label class="multi-select-item">
-                                            <input type="checkbox" name="hero_type_chk" value="commercial" checked onchange="updateHeroTypeSelection()">
-                                            <span class="custom-chk"></span>
-                                            <span class="item-label">Comercial / Oficinas</span>
-                                        </label>
-                                    </div>
-                                </div>
-                                <input type="hidden" name="propType" id="hero-proptype-hidden" value="all">
-                            </div>
+                    <!-- Cápsula de Búsqueda Ovalada Blanca -->
+                    <form action="explorar.html" method="GET" class="realtor-search-capsule" id="hero-search-form">
+                        <input type="hidden" name="operation" id="realtor-op-input" value="sale">
+                        <input type="hidden" name="che_roga" id="realtor-che-roga-input" value="">
+                        
+                        <div class="realtor-search-input-wrap">
+                            <input type="text" name="keyword" id="hero-location-input" class="realtor-search-input" placeholder="Dirección, barrio, ciudad (ej. 3 dorm con piscina en Villa Morra)" autocomplete="off">
                         </div>
 
-                        <!-- Fila Inferior: Filtros Rápidos y Botón Buscar -->
-                        <div class="search-card-bottom-row">
-                            <div class="quick-filter-pills">
-                                <span class="quick-filter-lbl">Filtros:</span>
-                                <a href="explorar.html?keyword=Asuncion" class="q-pill">Asunción</a>
-                                <a href="explorar.html?keyword=San+Bernardino" class="q-pill">San Bernardino</a>
-                                <a href="explorar.html?propType=house" class="q-pill">Casas</a>
-                                <a href="explorar.html?propType=apartment" class="q-pill">Departamentos</a>
-                                <a href="explorar.html?che_roga=true" class="q-pill pill-che-roga"><i class="fas fa-certificate text-emerald-600"></i> Che Róga Porã</a>
-                            </div>
-
-                            <button type="submit" class="btn-evergreen-search" id="hero-search-btn">
-                                <i class="fas fa-search"></i>
-                                <span>Buscar Inmuebles</span>
-                            </button>
-                        </div>
+                        <button type="submit" class="btn-realtor-search" id="hero-search-btn">
+                            <span>Buscar</span>
+                            <i class="fas fa-search"></i>
+                        </button>
                     </form>
+
+                    <!-- Sugerencias de Búsqueda Rápidas -->
+                    <div class="realtor-quick-pills">
+                        <span class="realtor-pills-label">Populares:</span>
+                        <a href="explorar.html?keyword=Villa+Morra" class="r-pill">Villa Morra</a>
+                        <a href="explorar.html?keyword=San+Bernardino" class="r-pill">San Bernardino</a>
+                        <a href="explorar.html?keyword=Surubii" class="r-pill">Surubi'i</a>
+                        <a href="explorar.html?keyword=Ykua+Sati" class="r-pill">Ykua Satî</a>
+                        <a href="explorar.html?keyword=Luque" class="r-pill">Luque</a>
+                        <a href="explorar.html?che_roga=true" class="r-pill r-pill-highlight"><i class="fas fa-certificate"></i> Che Róga Porã</a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- 3. Segunda Sección: "Tu próximo hogar te está esperando" (3-Card Showcase) -->
+    <!-- 3. Sección Principal: Compra, Alquila, Invierte (Pilares Inmobiliarios Zilla) -->
+    <section class="buy-rent-invest-section" id="servicios">
+        <div class="bri-container">
+            <div class="section-header-centered">
+                <span class="section-tag-badge"><i class="fas fa-layer-group"></i> Ecosistema Inmobiliario</span>
+                <h2 class="section-headline">Compra, Alquila, Invierte<span class="hero-dot-green">.</span></h2>
+                <p class="section-subheadline">
+                    Tres caminos inteligentes diseñados para que encuentres tu espacio ideal, alquiles sin complicaciones o hagas crecer tu patrimonio en Paraguay.
+                </p>
+            </div>
+
+            <div class="bri-grid">
+                <!-- Tarjeta 1: Compra -->
+                <div class="bri-card bri-card-buy">
+                    <div class="bri-card-header">
+                        <div class="bri-icon-wrap icon-buy">
+                            <i class="fas fa-house-chimney"></i>
+                        </div>
+                        <span class="bri-pill-tag tag-buy">Comprar</span>
+                    </div>
+                    <div class="bri-card-body">
+                        <h3 class="bri-title">Compra tu próximo hogar</h3>
+                        <p class="bri-desc">
+                            Encuentra casas, departamentos y terrenos con datos reales de valor por m², opciones con financiamiento bancario, crédito AFD y el programa Che Róga Porã.
+                        </p>
+                        <ul class="bri-features">
+                            <li class="bri-feature-item">
+                                <i class="fas fa-circle-check feature-ico"></i>
+                                <span>Precios transparentes en USD y Guaraníes</span>
+                            </li>
+                            <li class="bri-feature-item">
+                                <i class="fas fa-circle-check feature-ico"></i>
+                                <span>Simulador de cuota y acceso a créditos AFD</span>
+                            </li>
+                            <li class="bri-feature-item">
+                                <i class="fas fa-circle-check feature-ico"></i>
+                                <span>Contacto directo con propietarios y agentes</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bri-card-footer">
+                        <a href="explorar.html?operation=sale" class="btn-bri-action btn-bri-buy" title="Explorar propiedades en venta">
+                            <span>Explorar en Venta</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 2: Alquila -->
+                <div class="bri-card bri-card-rent">
+                    <div class="bri-card-header">
+                        <div class="bri-icon-wrap icon-rent">
+                            <i class="fas fa-key"></i>
+                        </div>
+                        <span class="bri-pill-tag tag-rent">Alquilar</span>
+                    </div>
+                    <div class="bri-card-body">
+                        <h3 class="bri-title">Alquila con total confianza</h3>
+                        <p class="bri-desc">
+                            Desde modernos departamentos amoblados en Asunción hasta casas de verano en San Bernardino. Alquileres mensuales y temporales verificados.
+                        </p>
+                        <ul class="bri-features">
+                            <li class="bri-feature-item">
+                                <i class="fas fa-circle-check feature-ico"></i>
+                                <span>Desglose claro de expensas y comodidades</span>
+                            </li>
+                            <li class="bri-feature-item">
+                                <i class="fas fa-circle-check feature-ico"></i>
+                                <span>Alquiler tradicional y temporal de verano</span>
+                            </li>
+                            <li class="bri-feature-item">
+                                <i class="fas fa-circle-check feature-ico"></i>
+                                <span>Comunicación directa por WhatsApp en 1 clic</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bri-card-footer">
+                        <a href="explorar.html?operation=rent_monthly" class="btn-bri-action btn-bri-rent" title="Ver inmuebles en alquiler">
+                            <span>Ver Alquileres</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Tarjeta 3: Invierte -->
+                <div class="bri-card bri-card-invest">
+                    <div class="bri-card-header">
+                        <div class="bri-icon-wrap icon-invest">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <span class="bri-pill-tag tag-invest">Invertir</span>
+                    </div>
+                    <div class="bri-card-body">
+                        <h3 class="bri-title">Invierte con alta plusvalía</h3>
+                        <p class="bri-desc">
+                            Maximiza tu retorno accediendo a proyectos en pozo con financiamiento propio en los polos de mayor crecimiento de Paraguay y métricas de rendimiento (Cap Rate).
+                        </p>
+                        <ul class="bri-features">
+                            <li class="bri-feature-item">
+                                <i class="fas fa-circle-check feature-ico"></i>
+                                <span>Proyectos en pozo con planes en cuotas</span>
+                            </li>
+                            <li class="bri-feature-item">
+                                <i class="fas fa-circle-check feature-ico"></i>
+                                <span>Cap Rate proyectado y estimación de ROI</span>
+                            </li>
+                            <li class="bri-feature-item">
+                                <i class="fas fa-circle-check feature-ico"></i>
+                                <span>Zonas premium: Ykua Satî, Villa Morra y Luque</span>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="bri-card-footer">
+                        <a href="explorar.html?operation=off_plan" class="btn-bri-action btn-bri-invest" title="Ver proyectos en pozo e inversiones">
+                            <span>Ver Inversiones en Pozo</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Cuarta Sección: "Tu próximo hogar te está esperando" (3-Card Showcase) -->
     <section class="showcase-triplet-section" id="experiencia">
         <div class="showcase-container">
             <!-- Cabecera de la sección -->
@@ -1065,21 +1061,35 @@
             }
         }
 
-        // Tags superiores en el Hero
-        function setHeroPropType(type, element) {
-            document.querySelectorAll('.hero-tag-pill').forEach(el => el.classList.remove('active'));
+        // Tabs estilo Realtor.com en el Hero
+        function setRealtorHeroTab(op, element) {
+            document.querySelectorAll('.realtor-tab-btn').forEach(el => el.classList.remove('active'));
             if (element) element.classList.add('active');
 
-            if (type === 'off_plan') {
-                const opChks = document.querySelectorAll("input[name='hero_op_chk']");
-                opChks.forEach(cb => cb.checked = (cb.value === 'off_plan'));
-                updateHeroOpSelection();
+            const opInput = document.getElementById('realtor-op-input');
+            const cheRogaInput = document.getElementById('realtor-che-roga-input');
+            const searchInput = document.getElementById('hero-location-input');
+
+            if (op === 'che_roga') {
+                if (opInput) opInput.value = '';
+                if (cheRogaInput) cheRogaInput.value = 'true';
+                if (searchInput) searchInput.placeholder = 'Inmuebles con financiamiento Che Róga Porã...';
+            } else if (op === 'off_plan') {
+                if (opInput) opInput.value = 'off_plan';
+                if (cheRogaInput) cheRogaInput.value = '';
+                if (searchInput) searchInput.placeholder = 'Proyectos en pozo, cuotas, Ykua Satî, Santa Teresa...';
+            } else if (op === 'rent_monthly') {
+                if (opInput) opInput.value = 'rent_monthly';
+                if (cheRogaInput) cheRogaInput.value = '';
+                if (searchInput) searchInput.placeholder = 'Alquileres en Asunción, Luque, amoblados o temporales...';
             } else {
-                const typeChks = document.querySelectorAll("input[name='hero_type_chk']");
-                typeChks.forEach(cb => cb.checked = (cb.value === type));
-                updateHeroTypeSelection();
+                if (opInput) opInput.value = 'sale';
+                if (cheRogaInput) cheRogaInput.value = '';
+                if (searchInput) searchInput.placeholder = 'Dirección, barrio, ciudad (ej. 3 dorm con piscina en Villa Morra)';
             }
         }
+
+        // Tags superiores en el Hero
 
         // ============================================================
         // 5. CONTROL DE PRECIOS CON VISIBILIDAD AMPLIADA

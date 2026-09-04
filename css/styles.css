@@ -720,7 +720,7 @@ button, input, select, textarea {
    ============================================================ */
 .split-screen-container {
     display: flex;
-    height: calc(100vh - 146px);
+    height: calc(100vh - 176px);
     position: relative;
     overflow: hidden;
     transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
@@ -732,7 +732,7 @@ button, input, select, textarea {
     max-width: 55%;
     height: 100%;
     overflow-y: auto;
-    padding: 24px 28px 80px 28px;
+    padding: 20px 24px 80px 24px;
     scroll-behavior: smooth;
     transition: flex 0.35s cubic-bezier(0.16, 1, 0.3, 1), max-width 0.35s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease;
 }
@@ -768,23 +768,22 @@ button, input, select, textarea {
 .split-screen-container.map-size-hide .map-column-wrapper {
     flex: 0 0 0%;
     max-width: 0%;
-    overflow: hidden;
+    border-right: none;
     opacity: 0;
     pointer-events: none;
-    border-right: none;
-    border-left: none;
+    overflow: hidden;
 }
 
-/* 3. MODO: MAPA 3/4 (75% Mapa / 25% Lista) */
+/* 3. MODO: MAPA 3/4 / EXPANDIR MAPA (25% Lista / 75% Mapa) */
 .split-screen-container.map-size-wide .properties-feed-column {
     flex: 0 0 25%;
     max-width: 25%;
-    padding: 16px 12px 80px 12px;
+    padding: 16px 14px 80px 14px;
 }
 
 .split-screen-container.map-size-wide .properties-feed-column .properties-grid {
     grid-template-columns: 1fr !important;
-    gap: 14px !important;
+    gap: 16px;
 }
 
 .split-screen-container.map-size-wide .map-column-wrapper {
@@ -792,35 +791,36 @@ button, input, select, textarea {
     max-width: 75%;
 }
 
-/* 4. MODO: DIBUJO EN PANTALLA COMPLETA (100vw x 100vh Fullscreen Canvas) */
+/* Modo Mapa Pantalla Completa para Dibujo (100% Mapa / 0% Lista) */
 .split-screen-container.map-fullscreen-draw .map-column-wrapper {
     position: fixed !important;
-    inset: 0 !important;
+    top: 0 !important;
+    left: 0 !important;
     width: 100vw !important;
-    max-width: 100vw !important;
     height: 100vh !important;
-    max-height: 100vh !important;
-    z-index: 99999 !important;
-    border-left: none !important;
-    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5) !important;
+    max-width: 100vw !important;
+    flex: 0 0 100% !important;
+    z-index: 9999 !important;
+    border-right: none !important;
 }
 
 .split-screen-container.map-fullscreen-draw #map-container {
-    width: 100vw !important;
     height: 100vh !important;
+    width: 100vw !important;
 }
 
 .split-screen-container.map-fullscreen-draw .map-floating-toolbar {
     top: 24px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    z-index: 100000 !important;
+    z-index: 10000 !important;
 }
 
 .split-screen-container.map-fullscreen-draw .map-draw-status-box {
-    font-size: 0.95rem !important;
-    padding: 12px 24px !important;
-    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.35) !important;
+    top: 80px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+    z-index: 10000 !important;
 }
 
 /* Switcher Segmentado de Tamaño del Mapa - Clean White Capsule Design */
@@ -828,20 +828,20 @@ button, input, select, textarea {
     display: inline-flex;
     align-items: center;
     background: #ffffff;
-    padding: 4px;
+    padding: 3px;
     border-radius: var(--radius-full);
     border: 1px solid #e2e8f0;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-    gap: 3px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+    gap: 2px;
 }
 
 .btn-map-size {
     display: inline-flex;
     align-items: center;
-    gap: 7px;
-    padding: 6px 14px;
+    gap: 6px;
+    padding: 5px 12px;
     border-radius: var(--radius-full);
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 700;
     color: #64748b;
     border: 1px solid transparent;
@@ -854,7 +854,7 @@ button, input, select, textarea {
 }
 
 .btn-map-size i {
-    font-size: 0.82rem;
+    font-size: 0.8rem;
     color: #64748b;
     transition: color 0.18s ease;
 }
@@ -878,11 +878,11 @@ button, input, select, textarea {
 .btn-map-size.active::before {
     content: '';
     display: inline-block;
-    width: 7px;
-    height: 7px;
+    width: 6px;
+    height: 6px;
     background: #10b981;
     border-radius: 50%;
-    box-shadow: 0 0 8px #10b981, 0 0 14px rgba(16, 185, 129, 0.8);
+    box-shadow: 0 0 8px #10b981, 0 0 12px rgba(16, 185, 129, 0.8);
     margin-right: 1px;
     animation: neonDotPulse 2s infinite ease-in-out;
 }
@@ -935,46 +935,68 @@ button, input, select, textarea {
 }
 
 /* ============================================================
-   HEADER DEL FEED Y ORDENAMIENTO ESTILO APPLE
+   BARRA SUPERIOR DE CONTROLES DE EXPLORACIÓN (ANCHO COMPLETO)
+   Pasa por encima del mapa y del listado en una sola fila compacta
    ============================================================ */
-.feed-header-info {
+.explore-top-controls-bar {
+    width: 100%;
+    background: #ffffff;
+    border-bottom: 1px solid #e2e8f0;
+    padding: 6px 24px;
+    position: relative;
+    z-index: 850;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+}
+
+.explore-top-controls-bar .feed-header-info {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 12px;
+    margin-bottom: 0;
+    flex-wrap: nowrap;
+    gap: 16px;
+    width: 100%;
 }
 
-.feed-left-stats .results-count {
-    font-size: 0.96rem;
-    font-weight: 800;
-    color: var(--text-primary);
-}
-
-.feed-right-controls {
+.explore-top-controls-bar .feed-left-stats {
     display: flex;
     align-items: center;
-    gap: 12px;
-    flex-wrap: wrap;
+    flex-shrink: 0;
+}
+
+.explore-top-controls-bar .feed-left-stats .results-count {
+    font-size: 0.92rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    white-space: nowrap;
+    letter-spacing: -0.01em;
+}
+
+.explore-top-controls-bar .feed-right-controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: nowrap;
 }
 
 .sort-and-mobile-map-wrap {
     display: flex;
     align-items: center;
     gap: 10px;
+    flex-shrink: 0;
 }
 
 .apple-sort-wrapper {
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 6px;
     background: #ffffff;
     border: 1px solid #e2e8f0;
-    padding: 6px 14px;
+    padding: 4px 12px;
     border-radius: var(--radius-full);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
     transition: all 0.2s ease;
+    flex-shrink: 0;
 }
 
 .apple-sort-wrapper:hover {
@@ -982,12 +1004,12 @@ button, input, select, textarea {
 }
 
 .apple-sort-wrapper label {
-    font-size: 0.78rem;
+    font-size: 0.76rem;
     font-weight: 700;
     color: #64748b;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 4px;
     cursor: pointer;
     white-space: nowrap;
 }
@@ -995,7 +1017,7 @@ button, input, select, textarea {
 .apple-sort-select {
     border: none;
     background: transparent;
-    font-size: 0.8rem;
+    font-size: 0.78rem;
     font-weight: 700;
     color: #0f172a;
     cursor: pointer;
@@ -4054,16 +4076,10 @@ button, input, select, textarea {
     height: 100%;
     background: linear-gradient(
         180deg,
-        rgba(15, 23, 42, 0.45) 0%,
-        rgba(15, 23, 42, 0.08) 28%,
-        rgba(15, 23, 42, 0.35) 60%,
-        rgba(15, 23, 42, 0.85) 100%
-    ),
-    linear-gradient(
-        90deg,
-        rgba(15, 23, 42, 0.45) 0%,
-        rgba(15, 23, 42, 0.15) 50%,
-        transparent 100%
+        rgba(15, 23, 42, 0.52) 0%,
+        rgba(15, 23, 42, 0.22) 40%,
+        rgba(15, 23, 42, 0.45) 70%,
+        rgba(15, 23, 42, 0.82) 100%
     );
 }
 
@@ -4304,133 +4320,285 @@ button, input, select, textarea {
     transform: translateX(3px);
 }
 
-/* Tarjeta Blanca de Búsqueda Flotante ("Find the best place") */
-.evergreen-search-card {
-    background: #ffffff;
-    border-radius: 26px;
-    padding: 24px 28px;
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
-    position: relative;
-    z-index: 50;
-    overflow: visible;
-}
-
-.search-card-title {
-    font-family: 'Outfit', sans-serif;
-    font-size: 1.15rem;
-    font-weight: 800;
-    color: #0f172a;
-    margin-bottom: 16px;
-}
-
-.search-fields-grid {
-    display: grid;
-    grid-template-columns: 1.35fr 1.15fr 1.15fr;
-    gap: 16px;
-    margin-bottom: 18px;
-    position: relative;
-}
-
-.search-col {
+/* ============================================================
+   HERO SEARCH BAR ESTILO REALTOR.COM (CENTERED CAPSULE & TABS)
+   ============================================================ */
+.realtor-hero-wrap {
     display: flex;
     flex-direction: column;
-    gap: 6px;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    min-height: 540px;
+    padding: 30px 20px;
+    margin: auto 0;
+    gap: 36px;
+    z-index: 5;
     position: relative;
 }
 
-.search-col-lbl {
-    font-size: 0.74rem;
+.realtor-hero-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 860px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.realtor-hero-heading {
+    font-family: 'Outfit', sans-serif;
+    font-size: clamp(1.75rem, 3.4vw, 2.85rem);
+    font-weight: 800;
+    letter-spacing: -0.025em;
+    line-height: 1.2;
+    color: #ffffff;
+    text-shadow: 0 4px 24px rgba(0, 0, 0, 0.85), 0 2px 10px rgba(0, 0, 0, 0.95);
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.realtor-heading-line1,
+.realtor-heading-line2 {
+    display: block;
+    white-space: nowrap;
+}
+
+.realtor-search-box-wrapper {
+    width: 100%;
+    max-width: 840px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+/* Tabs Superiores Estilo Realtor.com */
+.realtor-search-tabs {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin-bottom: 16px;
+    padding: 0 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.realtor-tab-btn {
+    background: transparent;
+    border: none;
+    color: rgba(255, 255, 255, 0.85);
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem;
     font-weight: 700;
-    color: #64748b;
-    text-transform: capitalize;
-}
-
-.search-select,
-.search-text-input {
-    width: 100%;
-    padding: 10px 14px;
-    border-radius: var(--radius-md);
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: #0f172a;
-    outline: none;
-    transition: all 0.2s ease;
-}
-
-.search-select:focus,
-.search-text-input:focus {
-    background: #ffffff;
-    border-color: #0f766e;
-    box-shadow: 0 0 0 3px rgba(15, 118, 110, 0.12);
-}
-
-/* ============================================================
-   DROPDOWNS DE SELECCIÓN MÚLTIPLE EN EL HERO
-   ============================================================ */
-.multi-select-wrap {
+    cursor: pointer;
+    padding: 6px 4px 8px 4px;
     position: relative;
-    width: 100%;
+    transition: all 0.2s ease;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.7);
 }
 
-.multi-select-btn {
+.realtor-tab-btn:hover {
+    color: #ffffff;
+}
+
+.realtor-tab-btn.active {
+    color: #ffffff;
+    font-weight: 800;
+}
+
+.realtor-tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: #ffffff;
+    border-radius: 999px;
+    box-shadow: 0 0 12px rgba(255, 255, 255, 0.9);
+}
+
+/* Cápsula de Búsqueda Ovalada Blanca */
+.realtor-search-capsule {
     width: 100%;
-    padding: 10px 14px;
-    border-radius: var(--radius-md);
-    background: #f1f5f9;
-    border: 1px solid #e2e8f0;
-    font-size: 0.86rem;
-    font-weight: 600;
-    color: #0f172a;
+    background: #ffffff;
+    border-radius: 9999px;
+    padding: 6px 8px 6px 28px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
-    cursor: pointer;
-    text-align: left;
-    transition: all 0.2s ease;
+    gap: 12px;
+    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.35), 0 4px 16px rgba(0, 0, 0, 0.15);
+    transition: all 0.25s ease;
+    border: 2px solid transparent;
+    box-sizing: border-box;
 }
 
-.multi-select-btn:hover {
-    background: #e2e8f0;
-    border-color: #cbd5e1;
+.realtor-search-capsule:focus-within {
+    border-color: #7bc133;
+    box-shadow: 0 20px 54px rgba(0, 0, 0, 0.4), 0 0 0 4px rgba(123, 193, 51, 0.25);
 }
 
-.multi-select-btn .btn-text {
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+.realtor-search-input-wrap {
+    flex: 1;
+    min-width: 0;
 }
 
-.multi-select-btn .chevron-icon {
-    font-size: 0.75rem;
-    color: #64748b;
-    transition: transform 0.2s ease;
-    flex-shrink: 0;
-}
-
-.multi-select-wrap.active .chevron-icon,
-.multi-select-menu.active ~ .multi-select-btn .chevron-icon {
-    transform: rotate(180deg);
-}
-
-.multi-select-menu {
-    position: absolute;
-    top: calc(100% + 8px);
-    left: 0;
+.realtor-search-input {
     width: 100%;
-    min-width: 250px;
+    border: none;
+    outline: none;
+    background: transparent;
+    font-family: 'Inter', sans-serif;
+    font-size: 1.08rem;
+    font-weight: 500;
+    color: #0f172a;
+    padding: 8px 0;
+}
+
+.realtor-search-input::placeholder {
+    color: #64748b;
+    font-weight: 400;
+    font-size: 1.02rem;
+}
+
+/* Botón Verde Lima Realtor.com */
+.btn-realtor-search {
+    background: #7bc133;
+    color: #ffffff;
+    border: none;
+    border-radius: 9999px;
+    padding: 0 32px;
+    height: 52px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.05rem;
+    font-weight: 800;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    flex-shrink: 0;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 16px rgba(123, 193, 51, 0.4);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.25);
+}
+
+.btn-realtor-search:hover {
+    background: #6aa82a;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 22px rgba(123, 193, 51, 0.6);
+}
+
+.btn-realtor-search i {
+    font-size: 0.95rem;
+}
+
+/* Sugerencias Rápidas / Pills */
+.realtor-quick-pills {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 18px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.realtor-pills-label {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
+}
+
+.r-pill {
+    background: rgba(15, 23, 42, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+    color: #ffffff;
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 5px 14px;
+    border-radius: var(--radius-full);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+}
+
+.r-pill:hover {
     background: #ffffff;
-    border: 1px solid #e2e8f0;
-    border-radius: 18px;
-    box-shadow: 0 20px 50px rgba(15, 23, 42, 0.25), 0 4px 14px rgba(0, 0, 0, 0.08);
-    padding: 8px;
-    z-index: 1000;
-    display: none;
-    flex-direction: column;
-    gap: 4px;
-    animation: multiSelectSlide 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    color: #0f172a;
+    border-color: #ffffff;
+    transform: translateY(-2px);
+}
+
+.r-pill-highlight {
+    border-color: rgba(45, 212, 191, 0.5);
+    color: #5eead4;
+}
+
+.r-pill-highlight:hover {
+    background: #0f766e;
+    color: #ffffff;
+    border-color: #0f766e;
+}
+
+@media (max-width: 768px) {
+    .evergreen-hero-frame {
+        padding: 24px 16px;
+        min-height: 520px;
+    }
+    
+    .realtor-hero-wrap {
+        min-height: 440px;
+        gap: 24px;
+    }
+
+    .realtor-hero-heading {
+        font-size: clamp(1.4rem, 5.5vw, 1.85rem);
+    }
+
+    .realtor-heading-line1,
+    .realtor-heading-line2 {
+        white-space: normal;
+    }
+
+    .realtor-search-tabs {
+        gap: 14px;
+        overflow-x: auto;
+        justify-content: flex-start;
+        width: 100%;
+        padding-bottom: 4px;
+    }
+
+    .realtor-tab-btn {
+        font-size: 0.92rem;
+        white-space: nowrap;
+    }
+
+    .realtor-search-capsule {
+        padding: 4px 6px 4px 18px;
+        min-height: 54px;
+    }
+
+    .realtor-search-input {
+        font-size: 0.94rem;
+    }
+
+    .btn-realtor-search {
+        height: 44px;
+        padding: 0 18px;
+        font-size: 0.92rem;
+        gap: 6px;
+    }
+
+    .realtor-quick-pills {
+        gap: 6px;
+    }
 }
 
 .price-popover-wide {
@@ -4601,7 +4769,240 @@ button, input, select, textarea {
     box-shadow: 0 8px 22px rgba(15, 118, 110, 0.35);
 }
 
-/* 3. Segunda Sección: Triplete de Tarjetas Bento ("Tu próximo hogar te está esperando") */
+/* ============================================================
+   SECCIÓN: COMPRA, ALQUILA, INVIERTE (ECOSISTEMA ZILLA)
+   ============================================================ */
+.buy-rent-invest-section {
+    padding: 84px 24px 70px 24px;
+    max-width: 1440px;
+    margin: 0 auto;
+}
+
+.bri-container {
+    display: flex;
+    flex-direction: column;
+    gap: 48px;
+}
+
+.bri-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+}
+
+.bri-card {
+    background: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.07);
+    border-radius: 28px;
+    padding: 36px 32px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    position: relative;
+    overflow: hidden;
+}
+
+.bri-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.bri-card-buy::before { background: linear-gradient(90deg, #0f766e, #2dd4bf); }
+.bri-card-rent::before { background: linear-gradient(90deg, #0284c7, #38bdf8); }
+.bri-card-invest::before { background: linear-gradient(90deg, #ca8a04, #eab308); }
+
+.bri-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+    border-color: rgba(15, 118, 110, 0.22);
+}
+
+.bri-card:hover::before {
+    opacity: 1;
+}
+
+.bri-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.bri-icon-wrap {
+    width: 60px;
+    height: 60px;
+    border-radius: 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    transition: transform 0.3s ease;
+}
+
+.bri-card:hover .bri-icon-wrap {
+    transform: scale(1.1);
+}
+
+.icon-buy {
+    background: #f0fdfa;
+    color: #0f766e;
+    border: 1.5px solid rgba(15, 118, 110, 0.16);
+}
+
+.icon-rent {
+    background: #f0f9ff;
+    color: #0284c7;
+    border: 1.5px solid rgba(2, 132, 199, 0.16);
+}
+
+.icon-invest {
+    background: #fefce8;
+    color: #ca8a04;
+    border: 1.5px solid rgba(202, 138, 4, 0.16);
+}
+
+.bri-pill-tag {
+    font-size: 0.76rem;
+    font-weight: 800;
+    padding: 4px 12px;
+    border-radius: var(--radius-full);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
+.tag-buy { background: #dcfce7; color: #15803d; }
+.tag-rent { background: #e0f2fe; color: #0369a1; }
+.tag-invest { background: #fef3c7; color: #b45309; }
+
+.bri-title {
+    font-family: 'Outfit', sans-serif;
+    font-size: 1.5rem;
+    font-weight: 800;
+    color: #0f172a;
+    margin-bottom: 12px;
+    line-height: 1.25;
+}
+
+.bri-desc {
+    font-size: 0.92rem;
+    color: #64748b;
+    line-height: 1.6;
+    margin-bottom: 24px;
+}
+
+.bri-features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 32px 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.bri-feature-item {
+    font-size: 0.86rem;
+    font-weight: 600;
+    color: #334155;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.bri-feature-item .feature-ico {
+    font-size: 0.95rem;
+    flex-shrink: 0;
+}
+
+.bri-card-buy .feature-ico { color: #0f766e; }
+.bri-card-rent .feature-ico { color: #0284c7; }
+.bri-card-invest .feature-ico { color: #ca8a04; }
+
+.btn-bri-action {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 14px 22px;
+    border-radius: 14px;
+    font-family: 'Outfit', sans-serif;
+    font-size: 0.92rem;
+    font-weight: 700;
+    text-decoration: none;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    box-sizing: border-box;
+}
+
+.btn-bri-buy {
+    background: #f0fdfa;
+    color: #0f766e;
+    border: 1.5px solid rgba(15, 118, 110, 0.25);
+}
+
+.btn-bri-buy:hover {
+    background: #0f766e;
+    color: #ffffff;
+    border-color: #0f766e;
+    box-shadow: 0 6px 18px rgba(15, 118, 110, 0.25);
+    transform: translateY(-2px);
+}
+
+.btn-bri-rent {
+    background: #f0f9ff;
+    color: #0284c7;
+    border: 1.5px solid rgba(2, 132, 199, 0.25);
+}
+
+.btn-bri-rent:hover {
+    background: #0284c7;
+    color: #ffffff;
+    border-color: #0284c7;
+    box-shadow: 0 6px 18px rgba(2, 132, 199, 0.25);
+    transform: translateY(-2px);
+}
+
+.btn-bri-invest {
+    background: #fefce8;
+    color: #ca8a04;
+    border: 1.5px solid rgba(202, 138, 4, 0.25);
+}
+
+.btn-bri-invest:hover {
+    background: #ca8a04;
+    color: #ffffff;
+    border-color: #ca8a04;
+    box-shadow: 0 6px 18px rgba(202, 138, 4, 0.25);
+    transform: translateY(-2px);
+}
+
+.btn-bri-action i {
+    font-size: 0.82rem;
+    transition: transform 0.2s ease;
+}
+
+.btn-bri-action:hover i {
+    transform: translateX(4px);
+}
+
+@media (max-width: 992px) {
+    .bri-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+    .buy-rent-invest-section {
+        padding: 50px 20px 40px 20px;
+    }
+}
+
+/* 4. Segunda Sección: Triplete de Tarjetas Bento ("Tu próximo hogar te está esperando") */
 .showcase-triplet-section {
     padding: 72px 24px 80px 24px;
     max-width: 1440px;
