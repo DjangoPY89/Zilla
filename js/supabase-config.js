@@ -52,8 +52,10 @@
          * Obtener URL de redirección actual para OAuth
          */
         getRedirectUrl: function () {
-            const origin = window.location.origin || (window.location.protocol + '//' + window.location.host);
-            // Si estamos en un path o subdirectorio
+            if (window.location.protocol === 'file:' || !window.location.origin || window.location.origin === 'null') {
+                return 'http://localhost:8000/dashboard.html';
+            }
+            const origin = window.location.origin;
             const pathname = window.location.pathname;
             const dir = pathname.substring(0, pathname.lastIndexOf('/') + 1);
             return `${origin}${dir}dashboard.html`;
